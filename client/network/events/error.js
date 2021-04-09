@@ -1,6 +1,5 @@
 import { emitter } from "./emitter.js"
-
-export const ERROR_EVENT = 0
+import { ERROR_EVENT } from "../../../events.js"
 
 emitter.on(
   ERROR_EVENT, 

@@ -1,11 +1,17 @@
 import WebSocket from 'ws'
 import { emitter } from './events/index.js'
 import { createVerify } from "crypto"
-import { ERROR_EVENT } from '../../client/network/events/error.js'
+import { ERROR_EVENT } from '../../events.js'
 
 export const server = new WebSocket.Server({
   port: 1234
 })
+
+export const broadcast = (event, payload) => {
+  for (const socket of server.clients) {
+    socket.sendEvent(event, payload)
+  }
+}
 
 server.on('connection', (socket, request) => {
   console.log('Socket connected to server')
