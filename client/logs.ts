@@ -1,11 +1,8 @@
 console.clear()
 
-const logs = []
+const logs: string[] = []
 
-/**
- * @param  {...string} args 
- */
-export const log = (...args) => {
+export const log = (...args: string[]) => {
   logs.push(...args)
   console.clear()
   process.stdout.write(`${logs.join('\n')}\n> `)

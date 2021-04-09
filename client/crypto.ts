@@ -1,20 +1,21 @@
 import {
   generateKeyPairSync,
+  KeyExportOptions,
 } from "crypto"
 
 import path from "path"
 import fs from "fs"
 
-const home = process.env.APPDATA || process.env.HOME
+const home = process.env.APPDATA || process.env.HOME || "~/"
 const storage = path.join(home, "mudgolt")
-const keyFile = path.join(storage, "keys.json")
+const keyFile = path.join(storage, "keyson")
 
 export const keys = {
   privateKey: "",
   publicKey: "",
 }
 
-const keyOptions = {
+const keyOptions: KeyExportOptions<"pem"> = {
   type: "pkcs1",
   format: "pem"
 }

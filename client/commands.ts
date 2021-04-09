@@ -1,7 +1,7 @@
-import { log } from "./logs.js"
+import { log } from "./logs"
 import chalk from "chalk"
-import { client } from "./network/index.js"
-import { CHAT_EVENT } from "../events.js"
+import { sendEvent } from "./network"
+import { CHAT_EVENT } from "../events"
 
 process.stdin.on("data", buffer => {
   const input = buffer.toString().trim()
@@ -11,7 +11,7 @@ process.stdin.on("data", buffer => {
   log(`> ${input}`)
 
   if (command === "say") {
-    client.sendEvent(CHAT_EVENT, args.join(" "))
+    sendEvent(CHAT_EVENT, args.join(" "))
   } else {
     log(chalk.gray("Invalid command."))
   }

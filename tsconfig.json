@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "declaration": true,
+    "outDir": "./dist",
+    "strict": true
+  },
+  "include": [
+    "client/index.ts",
+    "server/index.ts",
+  ],
+  "exclude": [
+    "node_modules",
+  ],
+}

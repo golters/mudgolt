@@ -1,3 +1,3 @@
-import "./network/index.js"
+import "./network"
 
 console.log("Server started")
