@@ -1,5 +1,5 @@
 {
-  "name": "golt-mud",
+  "name": "mudgolt",
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/golters/golt-mud.git"
+    "url": "git+https://github.com/golters/mudgolt.git"
   },
   "author": "Andres Sweeney-Rios",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/golters/golt-mud/issues"
+    "url": "https://github.com/golters/mudgolt/issues"
   },
-  "homepage": "https://github.com/golters/golt-mud#readme",
+  "homepage": "https://github.com/golters/mudgolt#readme",
   "devDependencies": {
     "@types/ws": "^7.4.1",
     "nodemon": "^2.0.7"
