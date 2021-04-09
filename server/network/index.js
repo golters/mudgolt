@@ -10,7 +10,7 @@ export const server = new WebSocket.Server({
 server.on('connection', (socket, request) => {
   console.log('Socket connected to server')
 
-  const publicKey = Buffer.from(request.headers["public-key"], "base64").toString("utf-8")
+  socket.publicKey = Buffer.from(request.headers["public-key"], "base64").toString("utf-8")
 
   socket.sendEvent = (code, payload) => {
     socket.send(Buffer.concat([
@@ -30,12 +30,16 @@ server.on('connection', (socket, request) => {
 
     console.log(`Received event ${code}`)
 
-    if (!verify.verify(publicKey, signature)) {
+    if (!verify.verify(socket.publicKey, signature)) {
       socket.sendEvent(ERROR_EVENT, "Invalid signature")
 
       return
     }
 
     emitter.emit(code, socket, payload)
+  })
+
+  socket.on("close", (socket) => {
+    console.log("Socket disconnected from server")
   })
 })
