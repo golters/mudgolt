@@ -1,0 +1,28 @@
+#terminal {
+  display: grid;
+  grid-template-rows: auto;
+}
+
+#terminal * {
+  display: inline-block;
+  max-width: 100%;
+  white-space: pre-wrap;
+}
+
+#terminal-input-container {
+  display: flex;
+  overflow-x: hidden;
+}
+
+#terminal-input-container div[contenteditable] {
+  flex-grow: 1;
+  outline: none;
+}
+
+.error-message {
+  color: rgba(255, 0, 0, 0.8);
+}
+
+.chat-message {
+  color: rgba(255, 255, 255, 0.6);
+}

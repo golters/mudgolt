@@ -1,11 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Anonymous+Pro:wght@400;700&display=swap');
+
 *, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Anonymous Pro', monospace;
+  font-weight: 400;
+  scrollbar-width: thin;
+  scrollbar-color: white black;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: white;
+}
+
+*::-webkit-scrollbar {
+  background-color: transparent;
+  width: 7px;
 }
 
 :root {
   background-color: black;
-  color: white;
-  padding: 0.5em;
+  color: rgb(240, 240, 240);
+  padding: 1em;
+  font-size: 0.95em;
 }

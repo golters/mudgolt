@@ -1,17 +1,16 @@
-import { log } from "./logs"
 import { sendEvent } from "./network"
-import { CHAT_EVENT } from "../../events"
+import { CHAT_EVENT, INPUT_EVENT, LOG_EVENT } from "../../events"
 
-// process.stdin.on("data", buffer => {
-//   const input = buffer.toString().trim()
+import Emitter from "events"
+import { ErrorMessage } from "./components/terminal"
 
-//   const [command, ...args] = input.split(" ")
+export const commandEmitter = new Emitter()
 
-//   log(`> ${input}`)
+commandEmitter.on(INPUT_EVENT, (input) => {
+  const [command, ...args] = input.split(" ")
 
-//   if (command === "say") {
-//     sendEvent(CHAT_EVENT, args.join(" "))
-//   } else {
-//     log(chalk.redBright(`Unknown command "${command}"`))
-//   }
-// })
+  if (false) {
+  } else {
+    sendEvent(CHAT_EVENT, input)
+  }
+})

@@ -1,9 +1,10 @@
 import { emitter, EventHandler } from "./emitter"
-import { log } from "../../logs"
-import { CHAT_EVENT } from "../../../../events"
+import { CHAT_EVENT, LOG_EVENT } from "../../../../events"
+import { commandEmitter } from "../../commands"
+import { ChatMessage } from "../../components/terminal"
 
 const handler: EventHandler = (socket, payload) => {
-  log(payload.toString("utf8"))
+  commandEmitter.emit(LOG_EVENT, ChatMessage(payload))
 }
 
 emitter.on(CHAT_EVENT, handler)

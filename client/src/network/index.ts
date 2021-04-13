@@ -1,5 +1,4 @@
 import { emitter } from "./events"
-import { log } from "../logs"
 import { CHAT_EVENT } from "../../../events"
 
 export const client = new WebSocket(`ws://localhost:1234?public-key=${btoa(localStorage.publicKey)}`)
@@ -12,9 +11,7 @@ export const sendEvent = async (code: string, payload: any) => {
 }
 
 client.addEventListener('open', () => {
-  log("Connected to server")
-
-  sendEvent(CHAT_EVENT, "test")
+  console.log("Connected to server")
 })
 
 client.addEventListener('message', (event) => {
