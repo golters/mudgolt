@@ -1,0 +1,11 @@
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  background-color: black;
+  color: white;
+  padding: 0.5em;
+}
