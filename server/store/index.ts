@@ -39,7 +39,10 @@ export const saveStore = () => {
 }
 
 if (store.rooms.length === 0) {
-  createRoom("golt-hq", true)
+  createRoom("golt-hq", {
+    isProtected: true,
+    description: "The headquarters of the Friends of the Golt.",
+  })
 }
 
 saveStore()

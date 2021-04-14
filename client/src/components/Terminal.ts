@@ -4,31 +4,14 @@ import { store } from "../store"
 import "./Terminal.css"
 
 export const LogItem = (...children: (string | Node)[]) => {
-  const message = document.createElement("div")
-  message.className = "message"
+  const message = document.createElement("span")
 
   message.append(...children)
 
   return message
 }
 
-export const ErrorMessage = (innerText: string) => {
-  const container = document.createElement("span")
-  container.className = "error-message"
-  container.innerText = innerText
-
-  return container
-}
-
-export const ChatMessage = (innerText: string) => {
-  const container = document.createElement("span")
-  container.className = "chat-message"
-  container.innerText = innerText
-
-  return container
-}
-
-export const UserBadge = () => `${store.player.username} >`
+export const UserBadge = () => `>`
 
 export const Terminal = () => {
   let hasScrolled = false

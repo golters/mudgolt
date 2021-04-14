@@ -1,20 +1,25 @@
 import { Room } from "../../@types"
 import { saveStore, store } from "../store"
+import { BANNER_WIDTH, BANNER_HEIGHT } from "../../constants"
 
-export const createRoom = (name: string, isProtected: boolean) => {
+export const generateBanner = () => {
+  return new Array(BANNER_WIDTH * BANNER_HEIGHT).fill("-").join("")
+}
+
+export const createRoom = (name: string, props: Partial<Room> = {}) => {
   if (store.rooms.some(room => room.name === name)) {
     throw "Room name taken."
   }
 
-  const room: Room = {
+  const room: Room = Object.assign({
     id: store.rooms.length,
     name: name,
-    banner: "",
+    banner: generateBanner(),
     description: "",
     doors: [],
     keys: [],
-    isProtected,
-  }
+    isProtected: false,
+  }, props)
 
   store.rooms.push(room)
 

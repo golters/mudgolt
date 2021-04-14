@@ -2,6 +2,7 @@
   display: grid;
   grid-template-rows: auto;
   pointer-events: none;
+  line-height: 1.5;
 }
 
 #terminal * {
@@ -27,10 +28,14 @@
   user-select: initial;
 }
 
-.error-message {
-  color: rgba(255, 0, 0, 0.8);
-}
-
 .chat-message {
   color: rgba(255, 255, 255, 0.6);
+}
+
+#terminal img {
+  max-width: 50vmin;
+  max-height: 50vmin;
+  object-fit: contain;
+  object-position: left top;
+  margin-top: 0.5em;
 }

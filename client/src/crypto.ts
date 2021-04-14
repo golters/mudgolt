@@ -7,7 +7,7 @@ export const GENERATE_ALGORITHM: RsaHashedKeyGenParams = {
 
 export const IMPORT_ALGORITHM: RsaHashedImportParams = {
   name: "RSASSA-PKCS1-v1_5",
-  hash: GENERATE_ALGORITHM.hash,
+  hash: 'SHA-256',
 }
 
 export const ALGORITHM_IDENTIFIER: AlgorithmIdentifier = {

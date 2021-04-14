@@ -3,7 +3,7 @@ import { emitter } from './events'
 import querystring from "querystring"
 import { findOrCreatePlayer } from "../services/player"
 import { Player } from '../../@types'
-import { AUTH_EVENT, ERROR_EVENT, PLAYER_EVENT } from '../../events'
+import { AUTH_EVENT, ERROR_EVENT, PLAYER_EVENT, SERVER_LOG_EVENT } from '../../events'
 import { createVerify, createPublicKey } from "crypto"
 
 export const server = new WebSocket.Server({
@@ -11,9 +11,11 @@ export const server = new WebSocket.Server({
 })
 
 export const broadcast = (code: string, payload: any) => {
-  server.clients.forEach((socket) => {
+  online.forEach(({ socket }) => {
     sendEvent(socket, code, payload)
   })
+
+  console.log(`[${code}]`, payload)
 }
 
 export const sendEvent = (socket: WebSocket, code: string, payload: any) => {
@@ -22,6 +24,11 @@ export const sendEvent = (socket: WebSocket, code: string, payload: any) => {
     payload,
   }))
 }
+
+export const online: {
+  socket: WebSocket
+  player: Player
+}[] = []
 
 server.on('connection', (socket, request) => {
   console.log('Socket connected to server')
@@ -53,13 +60,20 @@ server.on('connection', (socket, request) => {
           player = findOrCreatePlayer(publicKey)
 
           sendEvent(socket, PLAYER_EVENT, player)
+
+          online.push({
+            socket,
+            player,
+          })
+
+          broadcast(SERVER_LOG_EVENT, `${player.username} is now online`)
         } else {
           sendEvent(socket, ERROR_EVENT, "Invalid signature")
         }
       }
   
       if (authenticated) {
-        emitter.emit(code as unknown as string, socket, payload)
+        emitter.emit(code as unknown as string, socket, payload, player)
       }
     } catch (error) {
       console.error(error)
@@ -68,7 +82,13 @@ server.on('connection', (socket, request) => {
 
   sendEvent(socket, AUTH_EVENT, challenge)
 
-  socket.on("close", (socket) => {
-    console.log("Socket disconnected from server")
+  socket.on("close", () => {
+    console.log('Socket disconnected from server')
+
+    if (!authenticated) return
+
+    online.splice(online.findIndex(({ player }) => player.publicKey === publicKey), 1)
+
+    broadcast(SERVER_LOG_EVENT, `${player.username} went offline`)
   })
 })

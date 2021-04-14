@@ -20,11 +20,14 @@
   "homepage": "https://github.com/golters/mudgolt#readme",
   "devDependencies": {
     "@types/jwk-to-pem": "^2.0.0",
+    "@types/marked": "^2.0.2",
     "@types/ws": "^7.4.1",
     "parcel": "^2.0.0-beta.2",
     "ts-node-dev": "^1.1.6"
   },
   "dependencies": {
+    "fast-diff": "^1.2.0",
+    "marked": "^2.0.3",
     "ts-node": "^9.1.1",
     "ws": "^7.4.4"
   }
