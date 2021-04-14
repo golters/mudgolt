@@ -1,65 +1,87 @@
 export const GENERATE_ALGORITHM: RsaHashedKeyGenParams = {
   name: "RSA-PSS",
   modulusLength: 512,
-  publicExponent: new Uint8Array([1, 0, 1]),
+  publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
   hash: 'SHA-256',
 }
 
 export const IMPORT_ALGORITHM: RsaHashedImportParams = {
-  name: GENERATE_ALGORITHM.name,
+  name: "RSASSA-PKCS1-v1_5",
   hash: GENERATE_ALGORITHM.hash,
 }
 
 export const ALGORITHM_IDENTIFIER: AlgorithmIdentifier = {
-  name: GENERATE_ALGORITHM.name,
+  name: "RSASSA-PKCS1-v1_5",
   // @ts-ignore
   saltLength: 4,
 }
 
-const USAGES: KeyUsage[] = ["sign", "verify"]
+export const ab2str = (buffer: ArrayBuffer): string => {
+  return String.fromCharCode.apply(null, new Uint8Array(buffer))
+}
 
-const EXTRACTABLE = true
+export const str2ab = (string: string): ArrayBuffer => {
+  const buf = new ArrayBuffer(string.length)
+  const bufView = new Uint8Array(buf)
 
-const FORMAT: "raw" | "pkcs8" | "spki" | "jwk" = "jwk"
+  for (let i = 0, strLen = string.length; i < strLen; i++) {
+    bufView[i] = string.charCodeAt(i)
+  }
+  
+  return buf
+}
 
 export let keys: CryptoKeyPair
 
 export const generateRSAKeypair = (): Promise<CryptoKeyPair> => {
   return crypto.subtle.generateKey(
     GENERATE_ALGORITHM,
-    EXTRACTABLE,
-    USAGES,
+    true,
+    ["sign", "verify"],
   )
 }
 
-export const importRSAKey = async (json: string): Promise<CryptoKey> => {
-  const jwk: JsonWebKey = JSON.parse(String(json))
+export const importRSAKey = async (
+  base64: string, 
+  format: "pkcs8" | "spki",
+  usages: KeyUsage[],
+): Promise<CryptoKey> => {
+  const keyBuffer = str2ab(atob(base64))
 
   return await crypto.subtle.importKey(
-    FORMAT, 
-    jwk, 
+    format, 
+    keyBuffer, 
     IMPORT_ALGORITHM, 
-    EXTRACTABLE, 
-    jwk.key_ops as KeyUsage[],
+    true, 
+    usages,
   )
 }
 
-export const exportRSAKey = async (key: CryptoKey): Promise<string> => {
-  const jwk = await crypto.subtle.exportKey(FORMAT, key)
+export const exportRSAKey = async (
+  key: CryptoKey, 
+  format:  "pkcs8" | "spki",
+): Promise<string> => {
+  const keyBuffer = await crypto.subtle.exportKey(format, key)
 
-  return JSON.stringify(jwk)
+  const base64 = btoa(ab2str(keyBuffer))
+
+  return base64
 }
 
-export const cryptoTask = (async () => {
-  if (!localStorage.privateKey || !localStorage.publicKey) {
-    keys = await generateRSAKeypair()
-
-    localStorage.privateKey = await exportRSAKey(keys.privateKey)
-    localStorage.publicKey = await exportRSAKey(keys.publicKey)
-  } else {
-    keys = {
-      privateKey: await importRSAKey(localStorage.privateKey),
-      publicKey: await importRSAKey(localStorage.publicKey)
+export const cryptoTask = async () => {
+  try {
+    if (!localStorage.privateKey || !localStorage.publicKey || true) {
+      const generatedKeys = await generateRSAKeypair()
+  
+      localStorage.privateKey = await exportRSAKey(generatedKeys.privateKey, "pkcs8")
+      localStorage.publicKey = await exportRSAKey(generatedKeys.publicKey, "spki")
     }
+  
+    keys = {
+      privateKey: await importRSAKey(localStorage.privateKey, "pkcs8", ["sign"]),
+      publicKey: await importRSAKey(localStorage.publicKey, "spki", ["verify"])
+    }
+  } catch (error) {
+    console.error(error)
   }
-})().catch(console.trace)
+}

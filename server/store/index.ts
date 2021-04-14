@@ -18,9 +18,13 @@ const defaultStore: Store = {
   rooms: [],
 }
 
-export const store: Store = fs.existsSync(storeFile) 
-  ? JSON.parse(fs.readFileSync(storeFile, 'utf8'))
-  : defaultStore
+export const store: Store = Object.assign(
+  defaultStore,
+
+  fs.existsSync(storeFile) 
+    ? JSON.parse(fs.readFileSync(storeFile, 'utf8'))
+    : defaultStore
+)
 
 /**
  * Save storage to JSON file. Use this after every modification.
@@ -30,10 +34,12 @@ export const saveStore = () => {
     storeFile,
     JSON.stringify(store),
     'utf8', 
-    error => console.error(error)
+    error => error && console.error(error)
   )
 }
 
 if (store.rooms.length === 0) {
   createRoom("golt-hq", true)
 }
+
+saveStore()

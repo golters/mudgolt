@@ -4,6 +4,7 @@ import { cryptoTask } from "./crypto"
 import { Terminal } from "./components/Terminal"
 import { commandEmitter } from "./commands"
 import { LOG_EVENT } from "../../events"
+import { networkTask } from './network'
 
 const welcome = `
 ----- Welcome to MUDGOLT -----
@@ -12,12 +13,15 @@ const welcome = `
 ------------------------------
 `
 
-cryptoTask.then(async () => {
-  await import('./network')
+const init = async () => {
+  await cryptoTask()
+  await networkTask()
   
   console.log("Client started")
 
   document.body.appendChild(Terminal())
 
   commandEmitter.emit(LOG_EVENT, welcome.trim() + '\n\n')
-})
+}
+
+init()

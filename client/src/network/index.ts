@@ -1,7 +1,9 @@
+import { Player } from "../../../@types"
+import { PLAYER_EVENT } from "../../../events"
+import { store } from "../store"
 import { emitter } from "./events"
-import { CHAT_EVENT } from "../../../events"
 
-export const client = new WebSocket(`ws://localhost:1234?public-key=${btoa(localStorage.publicKey)}`)
+export let client: WebSocket
 
 export const sendEvent = async (code: string, payload: any) => {
   client.send(JSON.stringify({
@@ -10,19 +12,27 @@ export const sendEvent = async (code: string, payload: any) => {
   }))
 }
 
-client.addEventListener('open', () => {
-  console.log("Connected to server")
-})
+export const networkTask = () => new Promise<void>((resolve) => {
+  client = new WebSocket(`ws://localhost:1234?public-key=${encodeURIComponent(localStorage.publicKey)}`)
 
-client.addEventListener('message', (event) => {
-  const { code, payload } = JSON.parse(event.data) as {
-    code: string
-    payload: any
-  }
+  client.addEventListener('open', () => {
+    console.log("Connected to server")
+  })
+  
+  client.addEventListener('message', (event) => {
+    const { code, payload } = JSON.parse(event.data) as {
+      code: string
+      payload: any
+    }
 
-  // log(`Received event ${code}`)
+    if (code === PLAYER_EVENT) {
+      const player: Player = payload
 
-  console.log({ code, payload })
+      store.player = player
 
-  emitter.emit(code, client, payload)
+      resolve()
+    }
+  
+    emitter.emit(code, client, payload)
+  })
 })

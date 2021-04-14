@@ -11,6 +11,7 @@ export const findOrCreatePlayer = (publicKey: string) => {
   hash.update(publicKey)
   
   const player: Player = {
+    id: store.players.length,
     publicKey,
     username: `1_${hash.digest('hex').slice(0, 6)}`,
     location: 0,

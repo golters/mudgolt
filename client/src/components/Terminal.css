@@ -1,6 +1,7 @@
 #terminal {
   display: grid;
   grid-template-rows: auto;
+  pointer-events: none;
 }
 
 #terminal * {
@@ -8,15 +9,22 @@
   max-width: 100%;
   white-space: pre-wrap;
   word-break: break-all;
+  pointer-events: all;
+  display: inline;
 }
 
 #terminal-input-container {
-  display: flex;
+  pointer-events: none;
+}
+
+#terminal-input-container * {
+  user-select: none;
 }
 
 #terminal-input-container div[contenteditable] {
-  flex-grow: 1;
   outline: none;
+  pointer-events: all;
+  user-select: initial;
 }
 
 .error-message {

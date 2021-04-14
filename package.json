@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev:server": "ts-node-dev server",
+    "dev:server": "ts-node-dev server --rs",
     "dev:client": "cd client && parcel serve ./public/index.html --port 5555"
   },
   "repository": {

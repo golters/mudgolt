@@ -1,5 +1,6 @@
 import { INPUT_EVENT, LOG_EVENT } from "../../../events"
 import { commandEmitter } from "../commands"
+import { store } from "../store"
 import "./Terminal.css"
 
 export const LogItem = (...children: (string | Node)[]) => {
@@ -27,6 +28,8 @@ export const ChatMessage = (innerText: string) => {
   return container
 }
 
+export const UserBadge = () => `${store.player.username} >`
+
 export const Terminal = () => {
   let hasScrolled = false
 
@@ -46,7 +49,7 @@ export const Terminal = () => {
   }
 
   const arrow = document.createElement("span")
-  arrow.innerText = "> "
+  arrow.innerText = UserBadge() + ' '
 
   const input = document.createElement("div")
   input.contentEditable = "true"
@@ -60,7 +63,7 @@ export const Terminal = () => {
     if (input.innerText.trim() === "") return
 
     container.insertBefore(
-      LogItem(`> ${input.innerText}`),
+      LogItem(UserBadge(), ` ${input.innerText}`),
       inputContainer,
     )
     
@@ -100,7 +103,7 @@ export const Terminal = () => {
   })
 
   window.addEventListener("click", event => {
-    if ((event.target as HTMLElement).nodeName === "HTML") {
+    if (["HTML", "BODY"].includes((event.target as HTMLElement).nodeName)) {
       input.focus()
     }
   })
