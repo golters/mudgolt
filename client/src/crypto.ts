@@ -70,7 +70,7 @@ export const exportRSAKey = async (
 
 export const cryptoTask = async () => {
   try {
-    if (!localStorage.privateKey || !localStorage.publicKey || true) {
+    if (!localStorage.privateKey || !localStorage.publicKey) {
       const generatedKeys = await generateRSAKeypair()
   
       localStorage.privateKey = await exportRSAKey(generatedKeys.privateKey, "pkcs8")
