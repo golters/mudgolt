@@ -1,5 +1,7 @@
 import WebSocket from 'ws'
 import { emitter } from './events'
+import querystring from "querystring"
+import { findOrCreatePlayer } from "../services/player"
 
 export const server = new WebSocket.Server({
   port: 1234
@@ -21,7 +23,8 @@ export const sendEvent = (socket: WebSocket, code: string, payload: any) => {
 server.on('connection', (socket, request) => {
   console.log('Socket connected to server')
 
-  // const base64PublicKey = querystring.parse(request.url!)['/?public-key'] as string
+  const base64PublicKey = querystring.parse(request.url!)['/?public-key'] as string
+  const player = findOrCreatePlayer(base64PublicKey)
 
   socket.on('message', (data: string) => {
     const { code, payload} = JSON.parse(data) as {

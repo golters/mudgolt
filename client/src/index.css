@@ -6,6 +6,7 @@
   box-sizing: border-box;
   font-family: 'Anonymous Pro', monospace;
   font-weight: 400;
+  overflow-x: hidden;
   scrollbar-width: thin;
   scrollbar-color: white black;
 }

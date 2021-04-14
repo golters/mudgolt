@@ -11,18 +11,18 @@ export const LogItem = (...children: (string | Node)[]) => {
   return message
 }
 
-export const ErrorMessage = (textContent: string) => {
+export const ErrorMessage = (innerText: string) => {
   const container = document.createElement("span")
   container.className = "error-message"
-  container.textContent = textContent
+  container.innerText = innerText
 
   return container
 }
 
-export const ChatMessage = (textContent: string) => {
+export const ChatMessage = (innerText: string) => {
   const container = document.createElement("span")
   container.className = "chat-message"
-  container.textContent = textContent
+  container.innerText = innerText
 
   return container
 }
@@ -46,28 +46,27 @@ export const Terminal = () => {
   }
 
   const arrow = document.createElement("span")
-  arrow.textContent = "> "
+  arrow.innerText = "> "
 
   const input = document.createElement("div")
   input.contentEditable = "true"
   input.spellcheck = false
-  input.focus()
 
   const inputContainer = LogItem(arrow, input)
   inputContainer.id = "terminal-input-container"
   container.appendChild(inputContainer)
 
   const submit = () => {
-    if (input.textContent.trim() === "") return
+    if (input.innerText.trim() === "") return
 
     container.insertBefore(
-      LogItem(`> ${input.textContent}`),
+      LogItem(`> ${input.innerText}`),
       inputContainer,
     )
     
-    commandEmitter.emit(INPUT_EVENT, input.textContent)
+    commandEmitter.emit(INPUT_EVENT, input.innerText)
 
-    input.textContent = ""
+    input.innerText = ""
 
     requestAnimationFrame(() => {
       scrollToBottom()
@@ -121,6 +120,10 @@ export const Terminal = () => {
 
   window.addEventListener('scroll', event => {
     hasScrolled = window.scrollY < document.body.scrollHeight - window.innerHeight
+  })
+
+  requestAnimationFrame(() => {
+    input.focus()
   })
 
   return container

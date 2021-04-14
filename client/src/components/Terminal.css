@@ -7,11 +7,11 @@
   display: inline-block;
   max-width: 100%;
   white-space: pre-wrap;
+  word-break: break-all;
 }
 
 #terminal-input-container {
   display: flex;
-  overflow-x: hidden;
 }
 
 #terminal-input-container div[contenteditable] {
