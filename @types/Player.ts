@@ -4,7 +4,7 @@ export interface Player {
   id: number
   publicKey: string
   username: string
-  location: number
+  room: number
   inventory: Item[]
   golts: number
 }

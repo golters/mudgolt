@@ -1,10 +1,10 @@
-import { emitter, EventHandler } from "./emitter"
+import { networkEmitter, NetworkEventHandler } from "./emitter"
 import { CHAT_EVENT, LOG_EVENT } from "../../../../events"
-import { commandEmitter } from "../../commands"
+import { commandEmitter } from "../../commands/emitter"
 import { Player } from "../../../../@types"
 import { Markdown } from "../../components/Markdown"
 
-const handler: EventHandler = (payload) => {
+const handler: NetworkEventHandler = (payload) => {
   const {
     player,
     message,
@@ -31,4 +31,4 @@ const handler: EventHandler = (payload) => {
   commandEmitter.emit(LOG_EVENT, messageContainer, ...embeds)
 }
 
-emitter.on(CHAT_EVENT, handler)
+networkEmitter.on(CHAT_EVENT, handler)

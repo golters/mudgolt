@@ -1,8 +1,8 @@
-import { emitter, EventHandler } from "./emitter"
+import { networkEmitter, NetworkEventHandler } from "./emitter"
 import { ERROR_EVENT } from "../../../../events"
 
-const handler: EventHandler = (message: string) => {
+const handler: NetworkEventHandler = (message: string) => {
   console.error('Error: ' + message)
 }
 
-emitter.on(ERROR_EVENT, handler)
+networkEmitter.on(ERROR_EVENT, handler)

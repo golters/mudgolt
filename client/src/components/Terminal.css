@@ -34,6 +34,10 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
+.error-message {
+  color: rgb(228, 34, 76);
+}
+
 #terminal img {
   max-width: 50vmin;
   max-height: 50vmin;

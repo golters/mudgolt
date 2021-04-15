@@ -1,5 +1,5 @@
 import WebSocket from 'ws'
-import { emitter } from './events'
+import { networkEmitter } from './events'
 import querystring from "querystring"
 import { findOrCreatePlayer, getPlayerRoom } from "../services/player"
 import { Player } from '../../@types'
@@ -16,6 +16,16 @@ export const broadcast = (code: string, payload: any) => {
   })
 
   console.log(`[${code}]`, payload)
+}
+
+export const broadcastToRoom =  (code: string, payload: any, room: number) => {
+  online.forEach(({ socket, player }) => {
+    if (player.room !== room) return
+
+    sendEvent(socket, code, payload)
+  })
+
+  console.log(`[${code}]`, `[ROOM: ${room}]`, payload)
 }
 
 export const sendEvent = (socket: WebSocket, code: string, payload: any) => {
@@ -74,7 +84,7 @@ server.on('connection', (socket, request) => {
       }
   
       if (authenticated) {
-        emitter.emit(code as unknown as string, socket, payload, player)
+        networkEmitter.emit(code as unknown as string, socket, payload, player)
       }
     } catch (error) {
       console.error(error)

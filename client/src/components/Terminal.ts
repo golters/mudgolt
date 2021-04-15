@@ -1,5 +1,5 @@
 import { INPUT_EVENT, LOG_EVENT } from "../../../events"
-import { commandEmitter } from "../commands"
+import { commandEmitter } from "../commands/emitter"
 import { store } from "../store"
 import "./Terminal.css"
 

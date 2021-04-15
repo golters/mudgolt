@@ -5,6 +5,7 @@ export const AUTH_EVENT = "AUTH"
 export const PLAYER_EVENT = "PLAYER"
 export const SERVER_LOG_EVENT = "SERVER_LOG"
 export const ROOM_UPDATE_EVENT = "ROOM_UPDATE"
+export const RANDOM_EVENT = "RANDOM"
 
 // command events
 export const LOG_EVENT = "LOG"

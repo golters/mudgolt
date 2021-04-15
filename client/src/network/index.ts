@@ -1,7 +1,7 @@
 import { Player } from "../../../@types"
 import { PLAYER_EVENT } from "../../../events"
 import { store } from "../store"
-import { emitter } from "./events"
+import { networkEmitter } from "./events"
 
 export let client: WebSocket
 
@@ -33,6 +33,6 @@ export const networkTask = () => new Promise<void>((resolve) => {
       resolve()
     }
   
-    emitter.emit(code, payload)
+    networkEmitter.emit(code, payload)
   })
 })

@@ -1,6 +1,6 @@
 import { Room } from "../../../@types"
 import { ROOM_UPDATE_EVENT } from "../../../events"
-import { emitter } from "../network/events"
+import { networkEmitter } from "../network/events"
 import { BANNER_WIDTH } from "../../../constants"
 import "./Header.css"
 
@@ -24,13 +24,10 @@ export const Header = () => {
 
   window.addEventListener('resize', resizeHeader)
 
-  emitter.on(ROOM_UPDATE_EVENT, (room: Room) => {
-    console.log(room)
-
+  networkEmitter.on(ROOM_UPDATE_EVENT, (room: Room) => {
     const bannerParts: Node[] = []
 
     for (let i = 0; i < room.banner.length / BANNER_WIDTH; i++) {
-      console.log(i * BANNER_WIDTH, BANNER_WIDTH, room.banner.substr(i * BANNER_WIDTH, BANNER_WIDTH))
       const partContainer = document.createElement("div")
       partContainer.innerText = room.banner.substr(i * BANNER_WIDTH, BANNER_WIDTH)
       bannerParts.push(partContainer)

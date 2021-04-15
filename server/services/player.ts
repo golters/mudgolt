@@ -14,7 +14,7 @@ export const findOrCreatePlayer = (publicKey: string) => {
     id: store.players.length,
     publicKey,
     username: `1_${hash.digest('hex').slice(0, 6)}`,
-    location: 0,
+    room: 0,
     inventory: [],
     golts: 500,
   }
@@ -27,5 +27,5 @@ export const findOrCreatePlayer = (publicKey: string) => {
 }
 
 export const getPlayerRoom = (player: Player) => {
-  return store.rooms[player.location]
+  return store.rooms[player.room]
 }

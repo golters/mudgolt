@@ -1,5 +1,5 @@
 import Emitter from "events"
 
-export type EventHandler = (payload: any) => void
+export type NetworkEventHandler = (payload: any) => void
 
-export const emitter = new Emitter()
+export const networkEmitter = new Emitter()
