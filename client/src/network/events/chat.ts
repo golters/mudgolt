@@ -4,7 +4,7 @@ import { commandEmitter } from "../../commands"
 import { Player } from "../../../../@types"
 import { Markdown } from "../../components/Markdown"
 
-const handler: EventHandler = (socket, payload) => {
+const handler: EventHandler = (payload) => {
   const {
     player,
     message,

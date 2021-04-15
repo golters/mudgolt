@@ -1,9 +1,9 @@
 import WebSocket from 'ws'
 import { emitter } from './events'
 import querystring from "querystring"
-import { findOrCreatePlayer } from "../services/player"
+import { findOrCreatePlayer, getPlayerRoom } from "../services/player"
 import { Player } from '../../@types'
-import { AUTH_EVENT, ERROR_EVENT, PLAYER_EVENT, SERVER_LOG_EVENT } from '../../events'
+import { AUTH_EVENT, ERROR_EVENT, PLAYER_EVENT, ROOM_UPDATE_EVENT, SERVER_LOG_EVENT } from '../../events'
 import { createVerify, createPublicKey } from "crypto"
 
 export const server = new WebSocket.Server({
@@ -60,6 +60,7 @@ server.on('connection', (socket, request) => {
           player = findOrCreatePlayer(publicKey)
 
           sendEvent(socket, PLAYER_EVENT, player)
+          sendEvent(socket, ROOM_UPDATE_EVENT, getPlayerRoom(player))
 
           online.push({
             socket,

@@ -33,6 +33,6 @@ export const networkTask = () => new Promise<void>((resolve) => {
       resolve()
     }
   
-    emitter.emit(code, client, payload)
+    emitter.emit(code, payload)
   })
 })

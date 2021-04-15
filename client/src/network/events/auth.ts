@@ -5,9 +5,7 @@ import { sendEvent } from ".."
 
 const encoder = new TextEncoder()
 
-const handler: EventHandler = async (socket, payload) => {
-  const challenge: string = payload
-
+const handler: EventHandler = async (challenge: string) => {
   const signature = btoa(ab2str(await crypto.subtle.sign(
     ALGORITHM_IDENTIFIER,
     keys.privateKey,

@@ -1,0 +1,22 @@
+#header {
+  border-bottom: 1px solid rgb(35, 32, 35);
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  grid-template-columns: 1fr auto 1fr;
+}
+
+#header * {
+  white-space: pre;
+  overflow: hidden;
+}
+
+#room-details {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#banner {
+  line-height: 1;
+}

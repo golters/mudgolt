@@ -16,11 +16,11 @@ export const UserBadge = () => `>`
 export const Terminal = () => {
   let hasScrolled = false
 
-  const container = document.createElement("div")
+  const container = document.createElement("main")
   container.id = "terminal"
 
   const scrollToBottom = () => {
-    window.scrollTo(0, document.body.scrollHeight)
+    container.scrollTo(0, container.scrollHeight)
   }
 
   const scrollToBottomIfActive = () => {
@@ -104,8 +104,10 @@ export const Terminal = () => {
     scrollToBottomIfActive()
   })
 
-  window.addEventListener('scroll', event => {
-    hasScrolled = window.scrollY < document.body.scrollHeight - window.innerHeight
+  container.addEventListener('scroll', event => {
+    const { height } = container.getBoundingClientRect()
+
+    hasScrolled = container.scrollTop + 10 < container.scrollHeight - height
   })
 
   requestAnimationFrame(() => {

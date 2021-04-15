@@ -3,7 +3,7 @@ import { saveStore, store } from "../store"
 import { BANNER_WIDTH, BANNER_HEIGHT } from "../../constants"
 
 export const generateBanner = () => {
-  return new Array(BANNER_WIDTH * BANNER_HEIGHT).fill("-").join("")
+  return new Array(BANNER_WIDTH * BANNER_HEIGHT).fill("∙").join("")
 }
 
 export const createRoom = (name: string, props: Partial<Room> = {}) => {

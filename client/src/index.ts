@@ -5,15 +5,19 @@ import { Terminal } from "./components/Terminal"
 import { commandEmitter } from "./commands"
 import { LOG_EVENT } from "../../events"
 import { networkTask } from './network'
+import { Header } from "./components/Header"
 
 const welcome = `
 ----- Welcome to MUDGOLT -----
-   never gonna give you up
-   never gonna let you down
+
+ leave your shoes at the door
+
 ------------------------------
 `
 
 const init = async () => {
+  document.body.appendChild(Header())
+
   await cryptoTask()
   await networkTask()
   
@@ -21,7 +25,7 @@ const init = async () => {
 
   document.body.appendChild(Terminal())
 
-  commandEmitter.emit(LOG_EVENT, welcome.trim() + '\n\n')
+  commandEmitter.emit(LOG_EVENT, welcome.trim() + '\n')
 }
 
 init()

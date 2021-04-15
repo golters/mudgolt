@@ -25,3 +25,7 @@ export const findOrCreatePlayer = (publicKey: string) => {
 
   return player
 }
+
+export const getPlayerRoom = (player: Player) => {
+  return store.rooms[player.location]
+}

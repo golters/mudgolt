@@ -23,10 +23,15 @@
 :root {
   background-color: black;
   color: rgb(240, 240, 240);
-  padding: 1em;
   font-size: 0.95em;
 }
 
 a {
   color: rgb(83, 143, 255);
+}
+
+body {
+  display: grid;
+  grid-template-rows: 20em 1fr;
+  max-height: 100vh;
 }

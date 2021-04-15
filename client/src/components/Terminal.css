@@ -1,8 +1,8 @@
 #terminal {
-  display: grid;
-  grid-template-rows: auto;
   pointer-events: none;
   line-height: 1.5;
+  overflow: auto;
+  padding: 1em;
 }
 
 #terminal * {
@@ -39,3 +39,20 @@
   object-position: left top;
   margin-top: 0.5em;
 }
+
+#terminal > * {
+  padding: 0.4em 0;
+  display: block;
+}
+
+#terminal > *:first-child {
+  padding-top: 0;
+} 
+
+#terminal > *:last-child {
+  padding-bottom: 0.75em;
+} 
+
+#terminal > *:not(:last-child) {
+  border-bottom: 1px solid rgb(35, 32, 35);
+} 
