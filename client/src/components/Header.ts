@@ -16,17 +16,31 @@ export const Header = () => {
   banner.id = "banner"
   container.appendChild(banner)
 
+  const resizeHeader = () => {
+    container.style.fontSize = `${window.innerWidth / 1920}em`
+  }
+
+  resizeHeader()
+
+  window.addEventListener('resize', resizeHeader)
+
   emitter.on(ROOM_UPDATE_EVENT, (room: Room) => {
     console.log(room)
 
-    const bannerParts: string[] = []
+    const bannerParts: Node[] = []
 
     for (let i = 0; i < room.banner.length / BANNER_WIDTH; i++) {
       console.log(i * BANNER_WIDTH, BANNER_WIDTH, room.banner.substr(i * BANNER_WIDTH, BANNER_WIDTH))
-      bannerParts.push(room.banner.substr(i * BANNER_WIDTH, BANNER_WIDTH))
+      const partContainer = document.createElement("div")
+      partContainer.innerText = room.banner.substr(i * BANNER_WIDTH, BANNER_WIDTH)
+      bannerParts.push(partContainer)
     }
 
-    banner.textContent = bannerParts.join("\n")
+    while (banner.firstChild) {
+      banner.removeChild(banner.lastChild);
+    }
+
+    banner.append(...bannerParts)
 
     details.textContent = `${room.name}\n\n${room.description}`
   })

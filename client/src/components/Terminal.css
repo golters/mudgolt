@@ -3,6 +3,7 @@
   line-height: 1.5;
   overflow: auto;
   padding: 1em;
+  overflow-x: hidden;
 }
 
 #terminal * {
@@ -12,6 +13,7 @@
   word-break: break-all;
   pointer-events: all;
   display: inline;
+  overflow-x: visible;
 }
 
 #terminal-input-container {
