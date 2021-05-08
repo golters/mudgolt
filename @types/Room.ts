@@ -1,4 +1,5 @@
 import { Door } from "./Door"
+import { Item } from "./Item"
 
 export interface Room {
   id: number
@@ -6,6 +7,6 @@ export interface Room {
   banner: string
   description: string
   doors: Door[]
-  keys: []
+  keys: Item[]
   isProtected: boolean
 }
