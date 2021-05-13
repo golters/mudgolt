@@ -1,11 +1,19 @@
-import { Player } from "../../../@types"
-import { PLAYER_EVENT } from "../../../events"
-import { store } from "../store"
-import { networkEmitter } from "./events"
+import {
+  Player, 
+} from "../../../@types"
+import {
+  PLAYER_EVENT, 
+} from "../../../events"
+import {
+  store, 
+} from "../store"
+import {
+  networkEmitter, 
+} from "./events"
 
 export let client: WebSocket
 
-export const sendEvent = async (code: string, payload: any) => {
+export const sendEvent = async (code: string, payload: unknown) => {
   client.send(JSON.stringify({
     code,
     payload,
@@ -22,11 +30,11 @@ export const networkTask = () => new Promise<void>((resolve) => {
   client.addEventListener('message', (event) => {
     const { code, payload } = JSON.parse(event.data) as {
       code: string
-      payload: any
+      payload: unknown
     }
 
     if (code === PLAYER_EVENT) {
-      const player: Player = payload
+      const player = payload as Player
 
       store.player = player
 

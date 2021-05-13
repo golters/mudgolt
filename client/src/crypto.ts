@@ -12,6 +12,7 @@ export const IMPORT_ALGORITHM: RsaHashedImportParams = {
 
 export const ALGORITHM_IDENTIFIER: AlgorithmIdentifier = {
   name: "RSASSA-PKCS1-v1_5",
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   saltLength: 4,
 }
@@ -79,7 +80,7 @@ export const cryptoTask = async () => {
   
     keys = {
       privateKey: await importRSAKey(localStorage.privateKey, "pkcs8", ["sign"]),
-      publicKey: await importRSAKey(localStorage.publicKey, "spki", ["verify"])
+      publicKey: await importRSAKey(localStorage.publicKey, "spki", ["verify"]),
     }
   } catch (error) {
     console.error(error)

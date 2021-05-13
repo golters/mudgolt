@@ -1,7 +1,15 @@
-import { Room } from "../../../@types"
-import { ROOM_UPDATE_EVENT } from "../../../events"
-import { networkEmitter } from "../network/events"
-import { BANNER_WIDTH } from "../../../constants"
+import {
+  Room, 
+} from "../../../@types"
+import {
+  ROOM_UPDATE_EVENT, 
+} from "../../../events"
+import {
+  networkEmitter, 
+} from "../network/events"
+import {
+  BANNER_WIDTH, 
+} from "../../../constants"
 import "./Header.css"
 
 export const Header = () => {

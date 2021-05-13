@@ -1,7 +1,15 @@
-import { networkEmitter, NetworkEventHandler } from "./emitter"
-import { LOG_EVENT, SERVER_LOG_EVENT } from "../../../../events"
-import { commandEmitter } from "../../commands/emitter"
-import { LogItem } from "../../components/terminal"
+import {
+  networkEmitter, NetworkEventHandler, 
+} from "./emitter"
+import {
+  LOG_EVENT, SERVER_LOG_EVENT, 
+} from "../../../../events"
+import {
+  commandEmitter, 
+} from "../../commands/emitter"
+import {
+  LogItem, 
+} from "../../components/terminal"
 
 const handler: NetworkEventHandler = (message: string) => {
   const log = LogItem(message)

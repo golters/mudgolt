@@ -1,11 +1,23 @@
 import "./index.css"
 
-import { cryptoTask } from "./crypto"
-import { Terminal } from "./components/Terminal"
-import { commandEmitter } from "./commands"
-import { LOG_EVENT } from "../../events"
-import { networkTask } from './network'
-import { Header } from "./components/Header"
+import {
+  cryptoTask, 
+} from "./crypto"
+import {
+  Terminal, 
+} from "./components/Terminal"
+import {
+  commandEmitter, 
+} from "./commands"
+import {
+  LOG_EVENT, 
+} from "../../events"
+import {
+  networkTask, 
+} from './network'
+import {
+  Header, 
+} from "./components/Header"
 
 const welcome = `
 ----- Welcome to MUDGOLT -----

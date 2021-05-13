@@ -1,7 +1,15 @@
-import { networkEmitter, NetworkEventHandler } from "./emitter"
-import { AUTH_EVENT } from "../../../../events"
-import { ab2str, ALGORITHM_IDENTIFIER, keys, str2ab } from "../../crypto"
-import { sendEvent } from ".."
+import {
+  networkEmitter, NetworkEventHandler, 
+} from "./emitter"
+import {
+  AUTH_EVENT, 
+} from "../../../../events"
+import {
+  ab2str, ALGORITHM_IDENTIFIER, keys,
+} from "../../crypto"
+import {
+  sendEvent, 
+} from ".."
 
 const encoder = new TextEncoder()
 

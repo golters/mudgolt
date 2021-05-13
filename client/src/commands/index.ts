@@ -1,6 +1,12 @@
-import { sendEvent } from "../network"
-import { CHAT_EVENT, INPUT_EVENT } from "../../../events"
-import { commandEmitter } from "./emitter"
+import {
+  sendEvent, 
+} from "../network"
+import {
+  CHAT_EVENT, INPUT_EVENT, 
+} from "../../../events"
+import {
+  commandEmitter, 
+} from "./emitter"
 import Roll from './roll';
 
 const commandModules = [
@@ -13,7 +19,10 @@ commandEmitter.on(INPUT_EVENT, (input) => {
   for (const module of commandModules) {
     if (module.command === command) {
 
-      module.callback({ args, input })
+      module.callback({
+        args,
+        input, 
+      })
 
       return
     }

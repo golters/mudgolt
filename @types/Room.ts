@@ -1,5 +1,9 @@
-import { Door } from "./Door"
-import { Item } from "./Item"
+import {
+  Door, 
+} from "./Door"
+import {
+  Item, 
+} from "./Item"
 
 export interface Room {
   id: number

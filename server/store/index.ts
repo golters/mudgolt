@@ -1,7 +1,11 @@
-import { Player, Room } from "../../@types"
+import {
+  Player, Room, 
+} from "../../@types"
 import fs from "fs"
 import path from "path"
-import { createRoom } from "../services/room"
+import {
+  createRoom, 
+} from "../services/room"
 
 const db = path.join(__dirname, '../../db')
 const storeFile = path.join(db, 'store.json') 
@@ -23,7 +27,7 @@ export const store: Store = Object.assign(
 
   fs.existsSync(storeFile) 
     ? JSON.parse(fs.readFileSync(storeFile, 'utf8'))
-    : defaultStore
+    : defaultStore,
 )
 
 /**
@@ -34,7 +38,7 @@ export const saveStore = () => {
     storeFile,
     JSON.stringify(store),
     'utf8', 
-    error => error && console.error(error)
+    error => error && console.error(error),
   )
 }
 

@@ -1,7 +1,15 @@
-import { networkEmitter, NetworkEventHandler } from "./emitter"
-import { broadcastToRoom } from ".."
-import { ROLL_EVENT, SERVER_LOG_EVENT } from "../../../events"
-import { Player } from "../../../@types";
+import {
+  networkEmitter, NetworkEventHandler, 
+} from "./emitter"
+import {
+  broadcastToRoom, 
+} from ".."
+import {
+  ROLL_EVENT, SERVER_LOG_EVENT, 
+} from "../../../events"
+import {
+  Player, 
+} from "../../../@types";
 
 export interface DiceProps{
   count: number
@@ -9,7 +17,7 @@ export interface DiceProps{
 }
 
 const rollDice = (dice: DiceProps) => {
-  let total: number = 0;
+  let total = 0;
 
   if (dice.count + dice.sides > 69000) return "That's like, a really big number, so the result is 0."
   

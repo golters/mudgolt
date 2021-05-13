@@ -1,8 +1,18 @@
-import { networkEmitter, NetworkEventHandler } from "./emitter"
-import { CHAT_EVENT, LOG_EVENT } from "../../../../events"
-import { commandEmitter } from "../../commands/emitter"
-import { Player } from "../../../../@types"
-import { Markdown } from "../../components/Markdown"
+import {
+  networkEmitter, NetworkEventHandler, 
+} from "./emitter"
+import {
+  CHAT_EVENT, LOG_EVENT, 
+} from "../../../../events"
+import {
+  commandEmitter, 
+} from "../../commands/emitter"
+import {
+  Player, 
+} from "../../../../@types"
+import {
+  Markdown, 
+} from "../../components/Markdown"
 
 const handler: NetworkEventHandler = (payload) => {
   const {

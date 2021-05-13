@@ -1,6 +1,9 @@
-import { INPUT_EVENT, LOG_EVENT } from "../../../events"
-import { commandEmitter } from "../commands/emitter"
-import { store } from "../store"
+import {
+  INPUT_EVENT, LOG_EVENT, 
+} from "../../../events"
+import {
+  commandEmitter, 
+} from "../commands/emitter"
 import "./Terminal.css"
 
 export const LogItem = (...children: (string | Node)[]) => {
@@ -69,15 +72,15 @@ export const Terminal = () => {
 
   input.addEventListener("keydown", event => {
     switch (event.key) {
-      case "Enter": {
-        if (!event.shiftKey) {
-          event.preventDefault()
+    case "Enter": {
+      if (!event.shiftKey) {
+        event.preventDefault()
 
-          submit()
-        }
-
-        break
+        submit()
       }
+
+      break
+    }
     }
   })
 
@@ -104,7 +107,7 @@ export const Terminal = () => {
     scrollToBottomIfActive()
   })
 
-  container.addEventListener('scroll', event => {
+  container.addEventListener('scroll', () => {
     const { height } = container.getBoundingClientRect()
 
     hasScrolled = container.scrollTop + 10 < container.scrollHeight - height

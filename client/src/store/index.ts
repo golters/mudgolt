@@ -1,4 +1,6 @@
-import { Player } from "../../../@types"
+import {
+  Player, 
+} from "../../../@types"
 
 export interface Store {
   player?: Player

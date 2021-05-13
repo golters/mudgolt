@@ -1,16 +1,26 @@
 import WebSocket from 'ws'
-import { networkEmitter } from './events'
+import {
+  networkEmitter, 
+} from './events'
 import querystring from "querystring"
-import { findOrCreatePlayer, getPlayerRoom } from "../services/player"
-import { Player } from '../../@types'
-import { AUTH_EVENT, ERROR_EVENT, PLAYER_EVENT, ROOM_UPDATE_EVENT, SERVER_LOG_EVENT } from '../../events'
-import { createVerify, createPublicKey } from "crypto"
+import {
+  findOrCreatePlayer, getPlayerRoom, 
+} from "../services/player"
+import {
+  Player, 
+} from '../../@types'
+import {
+  AUTH_EVENT, ERROR_EVENT, PLAYER_EVENT, ROOM_UPDATE_EVENT, SERVER_LOG_EVENT, 
+} from '../../events'
+import {
+  createVerify, createPublicKey, 
+} from "crypto"
 
 export const server = new WebSocket.Server({
-  port: 1234
+  port: 1234,
 })
 
-export const broadcast = (code: string, payload: any) => {
+export const broadcast = (code: string, payload: unknown) => {
   online.forEach(({ socket }) => {
     sendEvent(socket, code, payload)
   })
@@ -18,7 +28,7 @@ export const broadcast = (code: string, payload: any) => {
   console.log(`[${code}]`, payload)
 }
 
-export const broadcastToRoom =  (code: string, payload: any, room: number) => {
+export const broadcastToRoom =  (code: string, payload: unknown, room: number) => {
   online.forEach(({ socket, player }) => {
     if (player.room !== room) return
 
@@ -28,7 +38,7 @@ export const broadcastToRoom =  (code: string, payload: any, room: number) => {
   console.log(`[${code}]`, `[ROOM: ${room}]`, payload)
 }
 
-export const sendEvent = (socket: WebSocket, code: string, payload: any) => {
+export const sendEvent = (socket: WebSocket, code: string, payload: unknown) => {
   socket.send(JSON.stringify({
     code,
     payload,
@@ -52,7 +62,7 @@ server.on('connection', (socket, request) => {
     try {
       const { code, payload } = JSON.parse(data) as {
         code: string
-        payload: any
+        payload: unknown
       }
   
       if (code === AUTH_EVENT) {
@@ -60,7 +70,7 @@ server.on('connection', (socket, request) => {
         verify.update(challenge)
         verify.end()
   
-        const signature: string = payload
+        const signature = payload as string
   
         const pem = createPublicKey(`-----BEGIN PUBLIC KEY-----\n${publicKey}\n-----END PUBLIC KEY-----`)
   
