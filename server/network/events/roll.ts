@@ -10,6 +10,8 @@ export interface DiceProps{
 
 const rollDice = (dice: DiceProps) => {
   let total: number = 0;
+
+  if (dice.count + dice.sides > 69000) return "That's like, a really big number, so the result is 0."
   
   for (let i = 0; i < dice.count; i++){
     total += Math.floor(Math.random() * dice.sides) + 1;
