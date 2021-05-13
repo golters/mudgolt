@@ -1,3 +1,3 @@
 export * from "./emitter"
 export * from "./chat"
-export * from "./random"
+export * from "./roll"
