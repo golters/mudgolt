@@ -1,10 +1,10 @@
 import { sendEvent } from "../network"
 import { CHAT_EVENT, INPUT_EVENT } from "../../../events"
 import { commandEmitter } from "./emitter"
-import { Random } from "./random"
+import Roll from './roll';
 
 const commandModules = [
-  Random,
+  Roll
 ]
 
 commandEmitter.on(INPUT_EVENT, (input) => {
