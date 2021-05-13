@@ -5,9 +5,9 @@ import { commandEmitter, CommandModule } from "./emitter"
 
 export const diceRegex =/(\d+)d(\d+)/;
 
-export type DiceProps = {
-  count: number;
-  sides: number;
+export interface DiceProps{
+  count: number
+  sides: number
 }
 
 const defaultRoll: DiceProps = {
@@ -19,7 +19,11 @@ const parseDice = (value: string) => {
   const match = value.match(diceRegex);
   if (!match) return false;
   if (match.length < 3) return false;
-  return {count: parseInt(match[1]), sides: parseInt(match[2])};
+
+  return {
+    count: parseInt(match[1]),
+    sides: parseInt(match[2])
+  };
 }
 
 const parseNumber = (value: string) => {
@@ -30,7 +34,10 @@ const parseNumber = (value: string) => {
   if (result = parseDice(value)) return result;
 
   if (!isNaN(parseInt(value))){
-    return {count: 1, sides: parseInt(value)};
+    return {
+      count: 1,
+      sides: parseInt(value)
+    };
   }
   return false;
 }
@@ -55,6 +62,6 @@ const Roll: CommandModule =  {
 
     sendEvent(ROLL_EVENT, dice)
   }
-} 
+}
 
 export default Roll;

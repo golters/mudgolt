@@ -4,7 +4,7 @@ import { commandEmitter } from "./emitter"
 import Roll from './roll';
 
 const commandModules = [
-  Roll
+  Roll,
 ]
 
 commandEmitter.on(INPUT_EVENT, (input) => {
