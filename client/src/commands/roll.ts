@@ -1,19 +1,19 @@
 import {
-  LOG_EVENT, ROLL_EVENT, 
+  LOG_EVENT, ROLL_EVENT,
 } from "../../../events"
 import {
-  LogItem, 
+  LogItem,
 } from "../components/terminal"
 import {
-  sendEvent, 
+  sendEvent,
 } from "../network"
 import {
-  commandEmitter, CommandModule, 
+  commandEmitter, CommandModule,
 } from "./emitter"
 
-export const diceRegex =/(\d+)d(\d+)/;
+export const diceRegex = /(\d+)d(\d+)/;
 
-export interface DiceProps{
+export interface DiceProps {
   count: number
   sides: number
 }
@@ -36,32 +36,32 @@ const parseDice = (value: string) => {
 
 const parseNumber = (value: string) => {
   let result: DiceProps | boolean;
-  
+
   if (!value) return defaultRoll;
 
   if (result = parseDice(value)) return result;
 
-  if (!isNaN(parseInt(value))){
+  if (!isNaN(parseInt(value))) {
     return {
       count: 1,
       sides: parseInt(value),
     };
   }
-  
+
   return false;
 }
 
-
-const Roll: CommandModule =  {
+const Roll: CommandModule = {
   command: "roll",
 
-  callback ({ args }) {
+  callback({ args }) {
     let dice: DiceProps | boolean;
 
     try {
       dice = parseNumber(args[0]);
+      if (!dice) throw new Error("Hey that's not a number");
     } catch (error) {
-      const errorItem = LogItem(`Syntax: roll [int | [int]d[int]`)
+      const errorItem = LogItem(`Syntax: roll [int] or roll [int]d[int]`)
       errorItem.classList.toggle("error-message")
 
       commandEmitter.emit(LOG_EVENT, errorItem)
