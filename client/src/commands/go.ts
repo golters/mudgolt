@@ -17,7 +17,9 @@ export const Go: CommandModule = {
   command: "go",
 
   callback ({ args }) {
-    const [roomName] = args
+    let [roomName] = args
+
+    roomName = roomName.trim()
 
     if (!roomName) {
       const errorItem = LogItem(`Syntax: go [room name]`)

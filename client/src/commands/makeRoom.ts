@@ -15,7 +15,9 @@ export const MakeRoom: CommandModule = {
   command: "make room",
 
   callback ({ args }) {
-    const [name] = args
+    let [name] = args
+
+    name = name.trim()
 
     if (!name) {
       const errorItem = LogItem(`Syntax: make room [name]`)
