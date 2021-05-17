@@ -8,16 +8,19 @@ import {
   commandEmitter, 
 } from "./emitter"
 import Roll from './roll';
+import {
+  MakeRoom, 
+} from "./makeRoom"
 
 const commandModules = [
   Roll,
+  MakeRoom,
 ]
 
 commandEmitter.on(INPUT_EVENT, (input) => {
-  const [command, ...args] = input.split(" ")
-
   for (const module of commandModules) {
-    if (module.command === command) {
+    if (new RegExp(module.command, "i").test(input)) {
+      const args = input.replace(new RegExp(module.command + '\\s?', "i"), '').split(" ")
 
       module.callback({
         args,

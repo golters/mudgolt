@@ -15,7 +15,7 @@ export const generateBanner = () => {
 
 export const createRoom = (name: string, props: Partial<Room> = {}) => {
   if (store.rooms.some(room => room.name === name)) {
-    throw "Room name taken."
+    throw new Error("Room name taken.")
   }
 
   const room: Room = Object.assign({

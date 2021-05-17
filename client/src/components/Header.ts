@@ -35,6 +35,8 @@ export const Header = () => {
   networkEmitter.on(ROOM_UPDATE_EVENT, (room: Room) => {
     const bannerParts: Node[] = []
 
+    console.log(room)
+
     for (let i = 0; i < room.banner.length / BANNER_WIDTH; i++) {
       const partContainer = document.createElement("div")
       partContainer.innerText = room.banner.substr(i * BANNER_WIDTH, BANNER_WIDTH)

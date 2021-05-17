@@ -2,11 +2,20 @@ import {
   networkEmitter, NetworkEventHandler, 
 } from "./emitter"
 import {
-  ERROR_EVENT, 
+  ERROR_EVENT, LOG_EVENT, 
 } from "../../../../events"
+import {
+  LogItem, 
+} from "../../components/terminal"
+import {
+  commandEmitter, 
+} from "../../commands"
 
 const handler: NetworkEventHandler = (message: string) => {
-  console.error('Error: ' + message)
+  const errorItem = LogItem(`Error: ${message}`)
+  errorItem.classList.toggle("error-message")
+
+  commandEmitter.emit(LOG_EVENT, errorItem)
 }
 
 networkEmitter.on(ERROR_EVENT, handler)
