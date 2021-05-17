@@ -33,3 +33,23 @@ export const findOrCreatePlayer = (publicKey: string) => {
 export const getPlayerRoom = (player: Player) => {
   return store.rooms[player.room]
 }
+
+export const setPlayerRoom = (player: Player, roomName: string) => {
+  const roomIndex = store.rooms.findIndex(({ name }) => name === roomName)
+
+  if (roomIndex === -1) {
+    throw new Error(`Room doesn't exist`)
+  }
+
+  const dbPlayer = store.players.find(({ id }) => {
+    return player.id === id
+  })
+
+  if (dbPlayer) {
+    dbPlayer.room = roomIndex
+  } else {
+    throw new Error(`Player doesn't exist`)
+  }
+
+  saveStore()
+}

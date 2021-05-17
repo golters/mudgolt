@@ -7,6 +7,7 @@ export const SERVER_LOG_EVENT = "SERVER_LOG"
 export const ROOM_UPDATE_EVENT = "ROOM_UPDATE"
 export const ROLL_EVENT = "ROLL"
 export const MAKE_ROOM_EVENT = "MAKE_ROOM"
+export const GO_EVENT = "GO"
 
 // command events
 export const LOG_EVENT = "LOG"
