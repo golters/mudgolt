@@ -9,7 +9,7 @@ import {
 } from "../../commands/emitter"
 import {
   LogItem, 
-} from "../../components/terminal"
+} from "../../components/Terminal"
 
 const handler: NetworkEventHandler = (message: string) => {
   const log = LogItem(message)

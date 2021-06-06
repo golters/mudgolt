@@ -4,7 +4,7 @@ import {
 } from "../../../events"
 import {
   LogItem, 
-} from "../components/terminal"
+} from "../components/Terminal"
 import {
   sendEvent, 
 } from "../network"

@@ -6,7 +6,7 @@ import {
 } from "../../../../events"
 import {
   LogItem, 
-} from "../../components/terminal"
+} from "../../components/Terminal"
 import {
   commandEmitter, 
 } from "../../commands"
