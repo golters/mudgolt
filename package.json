@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "description": "",
   "scripts": {
-    "start:server": "ts-node server",
-    "dev:server": "ts-node-dev server --rs",
-    "dev:client": "cd client && parcel serve ./public/index.html --port 5555",
-    "build:client": "cd client && parcel build ./public/index.html",
+    "start:server": "cross-env NODE_ENV=production ts-node server",
+    "dev:server": "cross-env NODE_ENV=development ts-node-dev server --rs",
+    "dev:client": "cd client && cross-env NODE_ENV=development parcel serve ./public/index.html --port 5555",
+    "build:client": "cd client && cross-env NODE_ENV=production parcel build ./public/index.html",
     "lint": "eslint --fix --ext .js,.ts ."
   },
   "repository": {
@@ -26,6 +26,7 @@
     "@types/ws": "^7.4.1",
     "@typescript-eslint/eslint-plugin": "^4.23.0",
     "@typescript-eslint/parser": "^4.23.0",
+    "cross-env": "^7.0.3",
     "eslint": "^7.26.0",
     "parcel": "^2.0.0-beta.2",
     "ts-node-dev": "^1.1.6",

@@ -1,4 +1,4 @@
 import "./network"
 import "./store"
 
-console.log("Server started")
+console.log("Server ready")

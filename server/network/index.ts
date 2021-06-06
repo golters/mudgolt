@@ -16,8 +16,10 @@ import {
   createVerify, createPublicKey, 
 } from "crypto"
 
+const PORT = Number(process.env.PORT) || 1234
+
 export const server = new WebSocket.Server({
-  port: 1234,
+  port: PORT,
 })
 
 export const broadcast = (code: string, payload: unknown) => {
@@ -113,3 +115,5 @@ server.on('connection', (socket, request) => {
     broadcast(SERVER_LOG_EVENT, `${player.username} went offline`)
   })
 })
+
+console.log(`WebSocket server started on port ${PORT}`)

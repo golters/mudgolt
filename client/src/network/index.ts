@@ -20,8 +20,12 @@ export const sendEvent = async (code: string, payload: unknown) => {
   }))
 }
 
+const host = process.env.NODE_ENV === "development"
+  ? `${location.hostname}:${process.env.PORT || 1234}`
+  : location.host
+
 export const networkTask = () => new Promise<void>((resolve) => {
-  client = new WebSocket(`ws://localhost:1234?public-key=${encodeURIComponent(localStorage.publicKey)}`)
+  client = new WebSocket(`ws://${host}?public-key=${encodeURIComponent(localStorage.publicKey)}`)
 
   client.addEventListener('open', () => {
     console.log("Connected to server")
