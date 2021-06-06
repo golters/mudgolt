@@ -3,9 +3,6 @@ import {
 } from "../../@types"
 import fs from "fs"
 import path from "path"
-import {
-  createRoom, 
-} from "../services/room"
 
 const db = path.join(__dirname, '../../db')
 const storeFile = path.join(db, 'store.json') 
@@ -42,11 +39,13 @@ export const saveStore = () => {
   )
 }
 
-if (store.rooms.length === 0) {
-  createRoom("golt-hq", {
-    isProtected: true,
-    description: "The headquarters of the Friends of the Golt.",
-  })
-}
+import('../services/room').then(({ createRoom }) => {
+  if (store.rooms.length === 0) {
+    createRoom("golt-hq", {
+      isProtected: true,
+      description: "The headquarters of the Friends of the Golt.",
+    })
+  }
+}).catch(console.error)
 
 saveStore()
