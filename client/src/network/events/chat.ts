@@ -23,8 +23,13 @@ const handler: NetworkEventHandler = (payload) => {
     message: string
   }
 
-  const messageContainer = Markdown(`[${player.username}] ${message}`)
+  const messageContainer = Markdown(`${message}`)
   messageContainer.classList.toggle("chat-message")
+
+  const username = document.createElement("span")
+  username.classList.toggle("username")
+  username.innerText = `[${player.username}] `
+  messageContainer.prepend(username)
 
   const embeds: Node[] = []
 

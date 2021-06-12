@@ -34,6 +34,10 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
+.chat-message .username {
+  color: rgb(196, 92, 236);
+}
+
 .error-message {
   color: rgb(228, 34, 76);
 }

@@ -15,7 +15,7 @@ module.exports = {
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "error" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
-    indent: ["error", 2],
+    indent: ["error", 2, { SwitchCase: 1 }],
     "array-bracket-newline": ["off", "consistent"],
     "array-element-newline": [
       "off",
@@ -64,7 +64,7 @@ module.exports = {
           multiline: true,
           consistent: true,
         },
-        ImportDeclaration: "always",
+        ImportDeclaration: "off",
         ExportDeclaration: {
           minProperties: 2,
           multiline: true,

@@ -36,7 +36,14 @@ export const logSimple = (message: string) => {
   commandEmitter.emit(LOG_EVENT, errorItem)
 }
 
-export const UserBadge = () => ">"
+/**
+ * WARNING: this isn't sanitized
+ */
+export const logSimpleNoMarkdown = (message: string) => {
+  const errorItem = LogItem(message)
+
+  commandEmitter.emit(LOG_EVENT, errorItem)
+}
 
 export const Terminal = () => {
   let hasScrolled = false
@@ -57,7 +64,7 @@ export const Terminal = () => {
   }
 
   const arrow = document.createElement("span")
-  arrow.innerText = UserBadge() + " "
+  arrow.innerText = "> "
 
   const input = document.createElement("div")
   input.contentEditable = "true"
@@ -70,11 +77,6 @@ export const Terminal = () => {
   const submit = () => {
     if (input.innerText.trim() === "") return
 
-    container.insertBefore(
-      LogItem(UserBadge(), ` ${input.innerText}`),
-      inputContainer,
-    )
-    
     commandEmitter.emit(INPUT_EVENT, input.innerText)
 
     input.innerText = ""
@@ -94,15 +96,15 @@ export const Terminal = () => {
 
   input.addEventListener("keydown", event => {
     switch (event.key) {
-    case "Enter": {
-      if (!event.shiftKey) {
-        event.preventDefault()
+      case "Enter": {
+        if (!event.shiftKey) {
+          event.preventDefault()
 
-        submit()
+          submit()
+        }
+
+        break
       }
-
-      break
-    }
     }
   })
 

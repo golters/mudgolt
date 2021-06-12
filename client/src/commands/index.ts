@@ -2,7 +2,7 @@ import {
   sendEvent,
 } from "../network"
 import {
-  CHAT_EVENT, INPUT_EVENT, LOG_EVENT,
+  CHAT_EVENT, INPUT_EVENT,
 } from "../../../events"
 import {
   commandEmitter,
@@ -18,7 +18,8 @@ import {
   MESSAGE_MAX_LENGTH,
 } from "../../../constants"
 import {
-  LogItem,
+  logError,
+  logSimpleNoMarkdown,
 } from "../components/Terminal"
 import {
   Help,
@@ -33,15 +34,22 @@ export const commandModules = [
   Nick,
 ]
 
-function findCommand(nameOrAlias: string) {
-  return commandModules.find(
-    (cmd) =>
-      cmd.command.toLowerCase() === nameOrAlias.toLowerCase() ||
-      cmd.aliases?.map((alias) => alias.toLowerCase()).includes(nameOrAlias),
-  )
+const findCommand = (nameOrAlias: string) => {
+  return commandModules.find(({ command, aliases }) => {
+    if (!nameOrAlias.startsWith("/")) {
+      return false
+    }
+
+    const unprefixedNameOrAlias = nameOrAlias.replace("/", "")
+
+    return (
+      command.toLowerCase() === unprefixedNameOrAlias.toLowerCase() ||
+      aliases?.map((alias) => alias.toLowerCase()).includes(unprefixedNameOrAlias)
+    )
+  })
 }
 
-function parseArgs(command: string, input: string) {
+const parseArgs = (command: string, input: string) => {
   return input
     .replace(command, "")
     .trim()
@@ -52,12 +60,9 @@ function parseArgs(command: string, input: string) {
 
 commandEmitter.on(INPUT_EVENT, (input) => {
   if (input.length > MESSAGE_MAX_LENGTH) {
-    const errorItem = LogItem(
-      `Message must not be longer than ${MESSAGE_MAX_LENGTH} characters.`,
-    )
-    errorItem.classList.toggle("error-message")
+    logError(`Message must not be longer than ${MESSAGE_MAX_LENGTH} characters.`)
 
-    commandEmitter.emit(LOG_EVENT, errorItem)
+    return
   }
 
   const commandName = input.trim().split(" ")[0]
@@ -65,10 +70,14 @@ commandEmitter.on(INPUT_EVENT, (input) => {
   const args = parseArgs(commandName, input)
 
   if (command) {
-    return command.callback({
+    logSimpleNoMarkdown(`> ${input}`)
+
+    command.callback({
       args,
       input,
     })
+
+    return
   }
 
   sendEvent(CHAT_EVENT, input)
