@@ -65,7 +65,7 @@ commandEmitter.on(INPUT_EVENT, (input) => {
   const args = parseArgs(commandName, input)
 
   if (command) {
-    command.callback({
+    return command.callback({
       args,
       input,
     })
