@@ -4,6 +4,9 @@ import {
 import {
   commandEmitter, 
 } from "../commands/emitter"
+import {
+  Markdown, 
+} from "./Markdown"
 import "./Terminal.css"
 
 export const LogItem = (...children: (string | Node)[]) => {
@@ -12,6 +15,19 @@ export const LogItem = (...children: (string | Node)[]) => {
   message.append(...children)
 
   return message
+}
+
+export const logError = (message: string) => {
+  const errorItem = LogItem(Markdown(message))
+  errorItem.classList.toggle("error-message")
+
+  commandEmitter.emit(LOG_EVENT, errorItem)
+}
+
+export const logSimple = (message: string) => {
+  const errorItem = LogItem(Markdown(message))
+
+  commandEmitter.emit(LOG_EVENT, errorItem)
 }
 
 export const UserBadge = () => `>`

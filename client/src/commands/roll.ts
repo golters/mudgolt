@@ -1,14 +1,14 @@
 import {
-  LOG_EVENT, ROLL_EVENT,
+  ROLL_EVENT,
 } from "../../../events"
 import {
-  LogItem,
+  logError,
 } from "../components/Terminal"
 import {
   sendEvent,
 } from "../network"
 import {
-  commandEmitter, CommandModule,
+  CommandModule,
 } from "./emitter"
 
 export const diceRegex = /(\d+)d(\d+)/;
@@ -53,18 +53,17 @@ const parseNumber = (value: string) => {
 
 const Roll: CommandModule = {
   command: "roll",
+  syntax: `roll [int] or [int]d[int]`,
 
   callback({ args }) {
     let dice: DiceProps | boolean;
 
     try {
-      dice = parseNumber(args[0]);
-      if (!dice) throw new Error("Hey that's not a number");
-    } catch (error) {
-      const errorItem = LogItem(`Syntax: roll [int] or roll [int]d[int]`)
-      errorItem.classList.toggle("error-message")
+      dice = parseNumber(args[0])
 
-      commandEmitter.emit(LOG_EVENT, errorItem)
+      if (!dice) throw new Error("Hey that's not a number");
+    } catch {
+      logError(`Syntax: ${Roll.syntax}`)
 
       return
     }

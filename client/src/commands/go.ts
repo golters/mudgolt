@@ -1,20 +1,19 @@
 import {
   GO_EVENT,
-  LOG_EVENT,
 } from "../../../events"
 import {
-  LogItem, 
+  logError,
 } from "../components/Terminal"
 import {
   sendEvent, 
 } from "../network"
 import {
-  commandEmitter, 
   CommandModule, 
 } from "./emitter"
 
 export const Go: CommandModule = {
   command: "go",
+  syntax: `go [room name]`,
 
   callback ({ args }) {
     let [roomName] = args
@@ -22,10 +21,7 @@ export const Go: CommandModule = {
     roomName = roomName.trim()
 
     if (!roomName) {
-      const errorItem = LogItem(`Syntax: go [room name]`)
-      errorItem.classList.toggle("error-message")
-
-      commandEmitter.emit(LOG_EVENT, errorItem)
+      logError(`Syntax: ${Go.syntax}`)
 
       return
     }

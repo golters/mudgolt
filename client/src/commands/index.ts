@@ -22,11 +22,15 @@ import {
 import {
   LogItem,
 } from "../components/Terminal"
+import {
+  Help, 
+} from "./help"
 
-const commandModules = [
+export const commandModules = [
   Roll,
   MakeRoom,
   Go,
+  Help,
 ]
 
 commandEmitter.on(INPUT_EVENT, (input) => {
@@ -38,7 +42,7 @@ commandEmitter.on(INPUT_EVENT, (input) => {
   }
 
   for (const module of commandModules) {
-    const commandRegex = new RegExp(`^${module.command}\\b\\s?`, "i")
+    const commandRegex = new RegExp(`^${module.command}(\\b\\s?|$)`, "i")
 
     if (commandRegex.test(input)) {
       const args = input.replace(commandRegex, '').split(" ")

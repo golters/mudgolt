@@ -4,7 +4,7 @@ export const commandEmitter = new Emitter()
 
 export interface CommandModule {
   command: string
-
+  syntax: string
   aliases?: string[]
 
   callback (props: {
