@@ -110,17 +110,17 @@ export const Terminal = () => {
     scrollToBottom()
   })
 
-  window.addEventListener("click", event => {
+  const onApplicationFocused = (event: MouseEvent | TouchEvent) => {
     if (
-      (
-        ["HTML", "BODY"].includes((event.target as HTMLElement).nodeName) || 
-        (event.target as HTMLElement).id === container.id
-      ) && 
-      event.clientX < window.innerWidth - 15
+      ["HTML", "BODY"].includes((event.target as HTMLElement).nodeName) || 
+      (event.target as HTMLElement).id === container.id
     ) {
       input.focus()
     }
-  })
+  }
+
+  window.addEventListener("click", onApplicationFocused)
+  window.addEventListener("touchstart", onApplicationFocused)
 
   commandEmitter.on(LOG_EVENT, (...log: (string | Node)[]) => {
     container.insertBefore(
