@@ -13,7 +13,7 @@ import {
 
 const Username: CommandModule = {
   command: "username",
-  syntax: "username [nickname]",
+  syntax: "username [new username]",
   aliases: ["name", "nick", "nickname"],
 
   callback({ args }) {
