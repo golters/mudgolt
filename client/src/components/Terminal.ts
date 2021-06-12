@@ -111,7 +111,13 @@ export const Terminal = () => {
   })
 
   window.addEventListener("click", event => {
-    if (["HTML", "BODY"].includes((event.target as HTMLElement).nodeName)) {
+    if (
+      (
+        ["HTML", "BODY"].includes((event.target as HTMLElement).nodeName) || 
+        (event.target as HTMLElement).id === container.id
+      ) && 
+      event.clientX < window.innerWidth - 15
+    ) {
       input.focus()
     }
   })
