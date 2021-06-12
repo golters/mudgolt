@@ -111,13 +111,11 @@ export const Terminal = () => {
   })
 
   const onApplicationFocused = (event: MouseEvent | TouchEvent) => {
-    window.addEventListener("click", event => {
-      if (
-        ["HTML", "BODY"].includes((event.target as HTMLElement).nodeName) || 
-        (event.target as HTMLElement).id === container.id
-      ) {
-        input.focus()
-      }
+    if (
+      ["HTML", "BODY"].includes((event.target as HTMLElement).nodeName) || 
+      (event.target as HTMLElement).id === container.id
+    ) {
+      input.focus()
     }
   }
 
