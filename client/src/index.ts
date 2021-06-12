@@ -4,28 +4,15 @@ import {
   cryptoTask, 
 } from "./crypto"
 import {
+  logSimple,
   Terminal, 
 } from "./components/Terminal"
-import {
-  commandEmitter, 
-} from "./commands"
-import {
-  LOG_EVENT, 
-} from "../../events"
 import {
   networkTask, 
 } from './network'
 import {
   Header, 
 } from "./components/Header"
-
-const welcome = `
------ Welcome to MUDGOLT -----
-
- leave your shoes at the door
-
-------------------------------
-`
 
 const init = async () => {
   document.body.appendChild(Header())
@@ -37,7 +24,9 @@ const init = async () => {
 
   document.body.appendChild(Terminal())
 
-  commandEmitter.emit(LOG_EVENT, welcome.trim() + '\n')
+  logSimple('Welcome to MUDGOLT! <small>Leave your shoes at the door.</small>')
+  logSimple('Want to contribute? https://github.com/golters/mudgolt')
+  logSimple('Type <code>help</code> for a list of commands.')
 }
 
 init()

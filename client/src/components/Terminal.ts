@@ -17,15 +17,21 @@ export const LogItem = (...children: (string | Node)[]) => {
   return message
 }
 
+/**
+ * WARNING: this isn't sanitized
+ */
 export const logError = (message: string) => {
-  const errorItem = LogItem(Markdown(message))
+  const errorItem = LogItem(Markdown(message, { sanitize: false }))
   errorItem.classList.toggle("error-message")
 
   commandEmitter.emit(LOG_EVENT, errorItem)
 }
 
+/**
+ * WARNING: this isn't sanitized
+ */
 export const logSimple = (message: string) => {
-  const errorItem = LogItem(Markdown(message))
+  const errorItem = LogItem(Markdown(message, { sanitize: false }))
 
   commandEmitter.emit(LOG_EVENT, errorItem)
 }

@@ -12,9 +12,14 @@ renderer.link = (href, title, text) => {
   return `<a target="_blank" href="${href}">${text}</a>`
 }
 
-export const Markdown = (string: string) => {
+export const Markdown = (string: string, options: marked.MarkedOptions = {}) => {
   const container = document.createElement("span")
-  container.innerHTML = marked(string, { renderer })
+  
+  container.innerHTML = marked(string, {
+    renderer, 
+    ...options,
+  })
+
   container.classList.toggle("markdown")
 
   return container
