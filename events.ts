@@ -8,6 +8,7 @@ export const ROOM_UPDATE_EVENT = "ROOM_UPDATE"
 export const ROLL_EVENT = "ROLL"
 export const MAKE_ROOM_EVENT = "MAKE_ROOM"
 export const GO_EVENT = "GO"
+export const PING_EVENT = "PING"
 
 // command events
 export const LOG_EVENT = "LOG"

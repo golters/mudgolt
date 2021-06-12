@@ -66,6 +66,10 @@ server.on('connection', (socket, request) => {
         code: string
         payload: unknown
       }
+
+      if (process.env.NODE_ENV === "development") {
+        console.log(`[${code}]`, payload)
+      }
   
       if (code === AUTH_EVENT) {
         const verify = createVerify("SHA256")

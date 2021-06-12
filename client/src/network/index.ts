@@ -10,6 +10,9 @@ import {
 import {
   networkEmitter, 
 } from "./events"
+import {
+  PING_EVENT, 
+} from "../../../events"
 
 export let client: WebSocket
 
@@ -37,6 +40,10 @@ export const networkTask = () => new Promise<void>((resolve) => {
       payload: unknown
     }
 
+    if (process.env.NODE_ENV === "development") {
+      console.log(`[${code}]`, payload)
+    }
+
     if (code === PLAYER_EVENT) {
       const player = payload as Player
 
@@ -48,3 +55,7 @@ export const networkTask = () => new Promise<void>((resolve) => {
     networkEmitter.emit(code, payload)
   })
 })
+
+setInterval(() => {
+  sendEvent(PING_EVENT, null)
+}, 15 * 1000)
