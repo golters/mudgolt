@@ -25,7 +25,7 @@ const host = process.env.NODE_ENV === "development"
   : location.host
 
 export const networkTask = () => new Promise<void>((resolve) => {
-  client = new WebSocket(`${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${host}?public-key=${encodeURIComponent(localStorage.publicKey)}`)
+  client = new WebSocket(`${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${host}/ws?public-key=${encodeURIComponent(localStorage.publicKey)}`)
 
   client.addEventListener('open', () => {
     console.log("Connected to server")
