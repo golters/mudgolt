@@ -1,0 +1,26 @@
+name: GitHub Actions Demo
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ssh pipelines
+        uses: cross-the-world/ssh-pipeline@master
+        env:
+          WELCOME: "ssh pipeline"
+        with:
+          host: ${{ secrets.DEPLOY_SSH_HOST }}
+          user: ${{ secrets.DEPLOY_SSH_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          connect_timeout: 10s
+          script: |
+            cd /var/www/mudgolt
+            git pull origin main
+            npm run build:client
+            pm2 restart mudgolt
