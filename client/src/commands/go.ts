@@ -18,7 +18,7 @@ export const Go: CommandModule = {
   callback ({ args }) {
     let [roomName] = args
 
-    roomName = roomName.trim()
+    roomName = roomName?.trim()
 
     if (!roomName) {
       logError(`Syntax: ${Go.syntax}`)

@@ -18,7 +18,7 @@ export const MakeRoom: CommandModule = {
   callback ({ args }) {
     let [name] = args
 
-    name = name.trim()
+    name = name?.trim()
 
     if (!name) {
       logError(`Syntax: ${MakeRoom.syntax}`)
