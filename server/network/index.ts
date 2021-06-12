@@ -55,7 +55,7 @@ export const online: {
 server.on('connection', (socket, request) => {
   console.log('Socket connected to server')
 
-  const publicKey = decodeURIComponent(querystring.parse(request.url!)['/?public-key'] as string)
+  const publicKey = decodeURIComponent(querystring.parse(request.url!)['/ws?public-key'] as string)
   let player: Player
   let authenticated = false
   const challenge = String(Math.random())
