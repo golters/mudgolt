@@ -28,9 +28,13 @@ const handler: NetworkEventHandler = (payload) => {
 
   const embeds: Node[] = []
 
-  const matches = message.match(/\b(https?:\/\/\S*?\.(?:png|jpe?g|gif)(?:\?(?:(?:(?:[\w_-]+=[\w_-]+)(?:&[\w_-]+=[\w_-]+)*)|(?:[\w_-]+)))?)\b/)
+  const matches = message.matchAll(/\b(https?:\/\/\S*?\.(?:png|jpe?g|gif)(?:\?(?:(?:(?:[\w_-]+=[\w_-]+)(?:&[\w_-]+=[\w_-]+)*)|(?:[\w_-]+)))?)\b/g)
 
-  if (matches) matches.slice(1).forEach(url => {
+  if (matches) [...matches].forEach(match => {
+    const url = match[1]
+
+    console.log(url)
+
     const imageElement = document.createElement("img")
 
     imageElement.src = url
