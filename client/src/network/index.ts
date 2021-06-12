@@ -13,6 +13,12 @@ import {
 import {
   PING_EVENT, 
 } from "../../../events"
+import {
+  RECONNECT_DELAY,
+} from "../../../constants"
+import {
+  logError, logSimple, 
+} from "../components/Terminal"
 
 export let client: WebSocket
 
@@ -27,11 +33,17 @@ const host = process.env.NODE_ENV === "development"
   ? `${location.hostname}:${process.env.PORT || 1234}`
   : location.host
 
+let reconnectAttempts = 0
+
 export const networkTask = () => new Promise<void>((resolve) => {
   client = new WebSocket(`${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${host}/ws?public-key=${encodeURIComponent(localStorage.publicKey)}`)
 
+  reconnectAttempts++
+
   client.addEventListener('open', () => {
-    console.log("Connected to server")
+    logSimple("Connected to server")
+
+    reconnectAttempts = 0
   })
   
   client.addEventListener('message', (event) => {
@@ -40,9 +52,7 @@ export const networkTask = () => new Promise<void>((resolve) => {
       payload: unknown
     }
 
-    if (process.env.NODE_ENV === "development") {
-      console.log(`[${code}]`, payload)
-    }
+    console.log(`[${code}]`, payload)
 
     if (code === PLAYER_EVENT) {
       const player = payload as Player
@@ -53,6 +63,18 @@ export const networkTask = () => new Promise<void>((resolve) => {
     }
   
     networkEmitter.emit(code, payload)
+  })
+
+  client.addEventListener('close', () => {
+    logError("Disconnected from server. Reconnecting...")
+
+    if (reconnectAttempts === 0) {
+      networkTask().catch(console.error)
+    } else {
+      setTimeout(() => {
+        networkTask().catch(console.error)
+      }, RECONNECT_DELAY)
+    }
   })
 })
 
