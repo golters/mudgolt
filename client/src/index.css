@@ -31,6 +31,6 @@ a {
 
 body {
   display: grid;
-  grid-template-rows: 20em 1fr;
+  grid-template-rows: auto 1fr;
   max-height: 100vh;
 }
