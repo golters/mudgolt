@@ -1,7 +1,7 @@
-import WebSocket from 'ws'
+import WebSocket from "ws"
 import {
   networkEmitter, 
-} from './events'
+} from "./events"
 import querystring from "querystring"
 import {
   getRoom,
@@ -11,10 +11,10 @@ import {
 } from "../services/player"
 import {
   Player, 
-} from '../../@types'
+} from "../../@types"
 import {
   AUTH_EVENT, ERROR_EVENT, PLAYER_EVENT, ROOM_UPDATE_EVENT, SERVER_LOG_EVENT, 
-} from '../../events'
+} from "../../events"
 import {
   createVerify, createPublicKey, 
 } from "crypto"
@@ -55,15 +55,15 @@ export const online: {
   player: Player
 }[] = []
 
-server.on('connection', (socket, request) => {
-  console.log('Socket connected to server')
+server.on("connection", (socket, request) => {
+  console.log("Socket connected to server")
 
-  const publicKey = decodeURIComponent(querystring.parse(request.url!)['/ws?public-key'] as string)
+  const publicKey = decodeURIComponent(querystring.parse(request.url!)["/ws?public-key"] as string)
   let player: Player
   let authenticated = false
   const challenge = String(Math.random())
 
-  socket.on('message', (data: string) => {
+  socket.on("message", (data: string) => {
     try {
       const { code, payload } = JSON.parse(data) as {
         code: string
@@ -114,7 +114,7 @@ server.on('connection', (socket, request) => {
   sendEvent(socket, AUTH_EVENT, challenge)
 
   socket.on("close", () => {
-    console.log('Socket disconnected from server')
+    console.log("Socket disconnected from server")
 
     if (!authenticated) return
 

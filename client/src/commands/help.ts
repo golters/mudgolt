@@ -10,9 +10,9 @@ import {
 
 export const Help: CommandModule = {
   command: "help",
-  syntax: `help`,
+  syntax: "help",
 
   callback () {
-    logSimple('<u>Command list</u>\n' + commandModules.map(({ syntax }) => syntax).join('\n'))
+    logSimple("<u>Command list</u>\n" + commandModules.map(({ syntax }) => syntax).join("\n"))
   },
 }

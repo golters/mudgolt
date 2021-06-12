@@ -29,7 +29,7 @@ const handler: NetworkEventHandler = (socket, roomName: string, player) => {
   }
   
   try {
-    roomName = roomName.replace(/\s/g, '_')
+    roomName = roomName.replace(/\s/g, "_")
 
     setPlayerRoom(player, roomName)
 

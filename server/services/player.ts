@@ -40,7 +40,7 @@ export const setPlayerRoom = (player: Player, roomName: string) => {
   const roomIndex = store.rooms.findIndex(({ name }) => name === roomName)
 
   if (roomIndex === -1) {
-    throw new Error(`Room doesn't exist`)
+    throw new Error("Room doesn't exist")
   }
 
   const dbPlayer = store.players.find(({ id }) => {
@@ -50,7 +50,7 @@ export const setPlayerRoom = (player: Player, roomName: string) => {
   if (dbPlayer) {
     dbPlayer.room = roomIndex
   } else {
-    throw new Error(`Player doesn't exist`)
+    throw new Error("Player doesn't exist")
   }
 
   saveStore()
@@ -62,7 +62,7 @@ export const setPlayerUsername = (playerId: number, username: string) => {
   if (player) {
     player.username = username
   } else {
-    throw new Error(`Player doesn't exist`)
+    throw new Error("Player doesn't exist")
   }
 
   saveStore()

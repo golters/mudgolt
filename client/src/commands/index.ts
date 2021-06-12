@@ -1,31 +1,37 @@
 import {
-  sendEvent, 
+  sendEvent,
 } from "../network"
 import {
-  CHAT_EVENT, INPUT_EVENT, LOG_EVENT, 
+  CHAT_EVENT, INPUT_EVENT, LOG_EVENT,
 } from "../../../events"
 import {
-  commandEmitter, 
+  commandEmitter,
 } from "./emitter"
 import Roll from "./roll"
 import {
-  MakeRoom, 
+  MakeRoom,
 } from "./makeRoom"
 import {
-  Go, 
+  Go,
 } from "./go"
 import {
-  MESSAGE_MAX_LENGTH, 
+  MESSAGE_MAX_LENGTH,
 } from "../../../constants"
 import {
-  LogItem, 
+  LogItem,
 } from "../components/Terminal"
 import {
-  Help, 
+  Help,
 } from "./help"
 import Nick from "./username"
 
-export const commandModules = [Roll, MakeRoom, Go, Help, Nick]
+export const commandModules = [
+  Roll,
+  MakeRoom,
+  Go,
+  Help,
+  Nick,
+]
 
 function findCommand(nameOrAlias: string) {
   return commandModules.find(
