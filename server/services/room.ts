@@ -34,3 +34,5 @@ export const createRoom = (name: string, props: Partial<Room> = {}) => {
 
   return room
 }
+
+export const getRoom = (id: number) => store.rooms[id]

@@ -4,6 +4,9 @@ import {
 } from './events'
 import querystring from "querystring"
 import {
+  getRoom,
+} from "../services/room"
+import {
   findOrCreatePlayer, getPlayerRoom, 
 } from "../services/player"
 import {
@@ -94,6 +97,7 @@ server.on('connection', (socket, request) => {
           })
 
           broadcast(SERVER_LOG_EVENT, `${player.username} is now online`)
+          broadcastToRoom(SERVER_LOG_EVENT, `${player.username} has joined ${getRoom(player.room).name}`, player.room)
         } else {
           sendEvent(socket, ERROR_EVENT, "Invalid signature")
         }
