@@ -13,12 +13,12 @@ import {
 
 export const Go: CommandModule = {
   command: "go",
-  syntax: `go [room name]`,
+  syntax: "go [room name]",
 
   callback ({ args }) {
     let [roomName] = args
 
-    roomName = roomName.trim()
+    roomName = roomName?.trim()
 
     if (!roomName) {
       logError(`Syntax: ${Go.syntax}`)

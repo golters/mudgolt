@@ -53,7 +53,7 @@ const parseNumber = (value: string) => {
 
 const Roll: CommandModule = {
   command: "roll",
-  syntax: `roll [int] or [int]d[int]`,
+  syntax: "roll [int] or [int]d[int]",
 
   callback({ args }) {
     let dice: DiceProps | boolean;

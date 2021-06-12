@@ -9,7 +9,7 @@ import {
 } from "./components/Terminal"
 import {
   networkTask, 
-} from './network'
+} from "./network"
 import {
   Header, 
 } from "./components/Header"
@@ -24,9 +24,9 @@ const init = async () => {
 
   document.body.appendChild(Terminal())
 
-  logSimple('Welcome to MUDGOLT! <small>Leave your shoes at the door.</small>')
-  logSimple('Want to contribute? https://github.com/golters/mudgolt')
-  logSimple('Type <code>help</code> for a list of commands.')
+  logSimple("Welcome to MUDGOLT! <small>Leave your shoes at the door.</small>")
+  logSimple("Want to contribute? https://github.com/golters/mudgolt")
+  logSimple("Type <code>help</code> for a list of commands.")
 }
 
 init()

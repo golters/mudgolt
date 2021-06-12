@@ -36,7 +36,7 @@ export const logSimple = (message: string) => {
   commandEmitter.emit(LOG_EVENT, errorItem)
 }
 
-export const UserBadge = () => `>`
+export const UserBadge = () => ">"
 
 export const Terminal = () => {
   let hasScrolled = false
@@ -57,7 +57,7 @@ export const Terminal = () => {
   }
 
   const arrow = document.createElement("span")
-  arrow.innerText = UserBadge() + ' '
+  arrow.innerText = UserBadge() + " "
 
   const input = document.createElement("div")
   input.contentEditable = "true"
@@ -125,11 +125,11 @@ export const Terminal = () => {
     scrollToBottomIfActive()
   })
 
-  window.addEventListener('resize', () => {
+  window.addEventListener("resize", () => {
     scrollToBottomIfActive()
   })
 
-  container.addEventListener('scroll', () => {
+  container.addEventListener("scroll", () => {
     const { height } = container.getBoundingClientRect()
 
     hasScrolled = container.scrollTop + 10 < container.scrollHeight - height

@@ -36,17 +36,17 @@ const host = process.env.NODE_ENV === "development"
 let reconnectAttempts = 0
 
 export const networkTask = () => new Promise<void>((resolve) => {
-  client = new WebSocket(`${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${host}/ws?public-key=${encodeURIComponent(localStorage.publicKey)}`)
+  client = new WebSocket(`${location.protocol === "https:" ? "wss:" : "ws:"}//${host}/ws?public-key=${encodeURIComponent(localStorage.publicKey)}`)
 
   reconnectAttempts++
 
-  client.addEventListener('open', () => {
+  client.addEventListener("open", () => {
     logSimple("Connected to server")
 
     reconnectAttempts = 0
   })
   
-  client.addEventListener('message', (event) => {
+  client.addEventListener("message", (event) => {
     const { code, payload } = JSON.parse(event.data) as {
       code: string
       payload: unknown
@@ -65,7 +65,7 @@ export const networkTask = () => new Promise<void>((resolve) => {
     networkEmitter.emit(code, payload)
   })
 
-  client.addEventListener('close', () => {
+  client.addEventListener("close", () => {
     logError("Disconnected from server. Reconnecting...")
 
     if (reconnectAttempts === 0) {

@@ -18,7 +18,7 @@ const handler: NetworkEventHandler = (socket, name: string) => {
   try {
     if (name.length > NAME_LENGTH) throw new Error(`Room name must not be greater than ${NAME_LENGTH} characters`)
 
-    name = name.replace(/\s/g, '_')
+    name = name.replace(/\s/g, "_")
 
     createRoom(name)
 

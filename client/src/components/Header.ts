@@ -30,7 +30,7 @@ export const Header = () => {
 
   resizeHeader()
 
-  window.addEventListener('resize', resizeHeader)
+  window.addEventListener("resize", resizeHeader)
 
   networkEmitter.on(ROOM_UPDATE_EVENT, (room: Room) => {
     const bannerParts: Node[] = []

@@ -2,12 +2,12 @@ export const GENERATE_ALGORITHM: RsaHashedKeyGenParams = {
   name: "RSA-PSS",
   modulusLength: 512,
   publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-  hash: 'SHA-256',
+  hash: "SHA-256",
 }
 
 export const IMPORT_ALGORITHM: RsaHashedImportParams = {
   name: "RSASSA-PKCS1-v1_5",
-  hash: 'SHA-256',
+  hash: "SHA-256",
 }
 
 export const ALGORITHM_IDENTIFIER: AlgorithmIdentifier = {
