@@ -25,6 +25,7 @@ import {
   Help,
 } from "./help"
 import Nick from "./username"
+import { Color } from './color'
 
 export const commandModules = [
   Roll,
@@ -32,6 +33,7 @@ export const commandModules = [
   Go,
   Help,
   Nick,
+  Color,
 ]
 
 const findCommand = (nameOrAlias: string) => {

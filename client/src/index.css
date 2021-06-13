@@ -20,13 +20,22 @@
 }
 
 :root {
-  background-color: black;
-  color: rgb(240, 240, 240);
+  --color-background-primary: black;
+  --color-background-code: rgb(26, 26, 39);
+  --color-text-primary: white;
+  --color-text-secondary: rgba(255, 255, 255, 0.6);
+  --color-text-tertiary: rgb(196, 92, 236);
+  --color-text-link: rgb(83, 143, 255);
+  --color-text-negative: rgb(228, 34, 76);
+  --color-divider: rgb(35, 32, 35);
+
+  background-color: var(--color-background-primary);
+  color: var(--color-text-primary);
   font-size: 0.95em;
 }
 
 a {
-  color: rgb(83, 143, 255);
+  color: var(--color-text-link);
 }
 
 body {
