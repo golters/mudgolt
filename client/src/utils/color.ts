@@ -10,7 +10,8 @@ const VALID_COLOR_KEYS = [
   'text-tertiary',
   'text-link',
   'text-negative',
-  'divider'
+  'divider',
+  'scrollbar'
 ];
 
 const DEFAULT_THEME: ColorTheme = {
@@ -22,6 +23,7 @@ const DEFAULT_THEME: ColorTheme = {
   'text-link': 'rgb(83, 143, 255)',
   'text-negative': 'rgb(228, 34, 76)',
   'divider': 'rgb(35, 32, 35)',
+  'scrollbar': 'white',
 }
 
 const THEME_STORAGE_KEY = 'colorTheme';

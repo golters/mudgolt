@@ -7,4 +7,5 @@ export interface ColorTheme {
   'text-link': string;
   'text-negative': string;
   'divider': string;
+  'scrollbar': string;
 }
