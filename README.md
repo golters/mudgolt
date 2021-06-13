@@ -1,5 +1,9 @@
 # mudgolt
 
+## Prerequities
+
+- `npm` v7
+
 ## Installation
 
 - `npm install`
