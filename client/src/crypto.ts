@@ -18,7 +18,7 @@ export const ALGORITHM_IDENTIFIER: AlgorithmIdentifier = {
 }
 
 export const ab2str = (buffer: ArrayBuffer): string => {
-  return String.fromCharCode.apply(null, new Uint8Array(buffer))
+  return String.fromCharCode.apply(null, new Uint8Array(buffer) as unknown as number[])
 }
 
 export const str2ab = (string: string): ArrayBuffer => {

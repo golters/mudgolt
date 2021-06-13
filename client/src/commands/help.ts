@@ -2,7 +2,7 @@ import {
   commandModules, 
 } from "."
 import {
-  logSimple,
+  pushToLog,
 } from "../components/Terminal"
 import {
   CommandModule, 
@@ -13,6 +13,6 @@ export const Help: CommandModule = {
   syntax: "help",
 
   callback () {
-    logSimple("<u>Command list</u>\n" + commandModules.map(({ syntax }) => syntax).join("\n"))
+    pushToLog("<u>Command list</u>\n" + commandModules.map(({ syntax }) => syntax).join("\n"))
   },
 }

@@ -2,21 +2,15 @@ import {
   networkEmitter, NetworkEventHandler, 
 } from "./emitter"
 import {
-  LOG_EVENT, SERVER_LOG_EVENT, 
+  SERVER_LOG_EVENT, 
 } from "../../../../events"
 import {
-  commandEmitter, 
-} from "../../commands/emitter"
-import {
-  LogItem, 
+  pushToLog, 
 } from "../../components/Terminal"
+import React from "react"
 
 const handler: NetworkEventHandler = (message: string) => {
-  const log = LogItem(message)
-  log.style.fontStyle = "italic"
-  log.style.opacity = "0.7"
-
-  commandEmitter.emit(LOG_EVENT, log)
+  pushToLog(<span style={{ fontStyle: "italic", opacity: "0.7" }}>{message}</span>)
 }
 
 networkEmitter.on(SERVER_LOG_EVENT, handler)

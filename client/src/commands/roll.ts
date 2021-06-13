@@ -2,7 +2,7 @@ import {
   ROLL_EVENT,
 } from "../../../events"
 import {
-  logError,
+  pushErrorToLog,
 } from "../components/Terminal"
 import {
   sendEvent,
@@ -63,7 +63,7 @@ const Roll: CommandModule = {
 
       if (!dice) throw new Error("Hey that's not a number");
     } catch {
-      logError(`Syntax: ${Roll.syntax}`)
+      pushErrorToLog(`Syntax: ${Roll.syntax}`)
 
       return
     }

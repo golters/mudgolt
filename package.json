@@ -5,8 +5,8 @@
   "scripts": {
     "start:server": "cross-env NODE_ENV=production ts-node server",
     "dev:server": "cross-env NODE_ENV=development ts-node-dev server --rs",
-    "dev:client": "cd client && cross-env NODE_ENV=development parcel serve ./public/index.html --port 5555",
-    "build:client": "cd client && cross-env NODE_ENV=production parcel build ./public/index.html",
+    "build:client": "cd client && cross-env webpack build --mode=production",
+    "dev:client": "cd client && cross-env NODE_ENV=development webpack serve --mode=development",
     "lint": "eslint --fix --ext .js,.ts ."
   },
   "repository": {
@@ -23,19 +23,36 @@
     "@types/jwk-to-pem": "^2.0.0",
     "@types/marked": "^2.0.2",
     "@types/node": "^15.0.3",
+    "@types/react": "^17.0.11",
+    "@types/react-dom": "^17.0.7",
     "@types/ws": "^7.4.1",
     "@typescript-eslint/eslint-plugin": "^4.23.0",
     "@typescript-eslint/parser": "^4.23.0",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.2.2",
+    "copy-webpack-plugin": "^9.0.0",
     "cross-env": "^7.0.3",
+    "css-loader": "^5.2.6",
     "eslint": "^7.26.0",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.3.1",
     "parcel": "^2.0.0-beta.2",
+    "raw-loader": "^4.0.2",
+    "style-loader": "^2.0.0",
+    "ts-loader": "^9.2.3",
     "ts-node-dev": "^1.1.6",
-    "typescript": "^4.2.4"
+    "typescript": "^4.2.4",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^4.0.0-beta.3"
   },
   "dependencies": {
     "fast-diff": "^1.2.0",
     "marked": "^2.0.3",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "ts-node": "^9.1.1",
+    "validate-color": "^2.1.1",
     "ws": "^7.4.4"
   }
 }

@@ -2,7 +2,7 @@ import {
   MAKE_ROOM_EVENT,
 } from "../../../events"
 import {
-  logError,
+  pushErrorToLog,
 } from "../components/Terminal"
 import {
   sendEvent, 
@@ -12,8 +12,8 @@ import {
 } from "./emitter"
 
 export const MakeRoom: CommandModule = {
-  command: "make room",
-  syntax: "make room [room name]",
+  command: "makeroom",
+  syntax: "makeroom [room name]",
 
   callback ({ args }) {
     let [name] = args
@@ -21,7 +21,7 @@ export const MakeRoom: CommandModule = {
     name = name?.trim()
 
     if (!name) {
-      logError(`Syntax: ${MakeRoom.syntax}`)
+      pushErrorToLog(`Syntax: ${MakeRoom.syntax}`)
 
       return
     }

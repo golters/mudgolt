@@ -2,7 +2,7 @@ import {
   GO_EVENT,
 } from "../../../events"
 import {
-  logError,
+  pushErrorToLog,
 } from "../components/Terminal"
 import {
   sendEvent, 
@@ -21,7 +21,7 @@ export const Go: CommandModule = {
     roomName = roomName?.trim()
 
     if (!roomName) {
-      logError(`Syntax: ${Go.syntax}`)
+      pushErrorToLog(`Syntax: ${Go.syntax}`)
 
       return
     }
