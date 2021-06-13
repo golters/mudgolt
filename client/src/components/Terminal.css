@@ -35,7 +35,7 @@
 }
 
 .chat-message .username {
-  color: rgb(196, 92, 236);
+  color: var(--color-text-tertiary);
 }
 
 .error-message {
