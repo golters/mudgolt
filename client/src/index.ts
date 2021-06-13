@@ -26,7 +26,7 @@ const init = async () => {
 
   logSimple("Welcome to MUDGOLT! <small>Leave your shoes at the door.</small>")
   logSimple("Want to contribute? https://github.com/golters/mudgolt")
-  logSimple("Type <code>help</code> for a list of commands.")
+  logSimple("Type <code>/help</code> for a list of commands.")
 }
 
 init()
