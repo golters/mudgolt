@@ -32,7 +32,16 @@
   outline: none;
   pointer-events: all;
   user-select: initial;
-  display: inline
+  display: inline;
+}
+
+#terminal-input-container .char-limit {
+  color: var(--color-text-secondary);
+  float: right;
+}
+
+#terminal-input-container .char-limit.invalid {
+  color: var(--color-text-negative);
 }
 
 .chat-message {
