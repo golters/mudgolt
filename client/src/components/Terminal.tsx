@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
+import { MESSAGE_MAX_LENGTH } from '../../../constants'
 import {
   INPUT_EVENT, LOG_EVENT, 
 } from "../../../events"
@@ -33,6 +34,7 @@ export const Terminal: React.FC = () => {
   const input = useRef<HTMLDivElement>(null)
 
   const [logsState, setLogsState] = useState<(JSX.Element | string)[]>(logs)
+  const [textLength, setTextLength] = useState(0)
 
   const scrollToBottom = () => {
     container.current?.scrollTo(0, container.current.scrollHeight)
@@ -52,6 +54,7 @@ export const Terminal: React.FC = () => {
     commandEmitter.emit(INPUT_EVENT, input.current.innerText)
 
     input.current.innerText = ""
+    setTextLength(0)
 
     requestAnimationFrame(() => {
       scrollToBottom()
@@ -78,6 +81,14 @@ export const Terminal: React.FC = () => {
         }}
     
         onKeyDown={event => {
+          setTimeout(() => {
+            let value = input.current?.innerText || ""
+            console.log(value.charCodeAt(value.length - 1))
+            if (value.charCodeAt(value.length - 1) === 10) {
+              value = value.slice(0, value.length - 1)
+            }
+            setTextLength(value.length)
+          }, 1)
           switch (event.key) {
             case "Enter": {
               if (!event.shiftKey) {
@@ -137,6 +148,9 @@ export const Terminal: React.FC = () => {
       })}
 
       <span id="terminal-input-container">
+        <span className={`char-limit ${textLength > MESSAGE_MAX_LENGTH ? 'invalid' : ''}`}>
+          {String(textLength)}/{MESSAGE_MAX_LENGTH}
+        </span>
         <span>&gt;</span> {Input ? <Input /> : null}
       </span>
     </main>
