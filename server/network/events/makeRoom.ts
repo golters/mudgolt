@@ -22,9 +22,9 @@ const handler: NetworkEventHandler = (socket, name: string) => {
 
     createRoom(name)
 
-    sendEvent(socket, SERVER_LOG_EVENT, `Created room ${name}`)
+    sendEvent<string>(socket, SERVER_LOG_EVENT, `Created room ${name}`)
   } catch (error) {
-    sendEvent(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, error.message)
   }
 }
 

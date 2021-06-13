@@ -2,37 +2,54 @@ import {
   Room, 
 } from "../../@types"
 import {
-  saveStore, store, 
+  db,
 } from "../store"
 import {
   BANNER_WIDTH, BANNER_HEIGHT, BANNER_FILL, 
 } from "../../constants"
 
 export const generateBanner = () => {
-  return new Array(BANNER_WIDTH * BANNER_HEIGHT).fill(BANNER_FILL)
+  return new Array(BANNER_WIDTH * BANNER_HEIGHT)
+    .fill(BANNER_FILL)
     .join("")
 }
 
-export const createRoom = (name: string, props: Partial<Room> = {}) => {
-  if (store.rooms.some(room => room.name === name)) {
+export const createRoom = async (name: string, props: Partial<Room> = {}): Promise<Room> => {
+  const existingRoom = await db.get<Partial<Room>>(/*sql*/`
+    SELECT id FROM rooms WHERE "name" = $1
+  `, [name])
+
+  if (existingRoom) {
     throw new Error("Room name taken.")
   }
 
-  const room: Room = Object.assign({
-    id: store.rooms.length,
-    name: name,
-    banner: generateBanner(),
-    description: "",
-    doors: [],
-    keys: [],
-    isProtected: false,
-  }, props)
+  await db.get(/*sql*/`
+    INSERT INTO rooms ("name", "banner", "description", "isProtected")
+      VALUES ($1, $2, $3, $4);
+  `, [
+    name, 
+    props.banner || generateBanner(), 
+    props.description || "",
+    props.isProtected || false,
+  ])
 
-  store.rooms.push(room)
-
-  saveStore()
+  const room = await getRoomByName(name) as Room
 
   return room
 }
 
-export const getRoom = (id: number) => store.rooms[id]
+export const getRoomById = async (id: number): Promise<Room | undefined> => {
+  const room = await db.get<Room>(/*sql*/`
+    SELECT * FROM rooms WHERE id = $1
+  `, [id])
+
+  return room
+}
+
+export const getRoomByName = async (name: string): Promise<Room | undefined> => {
+  const room = await db.get<Room>(/*sql*/`
+    SELECT * FROM rooms WHERE "name" = $1;
+  `, [name])
+
+  return room
+}

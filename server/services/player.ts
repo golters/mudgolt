@@ -1,69 +1,118 @@
 import {
-  Player, 
+  Player, Room, 
 } from "../../@types"
 import {
-  saveStore, store, 
+  db, 
 } from "../store"
 import crypto from "crypto"
+import { getRoomByName } from "./room"
+import { online } from "../network"
 
-export const findOrCreatePlayer = (publicKey: string) => {
-  const existingPlayer = store.players.find(
-    (player) => player.publicKey === publicKey,
-  )
+export const updateOnlinePlayerById = (playerId: number, newPlayer: Partial<Player>) => {
+  online.find(({ player }) => {
+    if (player.id === playerId) {
+      Object.assign(player, newPlayer)
+
+      return true
+    }
+  })
+}
+
+export const findOrCreatePlayer = async (publicKey: string): Promise<Player> => {
+  const existingPlayer = await getPlayerByPublicKey(publicKey)
 
   if (existingPlayer) return existingPlayer
 
   const hash = crypto.createHash("md5")
   hash.update(publicKey)
 
-  const player: Player = {
-    id: store.players.length,
-    publicKey,
-    username: `1_${hash.digest("hex").slice(0, 6)}`,
-    room: 0,
-    inventory: [],
-    golts: 500,
-  }
+  await db.get(/*sql*/`
+    INSERT INTO players ("publicKey", "username", "roomId", "golts")
+      VALUES ($1, $2, $3, $4);
+  `, [
+    publicKey, 
+    `1_${hash.digest("hex").slice(0, 6)}`, 
+    1,
+    500,
+  ])
 
-  store.players.push(player)
-
-  saveStore()
+  const player = await getPlayerByPublicKey(publicKey) as Player
 
   return player
 }
 
-export const getPlayerRoom = (player: Player) => {
-  return store.rooms[player.room]
+export const getPlayerByPublicKey = async (publicKey: string): Promise<Player | undefined> => {
+  const player = await db.get<Player>(/*sql*/`
+    SELECT * FROM players WHERE "publicKey" = $1
+  `, [publicKey])
+
+  return player
 }
 
-export const setPlayerRoom = (player: Player, roomName: string) => {
-  const roomIndex = store.rooms.findIndex(({ name }) => name === roomName)
+export const getPlayerById = async (id: number): Promise<Player | undefined> => {
+  const player = await db.get<Player>(/*sql*/`
+    SELECT * FROM players WHERE "id" = $1
+  `, [id])
 
-  if (roomIndex === -1) {
+  return player
+}
+
+export const getPlayerByUsername = async (username: string): Promise<Player | undefined> => {
+  const player = await db.get<Player>(/*sql*/`
+    SELECT * FROM players WHERE "username" = $1
+  `, [username])
+
+  return player
+}
+
+export const setPlayerRoomByName = async (playerId: number, roomName: string): Promise<Room> => {
+  const room = await getRoomByName(roomName)
+
+  if (!room) {
     throw new Error("Room doesn't exist")
   }
 
-  const dbPlayer = store.players.find(({ id }) => {
-    return player.id === id
-  })
-
-  if (dbPlayer) {
-    dbPlayer.room = roomIndex
-  } else {
+  const player = await getPlayerById(playerId)
+  
+  if (!player) {
     throw new Error("Player doesn't exist")
   }
 
-  saveStore()
+  await db.run(/*sql*/`
+    UPDATE players
+      SET roomId = $1
+      WHERE id = $2;
+  `, [room.id, playerId])
+
+  const newPlayer = await getPlayerById(playerId) as Player
+
+  updateOnlinePlayerById(playerId, newPlayer)
+
+  return room
 }
 
-export const setPlayerUsername = (playerId: number, username: string) => {
-  const player = store.players.find(({ id }) => playerId === id)
+export const setPlayerUsername = async (playerId: number, username: string): Promise<Player> => {
+  const existingPlayer = await getPlayerByUsername(username)
 
-  if (player) {
-    player.username = username
-  } else {
+  if (existingPlayer) {
+    throw new Error("Username in use")
+  }
+
+  const player = await getPlayerById(playerId)
+  
+  if (!player) {
     throw new Error("Player doesn't exist")
   }
 
-  saveStore()
+  await db.run(/*sql*/`
+    UPDATE players
+      SET username = $1
+      WHERE id = $2;
+  `, [username, playerId])
+
+  const newPlayer = await getPlayerById(playerId) as Player
+
+  updateOnlinePlayerById(playerId, newPlayer)
+
+  return newPlayer
 }

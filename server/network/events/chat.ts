@@ -10,16 +10,23 @@ import {
 import {
   MESSAGE_MAX_LENGTH, 
 } from "../../../constants"
+import { Chat } from "@types"
 
 const handler: NetworkEventHandler = (socket, message: string, player) => {
   if (message.length > MESSAGE_MAX_LENGTH) {
     return
   }
 
-  broadcastToRoom(CHAT_EVENT, {
-    player,
+  const {
+    username,
+  } = player
+
+  broadcastToRoom<Chat>(CHAT_EVENT, {
+    player: {
+      username,
+    },
     message,
-  }, player.room)
+  }, player.roomId)
 }
 
 networkEmitter.on(CHAT_EVENT, handler)

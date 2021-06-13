@@ -7,11 +7,10 @@
     "target": "es2020",
     "strict": true,
     "noImplicitAny": true,
-    "outDir": "./dist",
     "baseUrl": "./",
     "declaration": true,
   },
   "include": [
-    "index.ts",
+    "server/index.ts",
   ],
 }

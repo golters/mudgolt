@@ -1,48 +1,17 @@
-import {
-  Chat,
-  Player, 
-  Room, 
-} from "../../@types"
-import fs from "fs"
 import path from "path"
 import { initStore } from "../services/init"
+import sqlite3 from 'sqlite3'
+import { open, Database } from 'sqlite'
 
-const db = path.join(__dirname, "../../db")
-const storeFile = path.join(db, "store.json") 
+const storeFile = path.join("./db/store.db") 
 
-if (!fs.existsSync(db)) fs.mkdirSync(db)
-
-export interface Store {
-  players: Player[]
-  rooms: Room[]
-  chats: {
-    [roomId: string]: Chat[]
-  }
-}
-
-const defaultStore: Store = {} as Store
-
-export const store: Store = Object.assign(
-  defaultStore,
-
-  fs.existsSync(storeFile) 
-    ? JSON.parse(fs.readFileSync(storeFile, "utf8"))
-    : defaultStore,
-)
-
-/**
- * Save storage to JSON file. Use this after every modification.
- */
-export const saveStore = () => {
-  fs.writeFile(
-    storeFile,
-    JSON.stringify(store),
-    "utf8", 
-    error => error && console.error(error),
-  )
-}
+export let db: Database<sqlite3.Database, sqlite3.Statement>
 
 export const storeTask = async () => {
+  db = await open({
+    filename: storeFile,
+    driver: sqlite3.verbose().cached.Database,
+  })
+  
   await initStore()
-  saveStore()
 }

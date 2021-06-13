@@ -9,7 +9,7 @@ import {
 } from "../"
 
 const handler: NetworkEventHandler = (socket) => {
-  sendEvent(socket, PING_EVENT, null)
+  sendEvent<null>(socket, PING_EVENT, null)
 }
 
 networkEmitter.on(PING_EVENT, handler)

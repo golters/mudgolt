@@ -31,7 +31,7 @@ const rollDice = (dice: DiceProps) => {
 const handler: NetworkEventHandler = (socket, dice: DiceProps, player: Player) => {
   const result = rollDice(dice);
 
-  broadcastToRoom(SERVER_LOG_EVENT, `${player.username} rolled ${dice.count}d${dice.sides} - ${result}`, player.room)
+  broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} rolled ${dice.count}d${dice.sides} - ${result}`, player.roomId)
 }
 
 networkEmitter.on(ROLL_EVENT, handler)

@@ -35,10 +35,10 @@ const handler: NetworkEventHandler = (
 
     setPlayerUsername(player.id, username)
 
-    broadcastToRoom(
+    broadcastToRoom<string>(
       SERVER_LOG_EVENT,
       `${oldUsername} is now known as ${username}`,
-      player.room,
+      player.roomId,
     )
   } catch (error) {
     sendEvent(socket, ERROR_EVENT, error.message)

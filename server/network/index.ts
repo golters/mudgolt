@@ -4,13 +4,13 @@ import {
 } from "./events"
 import querystring from "querystring"
 import {
-  getRoom,
+  getRoomById,
 } from "../services/room"
 import {
-  findOrCreatePlayer, getPlayerRoom, 
+  findOrCreatePlayer,
 } from "../services/player"
 import {
-  Player, 
+  Player, Room, 
 } from "../../@types"
 import {
   AUTH_EVENT, ERROR_EVENT, PLAYER_EVENT, ROOM_UPDATE_EVENT, SERVER_LOG_EVENT, 
@@ -25,7 +25,7 @@ export const server = new WebSocket.Server({
   port: PORT,
 })
 
-export const broadcast = (code: string, payload: unknown) => {
+export const broadcast = <TPayload> (code: string, payload: TPayload) => {
   online.forEach(({ socket }) => {
     sendEvent(socket, code, payload)
   })
@@ -33,17 +33,17 @@ export const broadcast = (code: string, payload: unknown) => {
   console.log(`[${code}]`, payload)
 }
 
-export const broadcastToRoom =  (code: string, payload: unknown, room: number) => {
+export const broadcastToRoom = <TPayload> (code: string, payload: TPayload, roomId: number) => {
   online.forEach(({ socket, player }) => {
-    if (player.room !== room) return
+    if (player.roomId !== roomId) return
 
     sendEvent(socket, code, payload)
   })
 
-  console.log(`[${code}]`, `[ROOM: ${room}]`, payload)
+  console.log(`[${code}]`, `[ROOM: ${roomId}]`, payload)
 }
 
-export const sendEvent = (socket: WebSocket, code: string, payload: unknown) => {
+export const sendEvent = <TPayload> (socket: WebSocket, code: string, payload: TPayload) => {
   socket.send(JSON.stringify({
     code,
     payload,
@@ -63,7 +63,7 @@ server.on("connection", (socket, request) => {
   let authenticated = false
   const challenge = String(Math.random())
 
-  socket.on("message", (data: string) => {
+  socket.on("message", async (data: string) => {
     try {
       const { code, payload } = JSON.parse(data) as {
         code: string
@@ -86,10 +86,12 @@ server.on("connection", (socket, request) => {
         if (verify.verify(pem, signature, "base64")) {
           authenticated = true
   
-          player = findOrCreatePlayer(publicKey)
+          player = await findOrCreatePlayer(publicKey)
+
+          const room = await getRoomById(player.roomId) as Room
 
           sendEvent(socket, PLAYER_EVENT, player)
-          sendEvent(socket, ROOM_UPDATE_EVENT, getPlayerRoom(player))
+          sendEvent(socket, ROOM_UPDATE_EVENT, room)
 
           online.push({
             socket,
@@ -97,7 +99,7 @@ server.on("connection", (socket, request) => {
           })
 
           broadcast(SERVER_LOG_EVENT, `${player.username} is now online`)
-          broadcastToRoom(SERVER_LOG_EVENT, `${player.username} has joined ${getRoom(player.room).name}`, player.room)
+          broadcastToRoom(SERVER_LOG_EVENT, `${player.username} has joined ${room.name}`, player.roomId)
         } else {
           sendEvent(socket, ERROR_EVENT, "Invalid signature")
         }

@@ -12,33 +12,36 @@ import {
   sendEvent, 
 } from "../../network"
 import {
-  setPlayerRoom, 
+  setPlayerRoomByName, 
 } from "../../services/player"
-import {
-  getRoom,
-} from "../../services/room"
-import {
-  store, 
-} from "../../store"
+import { getRoomById } from "../../services/room"
+import { Room } from "@types"
 
-const handler: NetworkEventHandler = (socket, roomName: string, player) => {
-  const oldRoom = getRoom(player.room)
-
-  if (oldRoom.name === roomName) {
-    return
-  }
-  
+const handler: NetworkEventHandler = async (socket, roomName: string, player) => {
   try {
+    const oldRoom = await getRoomById(player.roomId)
+  
+    if (!oldRoom) {
+      sendEvent<string>(socket, ERROR_EVENT, `Room doesn't exist`)
+  
+      return
+    }
+  
+    if (oldRoom.name === roomName) {
+      return
+    }
+
     roomName = roomName.replace(/\s/g, "_")
 
-    setPlayerRoom(player, roomName)
+    const room = await setPlayerRoomByName(player.id, roomName)
 
-    broadcastToRoom(ROOM_UPDATE_EVENT, oldRoom, oldRoom.id)
-    broadcastToRoom(SERVER_LOG_EVENT, `${player.username} has left ${oldRoom.name}`, oldRoom.id)
-    broadcastToRoom(ROOM_UPDATE_EVENT, store.rooms[player.room], player.room)
-    broadcastToRoom(SERVER_LOG_EVENT, `${player.username} has joined ${roomName}`, player.room)
+    broadcastToRoom<Room>(ROOM_UPDATE_EVENT, oldRoom, oldRoom.id)
+    broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has left ${oldRoom.name}`, oldRoom.id)
+    broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
+    broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has joined ${room.name}`, room.id)
   } catch (error) {
-    sendEvent(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    console.error(error)
   }
 }
 
