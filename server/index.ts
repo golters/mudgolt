@@ -1,4 +1,9 @@
-import "./network"
-import "./store"
+import { storeTask } from "./store"
 
-console.log("Server ready")
+const init = async () => {
+  await storeTask()
+  await import("./network")
+  console.log("Server ready")
+}
+
+init().catch(console.error)

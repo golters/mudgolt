@@ -1,8 +1,11 @@
 import {
-  Player, Room, 
+  Chat,
+  Player, 
+  Room, 
 } from "../../@types"
 import fs from "fs"
 import path from "path"
+import { initStore } from "../services/init"
 
 const db = path.join(__dirname, "../../db")
 const storeFile = path.join(db, "store.json") 
@@ -12,12 +15,12 @@ if (!fs.existsSync(db)) fs.mkdirSync(db)
 export interface Store {
   players: Player[]
   rooms: Room[]
+  chats: {
+    [roomId: string]: Chat[]
+  }
 }
 
-const defaultStore: Store = {
-  players: [],
-  rooms: [],
-}
+const defaultStore: Store = {} as Store
 
 export const store: Store = Object.assign(
   defaultStore,
@@ -39,13 +42,7 @@ export const saveStore = () => {
   )
 }
 
-import("../services/room").then(({ createRoom }) => {
-  if (store.rooms.length === 0) {
-    createRoom("golt-hq", {
-      isProtected: true,
-      description: "The headquarters of the Friends of the Golt.",
-    })
-  }
-}).catch(console.error)
-
-saveStore()
+export const storeTask = async () => {
+  await initStore()
+  saveStore()
+}
