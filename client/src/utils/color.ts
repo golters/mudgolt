@@ -26,26 +26,44 @@ const defaultTheme: ColorTheme = {
 
 const rootElement = document.documentElement;
 
-export const isValidColorKey = (key: string) => {
-  return validColorKeys.includes(key);
+class ColorUtil {
+  /**
+   * Whether a color key is valid
+   * @param key The color key to validate 
+   */
+  public isValidColorKey = (key: string) => {
+    return validColorKeys.includes(key);
+  }
+
+  /**
+   * Whether a color value is valid
+   * @param value The color to validate
+   */
+  public isValidColor = (value: string) => {
+    return validateColor(value);
+  }
+
+  /**
+   * Update an individual color key
+   */
+  public setColor = (key: string, value: string) => {
+    if (!this.isValidColorKey(key)) {
+      throw new Error(`Invalid color key "${key}" - use one of: ${validColorKeys.join(', ')}`)
+    }
+    if (!this.isValidColor(value)) {
+      throw new Error(`Invalid color "${value}"`);
+    }
+    rootElement.style.setProperty(`--color-${key}`, value);
+  }
+
+  /**
+   * Reset all color keys to the default theme
+   */
+  public resetColors = () => {
+    for (let key in defaultTheme) {
+      rootElement.style.setProperty(`--color-${key}`, defaultTheme[key as keyof typeof defaultTheme]);
+    }
+  }
 }
 
-export const isValidColor = (value: string) => {
-  return validateColor(value);
-}
-
-export const setColor = (key: string, value: string) => {
-  if (!isValidColorKey(key)) {
-    throw new Error(`Invalid color key "${key}" - use one of: ${validColorKeys.join(', ')}`)
-  }
-  if (!validateColor(value)) {
-    throw new Error(`Invalid color "${value}"`);
-  }
-  rootElement.style.setProperty(`--color-${key}`, value);
-}
-
-export const resetColors = () => {
-  for (let key in defaultTheme) {
-    rootElement.style.setProperty(`--color-${key}`, defaultTheme[key as keyof typeof defaultTheme]);
-  }
-}
+export const colorUtil = new ColorUtil();
