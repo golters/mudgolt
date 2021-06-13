@@ -24,10 +24,15 @@
   user-select: none;
 }
 
+#terminal-input-container > span {
+  display: inline-block;
+}
+
 #terminal-input-container div[contenteditable] {
   outline: none;
   pointer-events: all;
   user-select: initial;
+  display: inline
 }
 
 .chat-message {

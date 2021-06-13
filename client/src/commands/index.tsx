@@ -18,13 +18,14 @@ import {
   MESSAGE_MAX_LENGTH,
 } from "../../../constants"
 import {
-  logError,
-  logSimpleNoMarkdown,
+  pushToLog,
+  pushErrorToLog,
 } from "../components/Terminal"
 import {
   Help,
 } from "./help"
 import Nick from "./username"
+import React from "react"
 import { Color } from './color'
 
 export const commandModules = [
@@ -60,9 +61,11 @@ const parseArgs = (command: string, input: string) => {
     .filter((arg) => arg !== "")
 }
 
-commandEmitter.on(INPUT_EVENT, (input) => {
+commandEmitter.on(INPUT_EVENT, (input: string) => {
+  console.log(input)
+
   if (input.length > MESSAGE_MAX_LENGTH) {
-    logError(`Message must not be longer than ${MESSAGE_MAX_LENGTH} characters.`)
+    pushErrorToLog(`Message must not be longer than ${MESSAGE_MAX_LENGTH} characters.`)
 
     return
   }
@@ -72,7 +75,7 @@ commandEmitter.on(INPUT_EVENT, (input) => {
   const args = parseArgs(commandName, input)
 
   if (command) {
-    logSimpleNoMarkdown(`> ${input}`)
+    pushToLog(<span>&gt; {input}</span>)
 
     command.callback({
       args,
