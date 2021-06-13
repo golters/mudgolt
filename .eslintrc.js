@@ -51,27 +51,7 @@ module.exports = {
     ],
     "no-spaced-func": "error",
     "object-curly-spacing": ["error", "always"],
-    "object-curly-newline": [
-      "error",
-      {
-        ObjectExpression: {
-          minProperties: 4,
-          multiline: true,
-          consistent: true,
-        },
-        ObjectPattern: {
-          minProperties: 4,
-          multiline: true,
-          consistent: true,
-        },
-        ImportDeclaration: "off",
-        ExportDeclaration: {
-          minProperties: 2,
-          multiline: true,
-          consistent: true,
-        },
-      },
-    ],
+    "object-curly-newline": ["error"],
     "comma-dangle": [
       "error",
       {

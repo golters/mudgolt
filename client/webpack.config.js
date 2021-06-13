@@ -1,26 +1,26 @@
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require("path")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
 const CopyPlugin = require("copy-webpack-plugin")
-const webpack = require('webpack')
+const webpack = require("webpack")
 
 module.exports = () => ({
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'src/index.html',
+      template: "src/index.html",
     }),
 
     new CopyPlugin({
       patterns: [
         {
-          from: 'public', 
-          to: '',
+          from: "public", 
+          to: "",
         },
       ],
     }),
 
     new webpack.DefinePlugin({
-      'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-      'PORT': JSON.stringify(process.env.PORT),
+      "NODE_ENV": JSON.stringify(process.env.NODE_ENV),
+      "PORT": JSON.stringify(process.env.PORT),
     }),
   ],
 
@@ -28,21 +28,21 @@ module.exports = () => ({
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
+        use: "ts-loader",
         exclude: /node_modules/,
       },
       {
         test: /\.css$/i,
         use: [
-          'style-loader', 
-          'css-loader',
+          "style-loader", 
+          "css-loader",
         ],
       },
       {
         test: /\.(png|svg|jpg|webp|gif|woff|woff2|eot|ttf|otf)$/,
         use: [
           {
-            loader: 'file-loader',
+            loader: "file-loader",
             options: {
               esModule: false,
             },
@@ -51,24 +51,24 @@ module.exports = () => ({
       },
       {
         test: /\.(md)$/,
-        use: 'raw-loader'
-      }
+        use: "raw-loader",
+      },
     ],
   },
 
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    extensions: [".js", ".jsx", ".ts", ".tsx"],
   },
 
   output: {
-    path: path.join(__dirname, 'dist'),
+    path: path.join(__dirname, "dist"),
     filename: "[name].bundle.js",
-    chunkFilename: '[name].bundle.js',
+    chunkFilename: "[name].bundle.js",
   },
 
-  target: 'web',
+  target: "web",
 
-  devtool: process.env.NODE_ENV === 'production' ? 'none' : 'source-map',
+  devtool: process.env.NODE_ENV === "production" ? "none" : "source-map",
 
   devServer: {
     port: process.env.PORT || 5555,
