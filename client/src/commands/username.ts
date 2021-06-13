@@ -1,9 +1,7 @@
 import {
   USERNAME_CHANGE_EVENT,
 } from "../../../events"
-import {
-  logError,
-} from "../components/Terminal"
+import { pushErrorToLog } from "../components/Terminal"
 import {
   sendEvent,
 } from "../network"
@@ -23,7 +21,7 @@ const Username: CommandModule = {
 
     nickname
       ? sendEvent(USERNAME_CHANGE_EVENT, nickname)
-      : logError(`Syntax: ${Username.syntax}`)
+      : pushErrorToLog(`Syntax: ${Username.syntax}`)
   },
 }
 

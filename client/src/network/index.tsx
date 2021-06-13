@@ -17,7 +17,8 @@ import {
   RECONNECT_DELAY,
 } from "../../../constants"
 import {
-  logError, logSimple, 
+  pushErrorToLog, 
+  pushToLog,
 } from "../components/Terminal"
 
 export let client: WebSocket
@@ -29,8 +30,10 @@ export const sendEvent = async (code: string, payload: unknown) => {
   }))
 }
 
-const host = process.env.NODE_ENV === "development"
-  ? `${location.hostname}:${process.env.PORT || 1234}`
+// @ts-ignore
+const host = NODE_ENV === "development"
+  // @ts-ignore
+  ? `${location.hostname}:${PORT || 1234}`
   : location.host
 
 let reconnectAttempts = 0
@@ -41,7 +44,7 @@ export const networkTask = () => new Promise<void>((resolve) => {
   reconnectAttempts++
 
   client.addEventListener("open", () => {
-    logSimple("Connected to server")
+    pushToLog("Connected to server")
 
     reconnectAttempts = 0
   })
@@ -66,7 +69,7 @@ export const networkTask = () => new Promise<void>((resolve) => {
   })
 
   client.addEventListener("close", () => {
-    logError("Disconnected from server. Reconnecting...")
+    pushErrorToLog(`Disconnected from server. Reconnecting...`)
 
     if (reconnectAttempts === 0) {
       networkTask().catch(console.error)

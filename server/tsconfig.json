@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "target": "ES2020",
+    "moduleResolution": "node",
+    "strict": true,
+    "module": "ES2020",
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
+  },
+  "include": [
+    "index.ts",
+  ],
+}
