@@ -1,6 +1,6 @@
 import { resetColors, setColor } from '../utils/color';
 import { CommandModule } from './emitter';
-import { logError, logSimple } from "../components/Terminal"
+import { pushErrorToLog, pushToLog } from "../components/Terminal"
 
 export const Color: CommandModule = {
   command: 'color',
@@ -11,15 +11,15 @@ export const Color: CommandModule = {
     
     if (key === undefined && value === undefined) {
       resetColors();
-      logSimple('Color theme reset');
+      pushToLog('Color theme reset');
       return;
     }
 
     try {
       setColor(key, value);
-      logSimple(`Updated color "${key}" to "${value}"`);
+      pushToLog(`Updated color "${key}" to "${value}"`);
     } catch (e) {
-      logError(e.message)
+      pushErrorToLog(e.message)
     }
   }
 }

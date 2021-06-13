@@ -46,6 +46,6 @@ export const setColor = (key: string, value: string) => {
 
 export const resetColors = () => {
   for (let key in defaultTheme) {
-    rootElement.style.setProperty(`--color-${key}`, defaultTheme[key]);
+    rootElement.style.setProperty(`--color-${key}`, defaultTheme[key as keyof typeof defaultTheme]);
   }
 }
