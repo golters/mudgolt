@@ -1,17 +1,18 @@
-import { colorUtil } from '../utils';
-import { CommandModule } from './emitter';
+import { colorUtil } from "../utils";
+import { CommandModule } from "./emitter";
 import { pushErrorToLog, pushToLog } from "../components/Terminal"
 
 export const Color: CommandModule = {
-  command: 'color',
-  syntax: 'color [key] [value]',
+  command: "color",
+  syntax: "color [key] [value]",
 
   callback ({ args }) {
-    let [key, value] = args;
+    const [key, value] = args;
     
     if (key === undefined && value === undefined) {
       colorUtil.resetColors();
-      pushToLog('Color theme reset');
+      pushToLog("Color theme reset");
+      
       return;
     }
 
@@ -21,5 +22,5 @@ export const Color: CommandModule = {
     } catch (e) {
       pushErrorToLog(e.message)
     }
-  }
+  },
 }
