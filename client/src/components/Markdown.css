@@ -1,9 +1,9 @@
 .markdown strong {
-  color: white;
+  color: var(--color-text-primary);
   font-weight: 600;
 }
 
 .markdown code {
-  background-color: rgb(26, 26, 39);
+  background-color: var(--color-background-code);
   padding: 4px 5px;
 }
