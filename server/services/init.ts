@@ -50,7 +50,7 @@ export const initStore = async () => {
     );
   `)
 
-  const rooms = await db.all(/*sql*/`SELECT id FROM rooms`)
+  const rooms = await db.all(/*sql*/"SELECT id FROM rooms")
 
   if (rooms.length === 0) {
     await createRoom("golt-hq", {
