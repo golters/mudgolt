@@ -1,7 +1,7 @@
 import path from "path"
 import { initStore } from "../services/init"
-import sqlite3 from 'sqlite3'
-import { open, Database } from 'sqlite'
+import sqlite3 from "sqlite3"
+import { open, Database } from "sqlite"
 
 const storeFile = path.join("./db/store.db") 
 

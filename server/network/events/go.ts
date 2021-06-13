@@ -22,7 +22,7 @@ const handler: NetworkEventHandler = async (socket, roomName: string, player) =>
     const oldRoom = await getRoomById(player.roomId)
   
     if (!oldRoom) {
-      sendEvent<string>(socket, ERROR_EVENT, `Room doesn't exist`)
+      sendEvent<string>(socket, ERROR_EVENT, "Room doesn't exist")
   
       return
     }
