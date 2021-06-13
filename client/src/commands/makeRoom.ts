@@ -12,8 +12,8 @@ import {
 } from "./emitter"
 
 export const MakeRoom: CommandModule = {
-  command: "make room",
-  syntax: "make room [room name]",
+  command: "makeroom",
+  syntax: "makeroom [room name]",
 
   callback ({ args }) {
     let [name] = args

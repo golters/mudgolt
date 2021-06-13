@@ -36,15 +36,15 @@
 }
 
 .chat-message {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-secondary);
 }
 
 .chat-message .username {
-  color: rgb(196, 92, 236);
+  color: var(--color-text-tertiary);
 }
 
 .error-message {
-  color: rgb(228, 34, 76);
+  color: var(--color-text-negative);
 }
 
 #terminal img {
@@ -70,5 +70,5 @@
 } 
 
 #terminal > *:not(:last-child) {
-  border-bottom: 1px solid rgb(35, 32, 35);
+  border-bottom: 1px solid var(--color-divider);
 } 
