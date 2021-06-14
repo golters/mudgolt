@@ -11,10 +11,13 @@ import {
   BANNER_WIDTH, 
 } from "../../../constants"
 import "./Header.css"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
+
+const BANNER_MINIMIZE_STORAGE_KEY = 'headerBannerMinimized'
 
 export const Header: React.FC = () => {
   const [room, setRoom] = useState<Room | null>(null)
+  const [minimized, setMinimized] = useState(!!localStorage.getItem(BANNER_MINIMIZE_STORAGE_KEY) || false)
   
   const bannerParts: string[] = []
 
@@ -30,12 +33,28 @@ export const Header: React.FC = () => {
     })
   }, [])
 
+  const toggleBanner = useCallback(() => {
+    setMinimized(!minimized)
+    if (minimized) {
+      localStorage.removeItem(BANNER_MINIMIZE_STORAGE_KEY)
+    } else {
+      localStorage.setItem(BANNER_MINIMIZE_STORAGE_KEY, '1')
+    }
+  }, [minimized])
+
   return (
     <header id="header">
       <div id="header-wrapper">
+        <div className="controls">
+          <span title={`${minimized ? 'Expand' : 'Minimize'} banner`} className="minimize" onClick={toggleBanner}>
+            -
+          </span>
+        </div>
         <h3 id="room-name">{room?.name}</h3>
         <p id="room-description">{room?.description}</p>
-        <div id="banner">{bannerParts.map((part, key) => <div key={key}>{part}</div>)}</div>
+        {!minimized &&
+          <div id="banner">{bannerParts.map((part, key) => <div key={key}>{part}</div>)}</div>
+        }
       </div>
     </header>
   )
