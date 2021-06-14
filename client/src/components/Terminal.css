@@ -37,6 +37,7 @@
 
 #terminal-input-container .char-limit {
   color: var(--color-text-secondary);
+  opacity: 0.75;
   float: right;
 }
 
