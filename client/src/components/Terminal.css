@@ -52,6 +52,14 @@
   color: var(--color-text-tertiary);
 }
 
+.chat-message .date, .chat-message .username  {
+  font-size: 0.9em;
+}
+
+.chat-message .date {
+  opacity: 0.75;
+}
+
 .error-message {
   color: var(--color-text-negative);
 }

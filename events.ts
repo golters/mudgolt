@@ -10,6 +10,7 @@ export const MAKE_ROOM_EVENT = "MAKE_ROOM"
 export const GO_EVENT = "GO"
 export const USERNAME_CHANGE_EVENT = "USERNAME_CHANGE"
 export const PING_EVENT = "PING"
+export const CHAT_HISTORY_EVENT = "CHAT_HISTORY"
 
 // command events
 export const LOG_EVENT = "LOG"

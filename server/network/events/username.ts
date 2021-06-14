@@ -41,7 +41,8 @@ const handler: NetworkEventHandler = (
       player.roomId,
     )
   } catch (error) {
-    sendEvent(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    console.error(error)
   }
 }
 
