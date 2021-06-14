@@ -43,6 +43,7 @@ export const initStore = async () => {
       "fromPlayerId" INTEGER NOT NULL,
       "toPlayerId" INTEGER,
       "message" TEXT,
+      "date" INTEGER,
 
       FOREIGN KEY("roomId") REFERENCES rooms("id"),
       FOREIGN KEY("fromPlayerId") REFERENCES players("id"),
@@ -50,7 +51,9 @@ export const initStore = async () => {
     );
   `)
 
-  const rooms = await db.all(/*sql*/"SELECT id FROM rooms")
+  const rooms = await db.all(/*sql*/`
+    SELECT id FROM rooms
+  `)
 
   if (rooms.length === 0) {
     await createRoom("golt-hq", {

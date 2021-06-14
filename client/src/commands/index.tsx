@@ -62,8 +62,6 @@ const parseArgs = (command: string, input: string) => {
 }
 
 commandEmitter.on(INPUT_EVENT, (input: string) => {
-  console.log(input)
-
   if (input.length > MESSAGE_MAX_LENGTH) {
     pushErrorToLog(`Message must not be longer than ${MESSAGE_MAX_LENGTH} characters.`)
 

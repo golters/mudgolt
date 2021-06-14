@@ -1,7 +1,10 @@
 import {
+  Chat,
   Player, 
 } from "../../../@types"
 import {
+  CHAT_EVENT,
+  CHAT_HISTORY_EVENT,
   PLAYER_EVENT, 
 } from "../../../events"
 import {
@@ -23,7 +26,8 @@ import {
 
 export let client: WebSocket
 
-export const sendEvent = async (code: string, payload: unknown) => {
+// TSX doens't like generics
+export const sendEvent = async <TPayload,> (code: string, payload: TPayload) => {
   client.send(JSON.stringify({
     code,
     payload,
@@ -61,6 +65,12 @@ export const networkTask = () => new Promise<void>((resolve) => {
       const player = payload as Player
 
       store.player = player
+
+      sendEvent<null>(CHAT_HISTORY_EVENT, null)
+    }
+
+    if (code === CHAT_HISTORY_EVENT) {
+      void (payload as Chat[]).forEach(chat => networkEmitter.emit(CHAT_EVENT, chat))
 
       resolve()
     }
