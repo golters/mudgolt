@@ -17,7 +17,7 @@ import {
   setPlayerUsername, 
 } from "../../services/player"
 
-const handler: NetworkEventHandler = (
+const handler: NetworkEventHandler = async (
   socket,
   username: string,
   player: Player,
@@ -33,13 +33,13 @@ const handler: NetworkEventHandler = (
 
     username = username.replace(/\s/g, "_")
 
-    setPlayerUsername(player.id, username)
-
     broadcastToRoom<string>(
       SERVER_LOG_EVENT,
       `${oldUsername} is now known as ${username}`,
       player.roomId,
     )
+
+    await setPlayerUsername(player.id, username)
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)
