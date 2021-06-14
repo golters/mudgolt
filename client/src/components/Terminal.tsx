@@ -71,24 +71,30 @@ export const Terminal: React.FC = () => {
         spellCheck="false"
         ref={input}
     
-        onInput={scrollToBottom}
+        onInput={() => {
+          scrollToBottom()
+
+          setTimeout(() => {
+            let value = input.current?.innerText || ""
+
+            if (value.charCodeAt(value.length - 1) === 10) {
+              value = value.slice(0, value.length - 1)
+            }
+
+            setTextLength(value.length)
+          })
+        }}
     
         // disable rich pastes
         onPaste={event => {
           event.preventDefault()
+
           const text = event.clipboardData.getData("text/plain")
+
           document.execCommand("insertHTML", false, text)
         }}
     
         onKeyDown={event => {
-          setTimeout(() => {
-            let value = input.current?.innerText || ""
-            console.log(value.charCodeAt(value.length - 1))
-            if (value.charCodeAt(value.length - 1) === 10) {
-              value = value.slice(0, value.length - 1)
-            }
-            setTextLength(value.length)
-          }, 1)
           switch (event.key) {
             case "Enter": {
               if (!event.shiftKey) {

@@ -25,6 +25,7 @@ const handler: NetworkEventHandler = (socket, name: string) => {
     sendEvent<string>(socket, SERVER_LOG_EVENT, `Created room ${name}`)
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
+    console.error(error)
   }
 }
 
