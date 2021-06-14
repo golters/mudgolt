@@ -154,9 +154,9 @@ export const Terminal: React.FC = () => {
       })}
 
       <span id="terminal-input-container">
-        <span className={`char-limit ${textLength > MESSAGE_MAX_LENGTH ? 'invalid' : ''}`}>
+        <small className={`char-limit ${textLength > MESSAGE_MAX_LENGTH ? 'invalid' : ''}`}>
           {String(textLength)}/{MESSAGE_MAX_LENGTH}
-        </span>
+        </small>
         <span>&gt;</span> {Input ? <Input /> : null}
       </span>
     </main>
