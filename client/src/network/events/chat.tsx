@@ -39,7 +39,7 @@ const handler: NetworkEventHandler = ({ player, message, date }: Chat) => {
 
   pushToLog(
     <span className="chat-message">
-      <span className="date">[{timestamp}] </span>
+      <span className="date" title={new Date(date).toLocaleString()}>[{timestamp}] </span>
       <span className="username">[{player.username}] </span>
       <Markdown string={message} />
       {embeds}
