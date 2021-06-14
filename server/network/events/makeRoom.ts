@@ -14,13 +14,13 @@ import {
 
 const NAME_LENGTH = 32
 
-const handler: NetworkEventHandler = (socket, name: string) => {
+const handler: NetworkEventHandler = async (socket, name: string) => {
   try {
     if (name.length > NAME_LENGTH) throw new Error(`Room name must not be greater than ${NAME_LENGTH} characters`)
 
     name = name.replace(/\s/g, "_")
 
-    createRoom(name)
+    await createRoom(name)
 
     sendEvent<string>(socket, SERVER_LOG_EVENT, `Created room ${name}`)
   } catch (error) {
