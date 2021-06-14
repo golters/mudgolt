@@ -41,6 +41,7 @@ const host = NODE_ENV === "development"
   : location.host
 
 let reconnectAttempts = 0
+let requestedChat = false
 
 export const networkTask = () => new Promise<void>((resolve) => {
   client = new WebSocket(`${location.protocol === "https:" ? "wss:" : "ws:"}//${host}/ws?public-key=${encodeURIComponent(localStorage.publicKey)}`)
@@ -66,7 +67,12 @@ export const networkTask = () => new Promise<void>((resolve) => {
 
       store.player = player
 
-      sendEvent<null>(CHAT_HISTORY_EVENT, null)
+      if (requestedChat) {
+        resolve()
+      } else {
+        sendEvent<null>(CHAT_HISTORY_EVENT, null)
+        requestedChat = true
+      }
     }
 
     if (code === CHAT_HISTORY_EVENT) {
