@@ -32,10 +32,14 @@ const handler: NetworkEventHandler = ({ player, message, date }: Chat) => {
     .slice(0, 1)
 
     formattedTimeParts[0] = formattedTimeParts[0].split(':').slice(0, 2).join(":")
+    
+  const timestamp = Date.now() - date < 86400000
+    ? formattedTimeParts.join(" ")
+    : `${formattedDate} ${formattedTimeParts.join(" ")}`
 
   pushToLog(
     <span className="chat-message">
-      <span className="date">[{formattedDate} {formattedTimeParts.join(" ")}] </span>
+      <span className="date">[{timestamp}] </span>
       <span className="username">[{player.username}] </span>
       <Markdown string={message} />
       {embeds}
