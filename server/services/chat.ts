@@ -12,9 +12,12 @@ export const insertRoomChat = async (roomId: number, fromPlayerId: number, messa
 
 export const fetchRoomChats = async (roomId: number, limit = 500): Promise<Chat[]> => {
   const chatHistories = await db.all<ChatHistory[]>(/*sql*/`
-    SELECT * FROM chats
+    SELECT * FROM (
+      SELECT * FROM chats
       WHERE roomId = $1
+      ORDER BY date DESC
       LIMIT ${limit}
+    ) ORDER BY date ASC
   `, [roomId])
 
   const playerIds: number[] = []
