@@ -55,6 +55,7 @@ export const online: {
   player: Player
 }[] = []
 
+
 server.on("connection", (socket, request) => {
   console.log("Socket connected to server")
 
@@ -98,7 +99,7 @@ server.on("connection", (socket, request) => {
             player,
           })
 
-          broadcast(SERVER_LOG_EVENT, `${player.username} is now online`)
+          //broadcast(SERVER_LOG_EVENT, `${player.username} is now online`)
           broadcastToRoom(SERVER_LOG_EVENT, `${player.username} has joined ${room.name}`, player.roomId)
         } else {
           sendEvent(socket, ERROR_EVENT, "Invalid signature")
@@ -122,7 +123,7 @@ server.on("connection", (socket, request) => {
 
     online.splice(online.findIndex(({ player }) => player.publicKey === publicKey), 1)
 
-    broadcast(SERVER_LOG_EVENT, `${player.username} went offline`)
+    //broadcast(SERVER_LOG_EVENT, `${player.username} went offline`)
   })
 })
 
