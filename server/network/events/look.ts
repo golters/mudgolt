@@ -30,10 +30,9 @@ const handler: NetworkEventHandler = async (socket, roomID: string, player) => {
 		  if (player.roomId == room?.id) {
 			  message = `${message} ${player?.username}`
 		}
-	})
-	  //fix this, log event not working so sending to whole room instead
-	  broadcastToRoom<string>(SERVER_LOG_EVENT, `${message}`, player?.roomId)
+	})	  
 	  sendEvent<string>(socket, LOG_EVENT, message)
+	  sendEvent<string>(socket, ERROR_EVENT, message)
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)
