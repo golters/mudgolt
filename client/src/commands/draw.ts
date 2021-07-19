@@ -39,4 +39,4 @@ export const Draw: CommandModule = {
 		sendEvent(DRAW_EVENT, args)
 	},
 
-} 
+}
