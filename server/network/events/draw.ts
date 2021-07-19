@@ -31,4 +31,4 @@ const handler: NetworkEventHandler = async (socket, payload: string, player) => 
 	}
 }
 
-networkEmitter.on(DRAW_EVENT, handler) 
+networkEmitter.on(DRAW_EVENT, handler)
