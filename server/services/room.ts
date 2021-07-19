@@ -7,11 +7,40 @@ import {
 import {
   BANNER_WIDTH, BANNER_HEIGHT, BANNER_FILL, 
 } from "../../constants"
+import {
+	ROOM_UPDATE_EVENT,
+} from "../../events"
+import {
+	broadcastToRoom,
+} from "../network"
 
 export const generateBanner = () => {
   return new Array(BANNER_WIDTH * BANNER_HEIGHT)
     .fill(BANNER_FILL)
     .join("")
+}
+
+export const editBaner = async (x: string, y: string, char: string, room: Room | undefined): Promise<Room | undefined> => {
+	let pos = (Number(x)-1) + ((Number(y)- 1) * 96)
+	if (!room) {
+		throw new Error("Room doesn't exist")
+	}
+	let newBanner1 = room?.banner.substring(0, pos)
+	let newBanner2 = room?.banner.substring(pos + 1)
+	let newbanner = newBanner1 + char + newBanner2
+
+	await db.run(/*sql*/`
+    UPDATE rooms
+      SET banner = $1
+      WHERE id = $2;
+  `, [newbanner, room?.id])
+	
+	if (room === undefined) {
+		throw new Error("Room doesn't exist")
+	}
+	broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room?.id)
+
+	return room
 }
 
 export const createRoom = async (name: string, props: Partial<Room> = {}): Promise<Room> => {
