@@ -27,7 +27,16 @@ import {
 import Nick from "./username"
 import React from "react"
 import { Color } from './color'
-import {Look}from './look'
+import { Look } from './look'
+import {
+	Draw,
+} from "./draw"
+import {
+	MakeDoor,
+} from "./makeDoor"
+import {
+	Tp,
+} from "./tp"
 
 export const commandModules = [
   Roll,
@@ -37,6 +46,9 @@ export const commandModules = [
   Nick,
   Color,
   Look,
+	Draw,
+	MakeDoor,
+  Tp,
 ]
 
 const findCommand = (nameOrAlias: string) => {
