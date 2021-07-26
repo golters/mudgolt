@@ -31,6 +31,12 @@ import { Look } from './look'
 import {
 	Draw,
 } from "./draw"
+import {
+	MakeDoor,
+} from "./makeDoor"
+import {
+	Tp,
+} from "./tp"
 
 export const commandModules = [
   Roll,
@@ -39,8 +45,10 @@ export const commandModules = [
   Help,
   Nick,
   Color,
-	Look,
-  Draw,
+  Look,
+	Draw,
+	MakeDoor,
+  Tp,
 ]
 
 const findCommand = (nameOrAlias: string) => {
