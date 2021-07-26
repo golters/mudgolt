@@ -11,6 +11,10 @@ export const GO_EVENT = "GO"
 export const USERNAME_CHANGE_EVENT = "USERNAME_CHANGE"
 export const PING_EVENT = "PING"
 export const CHAT_HISTORY_EVENT = "CHAT_HISTORY"
+export const LOOK_EVENT = "LOOK"
+export const DRAW_EVENT = "DRAW"
+export const MAKE_DOOR_EVENT = "MAKE_DOOR"
+export const TP_EVENT = "TP"
 
 // command events
 export const LOG_EVENT = "LOG"
