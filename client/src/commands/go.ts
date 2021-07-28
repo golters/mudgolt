@@ -13,7 +13,7 @@ import {
 
 export const Go: CommandModule = {
   command: "go",
-  syntax: "go [room name]",
+  syntax: "go [door name]",
 
   callback ({ args }) {
     let [roomName] = args
