@@ -13,6 +13,6 @@ export const Help: CommandModule = {
   syntax: "help",
 
   callback () {
-    pushToLog("<u>Command list</u>\n" + commandModules.map(({ syntax }) => syntax).join("\n"))
+    pushToLog("<u>Command list</u>\n/" + commandModules.map(({ syntax }) => syntax).join("\n/"))
   },
 }
