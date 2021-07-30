@@ -29,11 +29,14 @@ export const createDoor = async (roomID: number, targetID: number | undefined, n
 }
 
 export const getDoorByName = async (roomID: number, name: string): Promise<Door | undefined> => {
-	const room = await db.get<Door>(/*sql*/`
+	const door = await db.get<Door>(/*sql*/`
     SELECT * FROM doors WHERE "room_id" = $1 AND "name" = $2;
-  `, [roomID,name])
+  `, [roomID, name])
 
-	return room
+	if (door === undefined) {
+		throw new Error("door does not exist")		
+	}
+	return door
 }
 
 export const getDoorByRoom = async (roomId: number): Promise <Door[]> => {
