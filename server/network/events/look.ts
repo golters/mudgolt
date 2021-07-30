@@ -10,7 +10,6 @@ import {
   LOOK_EVENT,
 	LOG_EVENT,
 	ERROR_EVENT,
-	SERVER_LOG_EVENT,
 } from "../../../events"
 import { getRoomById } from "../../services/room"
 import { getDoorByRoom } from "../../services/door"
@@ -46,11 +45,9 @@ const handler: NetworkEventHandler = async (socket, roomID: string, player) => {
 	  } else {
 		  message = `${message}\nthere are no exits`
 	  }
-
 	  
 
 	  sendEvent<string>(socket, LOG_EVENT, message)
-	  sendEvent<string>(socket, ERROR_EVENT, message)
 
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
