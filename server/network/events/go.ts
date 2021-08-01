@@ -2,16 +2,16 @@ import {
   networkEmitter, NetworkEventHandler, 
 } from "./emitter"
 import {
-	ERROR_EVENT,
-	LOG_EVENT,
+  ERROR_EVENT,
+  LOG_EVENT,
   GO_EVENT,
   ROOM_UPDATE_EVENT,
   SERVER_LOG_EVENT,
 } from "../../../events"
 import {
   broadcastToRoom,
-	sendEvent,
-	online,
+  sendEvent,
+  online,
 } from "../../network"
 import {
   setPlayerRoomByName, 
@@ -19,11 +19,11 @@ import {
 import { getRoomById } from "../../services/room"
 import { getDoorByName, getDoorByRoom } from "../../services/door"
 import {
-	Room,
-	Door
+  Room,
+  Door,
 } from "@types"
 import {
-	db,
+  db,
 } from "../../store"
 
 
@@ -37,20 +37,19 @@ const handler: NetworkEventHandler = async (socket, doorName: string, player) =>
       return
 	  }
 	  const door = await getDoorByName(player.roomId, doorName);
-	  const doors = await getDoorByRoom(player.roomId)
 
 	  const { target_room_id: roomId } = await db.get(/*sql*/`
 SELECT target_room_id FROM doors WHERE "room_id" = $1 AND "name" = $2;
 `, [oldRoom.id, doorName])
 
 	  const newRoom = await getRoomById(roomId)
-	  var roomName: string = newRoom?.name as string
+	  let roomName: string = newRoom?.name as string
 
 	  if (oldRoom.name === roomName) {
       return
 	  }
 
-	  if (typeof roomName !== 'string') {
+	  if (typeof roomName !== "string") {
 		  sendEvent<string>(socket, ERROR_EVENT, "name not string")
 
 		  return
@@ -58,6 +57,7 @@ SELECT target_room_id FROM doors WHERE "room_id" = $1 AND "name" = $2;
 	  roomName = roomName.replace(/\s/g, "_")
 
 	  const room = await setPlayerRoomByName(player.id, roomName as string)	  
+	  const doors = await getDoorByRoom(player.roomId)
 
 	  let message = `${newRoom?.description}\nyou see`
 
