@@ -31,9 +31,9 @@ export const editBaner = async (x: string, y: string, char: string, room: Room):
     UPDATE rooms
       SET banner = $1
       WHERE id = $2;
-  `, [newbanner, room?.id])
+  `, [newbanner, room.id])
 
-  broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
+  broadcastToRoom<Room>(ROOM_UPDATE_EVENT, await getRoomById(room.id), room.id)
 
   return room
 }
