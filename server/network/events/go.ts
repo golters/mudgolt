@@ -74,7 +74,7 @@ SELECT target_room_id FROM doors WHERE "room_id" = $1 AND "name" = $2;
 	  }
 
     broadcastToRoom<Room>(ROOM_UPDATE_EVENT, oldRoom, oldRoom.id)
-    broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has left ${oldRoom.name} through ${doorName}`, oldRoom.id)
+    broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has left ${oldRoom.name} through the ${doorName}`, oldRoom.id)
 	  broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
 	  broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has joined ${room.name}`, room.id)
 	  sendEvent<string>(socket, LOG_EVENT, message)
