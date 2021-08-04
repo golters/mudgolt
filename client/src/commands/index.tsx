@@ -40,6 +40,9 @@ import {
 import {
 	DeleteDoor,
 } from "./deleteDoor"
+import {
+	Describe,
+} from "./describe"
 
 export const commandModules = [
   Roll,
@@ -52,7 +55,8 @@ export const commandModules = [
 	Draw,
 	MakeDoor,
 	Tp,
-  DeleteDoor,
+	DeleteDoor,
+	Describe,
 ]
 
 const findCommand = (nameOrAlias: string) => {

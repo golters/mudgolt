@@ -8,21 +8,21 @@ import {
 } from "../"
 import {
   LOOK_EVENT,
-	LOG_EVENT,
-	ERROR_EVENT,
+  LOG_EVENT,
+  ERROR_EVENT,
 } from "../../../events"
 import { getRoomById } from "../../services/room"
 import { getDoorByRoom } from "../../services/door"
 import { debug } from "console"
 import {
-	broadcastToRoom,
+  broadcastToRoom,
 } from "../../network"
 import {
-	Player,
-	Door
+  Player,
+  Door,
 } from "@types"
 import {
-	db,
+  db,
 } from "../../store"
 import { forEachChild } from "typescript"
 
@@ -36,11 +36,14 @@ const handler: NetworkEventHandler = async (socket, roomID: string, player) => {
 	  online.forEach(({ player }) => {
 		  if (player.roomId == room?.id) {
 			  message = `${message} ${player?.username}`
-		}
+      }
 	  })
 	  const doors = await getDoorByRoom(player.roomId)
 	  const names = doors.map(x => x.name);
-	  if (doors) {
+	  if (!doors) {
+		  return
+	  }
+	  if (doors.length > 0) {
 		  message = `${message}\nthe exits are ${names}`
 	  } else {
 		  message = `${message}\nthere are no exits`
@@ -52,7 +55,7 @@ const handler: NetworkEventHandler = async (socket, roomID: string, player) => {
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)
-	}
+  }
 }
 
 networkEmitter.on(LOOK_EVENT, handler)
