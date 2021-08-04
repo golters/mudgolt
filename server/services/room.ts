@@ -31,19 +31,19 @@ export const editBaner = async (x: string, y: string, char: string, room: Room):
     UPDATE rooms
       SET banner = $1
       WHERE id = $2;
-  `, [newbanner, room?.id])
+  `, [newbanner, room.id])
 
-  broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
+  broadcastToRoom<Room>(ROOM_UPDATE_EVENT, await getRoomById(room.id), room.id)
 
   return room
 }
 
-export const editBio = async (bio: string, room: Room | undefined): Promise<Room> => {
+export const editBio = async (bio: string, room: Room): Promise<Room> => {
   await db.run(/*sql*/`
     UPDATE rooms
       SET description = $1
       WHERE id = $2;
-  `, [bio, room?.id])
+  `, [bio, room.id])
 
   if (room === undefined) {
     throw new Error("Room doesn't exist")
