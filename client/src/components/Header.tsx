@@ -51,7 +51,6 @@ export const Header: React.FC = () => {
           </span>
         </div>
         <h3 id="room-name">{room?.name}</h3>
-        <p id="room-description">{room?.description}</p>
         {!minimized &&
           <div id="banner">{bannerParts.map((part, key) => <div key={key}>{part}</div>)}</div>
         }
