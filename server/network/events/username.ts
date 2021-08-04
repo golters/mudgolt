@@ -26,20 +26,18 @@ const handler: NetworkEventHandler = async (
     const oldUsername = player.username
 
     if (username.length > USERNAME_MAX_LENGTH) {
-      throw new Error(
-        `Username must not be greater than ${USERNAME_MAX_LENGTH} characters`,
-      )
+      throw new Error(`Username must not be greater than ${USERNAME_MAX_LENGTH} characters`)
     }
 
-    username = username.replace(/\s/g, "_")
+    const newUsername = username.replace(/\s/g, "_")
 
     broadcastToRoom<string>(
       SERVER_LOG_EVENT,
-      `${oldUsername} is now known as ${username}`,
+      `${oldUsername} is now known as ${newUsername}`,
       player.roomId,
     )
 
-    await setPlayerUsername(player.id, username)
+    await setPlayerUsername(player.id, newUsername)
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)

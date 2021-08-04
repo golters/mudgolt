@@ -1,15 +1,15 @@
 import {
-	networkEmitter, NetworkEventHandler,
+  networkEmitter, NetworkEventHandler,
 } from "./emitter"
 import {
-	LOG_EVENT,
+  LOG_EVENT,
 } from "../../../../events"
 import {
-	pushToLog,
+  pushToLog,
 } from "../../components/Terminal"
 
 const handler: NetworkEventHandler = (message: string) => {
-	pushToLog(`${message}`)
+  pushToLog(`${message}`)
 }
 
 networkEmitter.on(LOG_EVENT, handler)

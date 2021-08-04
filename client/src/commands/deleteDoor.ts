@@ -1,31 +1,29 @@
 import {
-	DELETE_DOOR_EVENT,
+  DELETE_DOOR_EVENT,
 } from "../../../events"
 import {
-	pushErrorToLog,
+  pushErrorToLog,
 } from "../components/Terminal"
 import {
-	sendEvent,
+  sendEvent,
 } from "../network"
 import {
-	CommandModule,
+  CommandModule,
 } from "./emitter"
 
 export const DeleteDoor: CommandModule = {
-	command: "deletedoor",
-	syntax: "deletedoor [door name]",
+  command: "deletedoor",
+  syntax: "deletedoor [door name]",
 
-	callback({ args }) {
-		let [door] = args
+  callback({ args }) {
+    const [door] = args
 
-		door = door?.trim()
+    if (!door) {
+      pushErrorToLog(`Syntax: ${DeleteDoor.syntax}`)
 
-		if (!door) {
-			pushErrorToLog(`Syntax: ${DeleteDoor.syntax}`)
+      return
+    }
 
-			return
-		}
-
-		sendEvent(DELETE_DOOR_EVENT, args)
-	},
+    sendEvent(DELETE_DOOR_EVENT, [door.trim()])
+  },
 }

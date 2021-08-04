@@ -2,14 +2,13 @@ import {
   networkEmitter, NetworkEventHandler,
 } from "./emitter"
 import {
-  broadcastToRoom, sendEvent,
+  sendEvent,
 } from ".."
 import {
-  ROOM_DESCRIBE_EVENT, SERVER_LOG_EVENT, ERROR_EVENT,
+  ROOM_DESCRIBE_EVENT, ERROR_EVENT,
 } from "../../../events"
 import {
   Player,
-  Room,
 } from "../../../@types"
 import {
   ROOM_MAX_BIO,
@@ -29,14 +28,15 @@ const handler: NetworkEventHandler = async (
     const oldBio = room?.description
 
     if (bio.length > ROOM_MAX_BIO) {
-      throw new Error(
-        `Description must not be greater than ${ROOM_MAX_BIO} characters`,
-      )
+      throw new Error(`Description must not be greater than ${ROOM_MAX_BIO} characters`)
     }
+
     if (oldBio === undefined) {
       return
     }
+
     const checked = new Array<number>()
+
     for (let i = 0; i < bio.length; i++) {
       for (let b = 0; b < oldBio?.length; b++) {
         if (!checked.includes(b)) {
@@ -50,20 +50,17 @@ const handler: NetworkEventHandler = async (
         }
       }
     }
-    let remainder = 0
-    if (bio.length > oldBio?.length) {
-      remainder = (ROOM_MAX_BIO - oldBio?.length) - (ROOM_MAX_BIO - bio?.length)
-    }
+
+    const remainder = bio.length > oldBio?.length 
+      ? (ROOM_MAX_BIO - oldBio?.length) - (ROOM_MAX_BIO - bio?.length)
+      : 0
+
     const cost = (oldBio?.length - checked.length) + remainder
-    console.log(cost)
 
     if (cost > 50) {
-      throw new Error(
-        "This edit is too much, try to change/add under 50 characters at a time",
-      )
+      throw new Error("This edit is too much, try to change/add under 50 characters at a time")
     }
 
-    console.log(bio)
     await editBio(bio, room)
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
