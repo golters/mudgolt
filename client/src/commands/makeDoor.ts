@@ -1,31 +1,29 @@
 import {
-	MAKE_DOOR_EVENT,
+  MAKE_DOOR_EVENT,
 } from "../../../events"
 import {
-	pushErrorToLog,
+  pushErrorToLog,
 } from "../components/Terminal"
 import {
-	sendEvent,
+  sendEvent,
 } from "../network"
 import {
-	CommandModule,
+  CommandModule,
 } from "./emitter"
 
 export const MakeDoor: CommandModule = {
-	command: "makedoor",
-	syntax: "makedoor [door name] [destination room]",
+  command: "makedoor",
+  syntax: "makedoor [door name] [destination room]",
 
-	callback({ args }) {
-		let [name,room] = args
+  callback({ args }) {
+    const [name, room] = args
 
-		name = name?.trim()
+    if (!name) {
+      pushErrorToLog(`Syntax: ${MakeDoor.syntax}`)
 
-		if (!name) {
-			pushErrorToLog(`Syntax: ${MakeDoor.syntax}`)
+      return
+    }
 
-			return
-		}
-
-		sendEvent(MAKE_DOOR_EVENT, args)
-	},
+    sendEvent(MAKE_DOOR_EVENT, [name.trim(), room])
+  },
 }

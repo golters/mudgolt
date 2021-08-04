@@ -16,9 +16,7 @@ export const MakeRoom: CommandModule = {
   syntax: "makeroom [room name]",
 
   callback ({ args }) {
-    let [name] = args
-
-    name = name?.trim()
+    const [name] = args
 
     if (!name) {
       pushErrorToLog(`Syntax: ${MakeRoom.syntax}`)
@@ -26,6 +24,6 @@ export const MakeRoom: CommandModule = {
       return
     }
 
-    sendEvent(MAKE_ROOM_EVENT, name)
+    sendEvent(MAKE_ROOM_EVENT, name.trim())
   },
 }

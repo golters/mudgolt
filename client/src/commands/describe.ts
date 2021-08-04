@@ -1,24 +1,24 @@
 import {
-	ROOM_DESCRIBE_EVENT,
+  ROOM_DESCRIBE_EVENT,
 } from "../../../events"
 import { pushErrorToLog } from "../components/Terminal"
 import {
-	sendEvent,
+  sendEvent,
 } from "../network"
 import {
-	ROOM_MAX_BIO,
+  ROOM_MAX_BIO,
 } from "../../../constants"
 import {
-	CommandModule,
+  CommandModule,
 } from "./emitter"
 
 export const Describe: CommandModule = {
-	command: "describe",
-	syntax: "describe [room description]",
+  command: "describe",
+  syntax: "describe [room description]",
 
-	callback({ input }) {
-		let bio = input
-		bio = bio.substring(10)
-		sendEvent(ROOM_DESCRIBE_EVENT, bio)
-	},
+  callback({ input }) {
+    let bio = input
+    bio = bio.substring(10)
+    sendEvent(ROOM_DESCRIBE_EVENT, bio)
+  },
 }

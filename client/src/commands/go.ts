@@ -16,9 +16,7 @@ export const Go: CommandModule = {
   syntax: "go [door name]",
 
   callback ({ args }) {
-    let [roomName] = args
-
-    roomName = roomName?.trim()
+    const [roomName] = args
 
     if (!roomName) {
       pushErrorToLog(`Syntax: ${Go.syntax}`)
@@ -26,6 +24,6 @@ export const Go: CommandModule = {
       return
     }
 
-    sendEvent(GO_EVENT, roomName)
+    sendEvent(GO_EVENT, roomName.trim())
   },
 }

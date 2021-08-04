@@ -1,4 +1,4 @@
-import { Props } from "react"
+/* eslint-disable camelcase */
 import {
   Door,
 } from "../../@types"
@@ -6,7 +6,7 @@ import {
   db,
 } from "../store"
 
-export const createDoor = async (roomID: number, targetID: number | undefined, name: string, props: Partial<Door> = {}): Promise<Door> => {
+export const createDoor = async (roomID: number, targetID: number | undefined, name: string): Promise<Door> => {
   const existingRoom = await db.get<Partial<Door>>(/*sql*/`
     SELECT id FROM rooms WHERE "room_id" = $1 AND ("target_room_id" = $2 OR "name" = $3)
   `, [roomID,targetID,name])
@@ -24,9 +24,8 @@ export const createDoor = async (roomID: number, targetID: number | undefined, n
     name,
   ])
 
-  const room = await getDoorByName(roomID, name) as Door
-
-  return room
+  // FIXME: this is an unnecessary query
+  return await getDoorByName(roomID, name)
 }
 
 export const deleteDoor = async (roomID: number, name: string): Promise<void> => {
@@ -38,7 +37,7 @@ export const deleteDoor = async (roomID: number, name: string): Promise<void> =>
   ])
 }
 
-export const getDoorByName = async (roomID: number, name: string): Promise<Door | undefined> => {
+export const getDoorByName = async (roomID: number, name: string): Promise<Door> => {
   const door = await db.get<Door>(/*sql*/`
     SELECT * FROM doors WHERE "room_id" = $1 AND "name" = $2;
   `, [roomID, name])
@@ -50,10 +49,22 @@ export const getDoorByName = async (roomID: number, name: string): Promise<Door 
   return door
 }
 
-export const getDoorByRoom = async (roomId: number): Promise <Door[]> => {
+export const getDoorByRoom = async (roomId: number): Promise<Door[]> => {
   const doors = await db.all<Door[]>(/*sql*/`
     SELECT * FROM doors WHERE room_id = $1;
   `, [roomId])
 
   return doors
+}
+
+export const getTargetDoor = async (roomId: number, doorName: string): Promise<Door> => {
+  const targetDoor = await db.get<Door>(/*sql*/`
+    SELECT target_room_id FROM doors WHERE "room_id" = $1 AND "name" = $2;
+  `, [roomId, doorName])
+
+  if (!targetDoor) {
+    throw new Error("Door doesn't exist")
+  }
+
+  return targetDoor
 }
