@@ -70,8 +70,9 @@
 }
 
 #banner span:hover {
-  color: var(--color-background-primary);
-  background-color: var(--color-text-primary);
+  /* color: var(--color-background-primary);
+  background-color: var(--color-text-primary); */
+  color: var(--color-text-tertiary);
 }
 
 #room-name {
