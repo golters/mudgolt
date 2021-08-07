@@ -43,6 +43,9 @@ import {
 import {
 	Describe,
 } from "./describe"
+import {
+  Brush,
+} from "./brush"
 
 export const commandModules = [
   Roll,
@@ -57,6 +60,7 @@ export const commandModules = [
 	Tp,
 	DeleteDoor,
 	Describe,
+  Brush,
 ]
 
 const findCommand = (nameOrAlias: string) => {

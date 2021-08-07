@@ -20,20 +20,22 @@ export const generateBanner = () => {
     .join("")
 }
 
-export const editBaner = async (x: string, y: string, char: string, room: Room): Promise<Room> => {
-  const pos = (Number(x)-1) + ((Number(y)- 1) * 96)
+export const editBaner = async (x: number, y: number, character: string, room: Room): Promise<Room> => {
+  const pos = x + (y * BANNER_WIDTH)
 
-  const newBanner1 = room.banner.substring(0, pos)
-  const newBanner2 = room.banner.substring(pos + 1)
-  const newbanner = newBanner1 + char + newBanner2
+  const banner = room.banner.split("")
+
+  banner[pos] = character
+
+  room.banner = banner.join("")
 
   await db.run(/*sql*/`
     UPDATE rooms
       SET banner = $1
       WHERE id = $2;
-  `, [newbanner, room.id])
+  `, [room.banner, room.id])
 
-  broadcastToRoom<Room>(ROOM_UPDATE_EVENT, await getRoomById(room.id), room.id)
+  broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
 
   return room
 }
