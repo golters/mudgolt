@@ -65,6 +65,7 @@
 
 /* Individual character */
 #banner span {
+  display: inline-block;
   width: 8px;
   cursor: none;
 }
