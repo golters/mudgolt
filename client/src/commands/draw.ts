@@ -1,3 +1,4 @@
+import { BANNER_HEIGHT, BANNER_WIDTH } from "../../../constants"
 import {
   DRAW_EVENT,
 } from "../../../events"
@@ -14,36 +15,32 @@ import {
 
 export const Draw: CommandModule = {
   command: "draw",
-  syntax: "draw [x] [y] [character]",
+  syntax: `draw [0-${BANNER_WIDTH}] [0-${BANNER_HEIGHT}] [character]`,
 
   callback({ args }) {
-    const [x, y, char] = args
+    const x = parseInt(args[0])
+    const y = parseInt(args[1])
+    const character = args[2]
 
-    if (!x || !y || !char) {
+    if (typeof x !== "number" || typeof y !== "number" || typeof character !== "string") {
       pushErrorToLog(this.syntax)
       
       return
     }
 
-    if (isNaN(Number(x)) || isNaN(Number(y))){
-      pushErrorToLog("Argument must be a number")
-      
-      return
-    }
-
-    if (parseInt(x) > 96 || parseInt(y) > 16 || parseInt(x) == 0 || parseInt(y) == 0) {
-      pushErrorToLog("[1-96] [1-16] [character]")
+    if (x >= BANNER_WIDTH || y >= BANNER_HEIGHT || x < 0 || y < 0) {
+      pushErrorToLog(this.syntax)
       
       return
     }
     
-    if (char.length > 1) {
+    if (character.length > 1) {
       pushErrorToLog("Single character required")
       
       return
     }
 
-    sendEvent(DRAW_EVENT, args)
+    sendEvent(DRAW_EVENT, [x, y, character])
   },
 
 }

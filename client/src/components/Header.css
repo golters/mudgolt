@@ -71,9 +71,8 @@
 }
 
 #banner span:hover {
-  /* color: var(--color-background-primary);
-  background-color: var(--color-text-primary); */
   color: var(--color-text-tertiary);
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 #room-name {
