@@ -32,7 +32,7 @@ const handler: NetworkEventHandler = async (socket, payload: [number, number, st
       return
     }
 
-    if (char.length > 1) {
+    if (char.length !== 1) {
       sendEvent<string>(socket, ERROR_EVENT, "You may only draw one character at a time")
 
       return
