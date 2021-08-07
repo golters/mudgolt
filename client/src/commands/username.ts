@@ -17,7 +17,7 @@ const Username: CommandModule = {
   callback({ args }) {
     const [nickname] = args
 
-    if (nickname) {
+    if (!nickname) {
       pushErrorToLog(`Syntax: ${Username.syntax}`)
 
       return
