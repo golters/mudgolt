@@ -10,7 +10,7 @@ export const Color: CommandModule = {
     const [key, value] = args;
     
     if(key == "themes" && value == undefined){
-      pushErrorToLog("try themes: amiga, commodore, green, amber, windows, cga, gba")
+      pushErrorToLog("try themes: amiga, commodore, green, amber, windows, cga, gba, light")
     }else
     if (key != undefined && value == undefined){    
       try{
