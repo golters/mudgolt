@@ -4,23 +4,36 @@ import { pushErrorToLog, pushToLog } from "../components/Terminal"
 
 export const Color: CommandModule = {
   command: "color",
-  syntax: "color [key] [value]",
+  syntax: "color [key] [value] or 'color themes' for a list of themes",
 
   callback ({ args }) {
     const [key, value] = args;
     
+    if(key == "themes" && value == undefined){
+      pushErrorToLog("try themes: amiga, commodore, green, amber, windows, cga, gba")
+    }else
+    if (key != undefined && value == undefined){    
+      try{
+        colorUtil.changeTheme(key);
+        pushToLog("Color theme changed");
+      } catch (e){
+        pushErrorToLog(e.message)
+      }
+    } else
+
     if (key === undefined && value === undefined) {
       colorUtil.resetColors();
       pushToLog("Color theme reset");
       
       return;
-    }
+    } else{
 
-    try {
-      colorUtil.setColor(key, value);
-      pushToLog(`Updated color "${key}" to "${value}"`);
-    } catch (e) {
-      pushErrorToLog(e.message)
+      try {
+        colorUtil.setColor(key, value);
+        pushToLog(`Updated color "${key}" to "${value}"`);
+      } catch (e) {
+        pushErrorToLog(e.message)
+      }
     }
   },
 }
