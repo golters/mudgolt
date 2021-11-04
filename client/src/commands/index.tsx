@@ -46,6 +46,9 @@ import {
 import {
   Brush,
 } from "./brush"
+import{
+  Shout,
+} from "./shout"
 
 export const commandModules = [
   Look,
@@ -61,6 +64,7 @@ export const commandModules = [
 	MakeDoor,
 	DeleteDoor,
 	Draw,
+  Shout,
 ]
 
 const findCommand = (nameOrAlias: string) => {
