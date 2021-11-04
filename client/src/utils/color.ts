@@ -24,6 +24,7 @@ const VALID_COLOR_THEMES = [
   "cga",
   "windows",
   "gba",
+  "light",
 ];
 
 const DEFAULT_THEME: ColorTheme = {
@@ -53,7 +54,7 @@ const amiga: ColorTheme = {
 }
 const commodore: ColorTheme = {
   "background-primary": "#4835ad",
-  "background-code": "#8677e1",
+  "background-code": "#84cdcf",
   "text-primary": "#8677e1",
   "text-secondary": "#84cdcf",
   "text-tertiary": "#d9e474",
@@ -61,7 +62,7 @@ const commodore: ColorTheme = {
   "text-negative": "#d9e474",
   "divider": "#8677e1",
   "scrollbar": "#8677e1",
-  "brush": "#d9e474",
+  "brush": "#8677e1",
 }
 const green: ColorTheme = {
   "background-primary": "#023401",
@@ -122,6 +123,18 @@ const gba: ColorTheme = {
   "divider": "#346856",
   "scrollbar": "#346856",
   "brush": "#346856",
+}
+const light: ColorTheme = {
+  "background-primary": "white",
+  "background-code": "grey",
+  "text-primary": "black",
+  "text-secondary": "black",
+  "text-tertiary": "black",
+  "text-link": "grey",
+  "text-negative": "grey",
+  "divider": "grey",
+  "scrollbar": "grey",
+  "brush": "grey",
 }
 
 const THEME_STORAGE_KEY = "colorTheme";
@@ -267,6 +280,14 @@ class ColorUtil {
            rootElement.style.setProperty(`--color-${key}`, value);
          }
          this.currentTheme = gba;
+         this.saveTheme();
+         break;
+       case "light":
+         for (const key in light) {
+           const value = light[key as keyof typeof light];
+           rootElement.style.setProperty(`--color-${key}`, value);
+         }
+         this.currentTheme = light;
          this.saveTheme();
          break;
      }
