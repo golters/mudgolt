@@ -48,19 +48,19 @@ import {
 } from "./brush"
 
 export const commandModules = [
-  Roll,
-  MakeRoom,
+  Look,
   Go,
+	Tp,
   Help,
   Nick,
   Color,
-  Look,
-	Draw,
-	MakeDoor,
-	Tp,
-	DeleteDoor,
-	Describe,
+  Roll,
   Brush,
+	Describe,
+  MakeRoom,
+	MakeDoor,
+	DeleteDoor,
+	Draw,
 ]
 
 const findCommand = (nameOrAlias: string) => {
