@@ -1,5 +1,6 @@
+/* eslint-disable camelcase */
 export interface Door {
   name: string
-  toRoomId: number
-  fromRoomId: number
+  target_room_id: number
+  room_id: number
 }

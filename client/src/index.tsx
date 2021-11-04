@@ -33,7 +33,7 @@ const init = async () => {
   console.log("Client started")
 
   pushToLog(/* html */`Welcome to MUDGOLT! <small>Leave your shoes at the door.</small>`)
-  pushToLog(/* html */`Want to contribute? https://github.com/golters/mudgolt`)
+  // pushToLog(/* html */`Want to contribute? https://github.com/golters/mudgolt`)
   pushToLog(/* html */`Type <code>/help</code> for a list of commands.`)
 }
 

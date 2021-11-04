@@ -1,31 +1,29 @@
 import {
-	TP_EVENT,
+  TP_EVENT,
 } from "../../../events"
 import {
-	pushErrorToLog,
+  pushErrorToLog,
 } from "../components/Terminal"
 import {
-	sendEvent,
+  sendEvent,
 } from "../network"
 import {
-	CommandModule,
+  CommandModule,
 } from "./emitter"
 
 export const Tp: CommandModule = {
-	command: "tp",
-	syntax: "tp [room name]",
+  command: "tp",
+  syntax: "tp [room name]",
 
-	callback({ args }) {
-		let [roomName] = args
+  callback({ args }) {
+    const [roomName] = args
 
-		roomName = roomName?.trim()
+    if (!roomName) {
+      pushErrorToLog(`Syntax: ${Tp.syntax}`)
 
-		if (!roomName) {
-			pushErrorToLog(`Syntax: ${Tp.syntax}`)
+      return
+    }
 
-			return
-		}
-
-		sendEvent(TP_EVENT, roomName)
-	},
+    sendEvent(TP_EVENT, roomName.trim())
+  },
 }

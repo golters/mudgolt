@@ -49,15 +49,16 @@ export const initStore = async () => {
       FOREIGN KEY("fromPlayerId") REFERENCES players("id"),
       FOREIGN KEY("toPlayerId") REFERENCES players("id")
     );
-	CREATE TABLE IF NOT EXISTS doors (
-  "room_id" INTEGER,
-  "target_room_id" INTEGER,
-	"name" TEXT NOT NULL,
 
-  PRIMARY KEY("room_id", "target_room_id"),
-  FOREIGN KEY("room_id") REFERENCES rooms("id"),
-  FOREIGN KEY("target_room_id") REFERENCES rooms("id")
-	);
+    CREATE TABLE IF NOT EXISTS doors (
+      "room_id" INTEGER,
+      "target_room_id" INTEGER,
+      "name" TEXT NOT NULL,
+
+      PRIMARY KEY("room_id", "target_room_id"),
+      FOREIGN KEY("room_id") REFERENCES rooms("id"),
+      FOREIGN KEY("target_room_id") REFERENCES rooms("id")
+    );
   `)
 
   const rooms = await db.all(/*sql*/`

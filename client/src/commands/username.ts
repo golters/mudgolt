@@ -15,13 +15,15 @@ const Username: CommandModule = {
   aliases: ["name", "nick", "nickname"],
 
   callback({ args }) {
-    let [nickname] = args
+    const [nickname] = args
 
-    nickname = nickname?.trim()
+    if (!nickname) {
+      pushErrorToLog(`Syntax: ${Username.syntax}`)
 
-    nickname
-      ? sendEvent(USERNAME_CHANGE_EVENT, nickname)
-      : pushErrorToLog(`Syntax: ${Username.syntax}`)
+      return
+    }
+
+    sendEvent(USERNAME_CHANGE_EVENT, nickname.trim())
   },
 }
 

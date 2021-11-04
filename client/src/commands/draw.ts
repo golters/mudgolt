@@ -1,42 +1,46 @@
+import { BANNER_HEIGHT, BANNER_WIDTH } from "../../../constants"
 import {
-	DRAW_EVENT,
+  DRAW_EVENT,
 } from "../../../events"
 import {
-	pushErrorToLog,
+  pushErrorToLog,
 } from "../components/Terminal"
 import {
-	sendEvent,
+  sendEvent,
 } from "../network"
 import {
-	CommandModule,
+  CommandModule,
 } from "./emitter"
 
 
 export const Draw: CommandModule = {
-	command: "draw",
-	syntax: "draw [x] [y] [character]",
+  command: "draw",
+  syntax: `draw [0-${BANNER_WIDTH}] [0-${BANNER_HEIGHT}] [character]`,
 
-	callback({ args }) {
-		let [x, y, char] = args
+  callback({ args }) {
+    const x = parseInt(args[0])
+    const y = parseInt(args[1])
+    const character = args[2]
 
-		if (!x || !y || !char) {
-			pushErrorToLog(this.syntax)
-			return
-		}
-		if (isNaN(Number(x)) || isNaN(Number(y))){
-			pushErrorToLog(`Argument must be a number`)
-			return
-		}
-		if (parseInt(x) > 96 || parseInt(y) > 16 || parseInt(x) == 0 || parseInt(y) == 0) {
-			pushErrorToLog(`[1-96] [1-16] [character]`)
-			return
-		}
-		if (char.length > 1) {
-			pushErrorToLog(`Single character required`)
-			return
-		}
+    if (typeof x !== "number" || typeof y !== "number" || typeof character !== "string") {
+      pushErrorToLog(this.syntax)
+      
+      return
+    }
 
-		sendEvent(DRAW_EVENT, args)
-	},
+    if (x >= BANNER_WIDTH || y >= BANNER_HEIGHT || x < 0 || y < 0) {
+      pushErrorToLog(this.syntax)
+      
+      return
+    }
+    
+    if (character.length > 1) {
+      pushErrorToLog("Single character required")
+      
+      return
+    }
+
+    sendEvent(DRAW_EVENT, [x, y, character])
+  },
 
 }

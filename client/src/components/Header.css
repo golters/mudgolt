@@ -1,3 +1,15 @@
+@font-face {
+  font-family: DOS16;
+  src: url(../assets/ModernDOS8x16.ttf);
+  font-size: 16px;
+}
+
+@font-face {
+  font-family: DOS14;
+  src: url(../assets/ModernDOS8x14.ttf);
+  font-size: 14px;
+}
+
 #header {
   border-bottom: 1px solid rgb(35, 32, 35);
   display: flex;
@@ -39,6 +51,30 @@
   line-height: 1;
 }
 
+#banner, #banner * {
+  font-size: 16px;
+  font-family: DOS16;
+  letter-spacing: 0;
+  user-select: none;
+}
+
+#banner > div {
+  display: flex;
+  line-height: 16px;
+}
+
+/* Individual character */
+#banner span {
+  display: inline-block;
+  width: 8px;
+  cursor: none;
+}
+
+#banner span:hover {
+  color: var(--color-text-tertiary);
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
 #room-name {
   font-weight: 600;
 }
@@ -47,20 +83,50 @@
   opacity: 0.7;
 }
 
-@media (max-width: 910px) {
-  #banner {
-    font-size: 0.8em;
+@media (max-width: 900px) {
+  #banner, #banner * {
+    font-size: 14px;
+    font-family: DOS14;
+    line-height: 12px;
+  }
+  
+  #banner span {
+    width: 7px;
   }
 }
 
-@media (max-width: 710px) {
-  #banner {
-    font-size: 0.6em;
+@media (max-width: 800px) {
+  #banner, #banner * {
+    font-size: 12px;
+    font-family: DOS14;
+    line-height: 10px;
+  }
+  
+  #banner span {
+    width: 6px;
   }
 }
 
-@media (max-width: 510px) {
-  #banner, #header-wrapper .controls {
-    display: none;
+@media (max-width: 620px) {
+  #banner, #banner * {
+    font-size: 10px;
+    font-family: DOS14;
+    line-height: 9px;
+  }
+  
+  #banner span {
+    width: 5px;
+  }
+}
+
+@media (max-width: 550px) {
+  #banner, #banner * {
+    font-size: 8px;
+    font-family: DOS14;
+    line-height: 7px;
+  }
+  
+  #banner span {
+    width: 4px;
   }
 }

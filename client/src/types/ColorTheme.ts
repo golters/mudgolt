@@ -8,4 +8,5 @@ export interface ColorTheme {
   "text-negative": string
   "divider": string
   "scrollbar": string
+  "brush": string
 }

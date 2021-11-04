@@ -20,40 +20,38 @@ export const generateBanner = () => {
     .join("")
 }
 
-export const editBaner = async (x: string, y: string, char: string, room: Room | undefined): Promise<Room | undefined> => {
-  const pos = (Number(x)-1) + ((Number(y)- 1) * 96)
-  if (!room) {
-    throw new Error("Room doesn't exist")
-  }
-  const newBanner1 = room?.banner.substring(0, pos)
-  const newBanner2 = room?.banner.substring(pos + 1)
-  const newbanner = newBanner1 + char + newBanner2
+export const editBaner = async (x: number, y: number, character: string, room: Room): Promise<Room> => {
+  const pos = x + (y * BANNER_WIDTH)
+
+  const banner = room.banner.split("")
+
+  banner[pos] = character
+
+  room.banner = banner.join("")
 
   await db.run(/*sql*/`
     UPDATE rooms
       SET banner = $1
       WHERE id = $2;
-  `, [newbanner, room?.id])
-	
-  if (room === undefined) {
-    throw new Error("Room doesn't exist")
-  }
-  broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room?.id)
+  `, [room.banner, room.id])
+
+  broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
 
   return room
 }
 
-export const editBio = async (bio: string, room: Room | undefined): Promise<Room | undefined> => {
+export const editBio = async (bio: string, room: Room): Promise<Room> => {
   await db.run(/*sql*/`
     UPDATE rooms
       SET description = $1
       WHERE id = $2;
-  `, [bio, room?.id])
+  `, [bio, room.id])
 
   if (room === undefined) {
     throw new Error("Room doesn't exist")
   }
-  broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room?.id)
+
+  broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
   
   return room
 }
@@ -77,23 +75,35 @@ export const createRoom = async (name: string, props: Partial<Room> = {}): Promi
     props.isProtected || false,
   ])
 
-  const room = await getRoomByName(name) as Room
+  const room = await getRoomByName(name)
+
+  if (room === undefined) {
+    throw new Error("Room doesn't exist")
+  }
 
   return room
 }
 
-export const getRoomById = async (id: number): Promise<Room | undefined> => {
+export const getRoomById = async (id: number): Promise<Room> => {
   const room = await db.get<Room>(/*sql*/`
     SELECT * FROM rooms WHERE id = $1
   `, [id])
 
+  if (room === undefined) {
+    throw new Error("Room doesn't exist")
+  }
+
   return room
 }
 
-export const getRoomByName = async (name: string): Promise<Room | undefined> => {
+export const getRoomByName = async (name: string): Promise<Room> => {
   const room = await db.get<Room>(/*sql*/`
     SELECT * FROM rooms WHERE "name" = $1;
   `, [name])
+
+  if (room === undefined) {
+    throw new Error("Room doesn't exist")
+  }
 
   return room
 }
