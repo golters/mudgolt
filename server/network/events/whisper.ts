@@ -36,19 +36,19 @@ const handler: NetworkEventHandler = async (
     let message = input
     message = message.substring(10 + name.length)
     if(message.length <= 0){      
-      sendEvent<string>(socket, LOG_EVENT, "you forgot to say something")
+      sendEvent<string>(socket, ERROR_EVENT, "you forgot to say something")
 
       return
     }
     if(user.username === player.username){      
-      sendEvent<string>(socket, LOG_EVENT, "you whispered '" + message + "' to yourself")
+      sendEvent<string>(socket, SERVER_LOG_EVENT, "you whispered '" + message + "' to yourself")
 
       return
     }
     let onlinecheck = false
     online.forEach(element => {      
       if(element.player.username === user.username){
-        sendEvent<string>(socket, LOG_EVENT, "you whispered '" + message + "' to " + name)
+        sendEvent<string>(socket, SERVER_LOG_EVENT, "you whispered '" + message + "' to " + name)
         broadcastToUser<string>(SERVER_LOG_EVENT, player.username + " whispered '" + message + "' to you", name); 
         onlinecheck = true
 
@@ -57,7 +57,7 @@ const handler: NetworkEventHandler = async (
     });
        
     if(onlinecheck === false){
-      sendEvent<string>(socket, LOG_EVENT, name + " is not online")
+      sendEvent<string>(socket, ERROR_EVENT, name + " is not online")
     }
 
   } catch (error) {
