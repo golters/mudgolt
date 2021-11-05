@@ -1,3 +1,5 @@
+import exp from "constants"
+
 export * from "./emitter"
 export * from "./chat"
 export * from "./roll"
@@ -13,3 +15,4 @@ export * from "./tp"
 export * from "./deleteDoor"
 export * from "./describe"
 export * from "./shout"
+export * from "./whisper"
