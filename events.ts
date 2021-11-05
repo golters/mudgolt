@@ -18,6 +18,7 @@ export const TP_EVENT = "TP"
 export const DELETE_DOOR_EVENT = "DELETE_DOOR"
 export const ROOM_DESCRIBE_EVENT = "DESCRIBE"
 export const SHOUT_EVENT = "SHOUT"
+export const WHISPER_EVENT = "WHISPER"
 
 // command events
 export const LOG_EVENT = "LOG"
