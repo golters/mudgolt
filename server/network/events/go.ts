@@ -55,7 +55,7 @@ const handler: NetworkEventHandler = async (socket, doorName: string, player) =>
 
     const names = doors.map(x => x.name);
 
-    if (doors) {
+    if (doors.length > 0) {
       message = `${message}\nthe exits are ${names}`
     } else {
       message = `${message}\nthere are no exits`
