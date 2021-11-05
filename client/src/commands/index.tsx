@@ -46,21 +46,25 @@ import {
 import {
   Brush,
 } from "./brush"
+import{
+  Shout,
+} from "./shout"
 
 export const commandModules = [
-  Roll,
-  MakeRoom,
+  Look,
   Go,
+	Tp,
   Help,
   Nick,
   Color,
-  Look,
-	Draw,
-	MakeDoor,
-	Tp,
-	DeleteDoor,
-	Describe,
+  Roll,
   Brush,
+	Describe,
+  MakeRoom,
+	MakeDoor,
+	DeleteDoor,
+	Draw,
+  Shout,
 ]
 
 const findCommand = (nameOrAlias: string) => {
