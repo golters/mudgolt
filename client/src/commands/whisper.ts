@@ -16,6 +16,11 @@ export const Whisper: CommandModule = {
   syntax: "whisper [user] [message]",
 
   callback({ input }) {
+    if(!input){      
+      pushErrorToLog(`Syntax: ${Whisper.syntax}`)
+
+      return
+    }
     sendEvent(WHISPER_EVENT, input)
   },
 }
