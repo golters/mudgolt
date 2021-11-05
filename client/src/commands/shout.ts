@@ -16,6 +16,11 @@ export const Shout: CommandModule = {
   syntax: "shout [message]",
 
   callback({ input }) {
+    if(!input){      
+      pushErrorToLog(`Syntax: ${Shout.syntax}`)
+
+      return
+    }
     let message = input
     message = message.substring(7)
     sendEvent(SHOUT_EVENT, message)
