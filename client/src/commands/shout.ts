@@ -16,7 +16,7 @@ export const Shout: CommandModule = {
   syntax: "shout [message]",
 
   callback({ input }) {
-    if(!input){      
+    if(input.length <= 6){      
       pushErrorToLog(`Syntax: ${Shout.syntax}`)
 
       return

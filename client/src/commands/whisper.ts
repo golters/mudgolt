@@ -16,7 +16,7 @@ export const Whisper: CommandModule = {
   syntax: "whisper [user] [message]",
 
   callback({ input }) {
-    if(!input){      
+    if(input.length <= 8){      
       pushErrorToLog(`Syntax: ${Whisper.syntax}`)
 
       return
