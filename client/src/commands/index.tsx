@@ -55,6 +55,9 @@ import{
 import{
   Me
 }from "./me"
+import{
+  Online
+}from "./online"
 
 export const commandModules = [
   Look,
@@ -73,6 +76,7 @@ export const commandModules = [
   Shout,
   Whisper,
   Me,
+  Online,
 ]
 
 const findCommand = (nameOrAlias: string) => {
