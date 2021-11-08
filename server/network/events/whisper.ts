@@ -21,20 +21,20 @@ import {
 
 const handler: NetworkEventHandler = async (
   socket,
-  input: string,
+  input: string[],
   player: Player,
 ) => {
   try {    
-    const split = input.split(" ")
-    const name = split[1]
+    const name = input[0]
     const user = await getPlayerByUsername(name)
     if (!user) {
       sendEvent<string>(socket, ERROR_EVENT, "User does not exist")
 
       return
     }
-    let message = input
-    message = message.substring(10 + name.length)
+    const message = input.splice(1).join(" ")
+    //message = message.join(" ")
+
     if(message.length <= 0){      
       sendEvent<string>(socket, ERROR_EVENT, "you forgot to say something")
 
