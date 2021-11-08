@@ -52,6 +52,9 @@ import{
 import{
   Whisper,
 } from "./whisper"
+import{
+  Me
+}from "./me"
 
 export const commandModules = [
   Look,
@@ -69,6 +72,7 @@ export const commandModules = [
 	Draw,
   Shout,
   Whisper,
+  Me,
 ]
 
 const findCommand = (nameOrAlias: string) => {
