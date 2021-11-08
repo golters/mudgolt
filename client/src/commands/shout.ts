@@ -15,14 +15,12 @@ export const Shout: CommandModule = {
   command: "shout",
   syntax: "shout [message]",
 
-  callback({ input }) {
-    if(input.length <= 6){      
+  callback({ args }) {
+    if(!args){      
       pushErrorToLog(`Syntax: ${Shout.syntax}`)
 
       return
-    }
-    let message = input
-    message = message.substring(7)
-    sendEvent(SHOUT_EVENT, message)
+    }    
+    sendEvent(SHOUT_EVENT, args.join(" "))
   },
 }

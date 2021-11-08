@@ -14,13 +14,15 @@ import {
 export const Whisper: CommandModule = {
   command: "whisper",
   syntax: "whisper [user] [message]",
+  aliases: ["dm", "pm"],
 
-  callback({ input }) {
-    if(input.length <= 8){      
+  callback({ args }) {
+    if(!args){      
       pushErrorToLog(`Syntax: ${Whisper.syntax}`)
 
       return
     }
-    sendEvent(WHISPER_EVENT, input)
+    
+    sendEvent(WHISPER_EVENT, args)
   },
 }
