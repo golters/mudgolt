@@ -58,6 +58,19 @@ import{
 import{
   Online
 }from "./online"
+import{
+  MakeItem
+}from "./makeItem"
+import{
+  Inv
+}from "./inv"
+import{
+  DropItem
+}from "./dropItem"
+import{
+  TakeItem
+}from "./takeItem"
+
 
 export const commandModules = [
   Look,
@@ -65,6 +78,7 @@ export const commandModules = [
 	Tp,
   Help,
   Nick,
+  Inv,
   Color,
   Roll,
   Brush,
@@ -77,6 +91,9 @@ export const commandModules = [
   Whisper,
   Me,
   Online,
+  MakeItem,
+  DropItem,
+  TakeItem,
 ]
 
 const findCommand = (nameOrAlias: string) => {

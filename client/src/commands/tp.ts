@@ -10,10 +10,14 @@ import {
 import {
   CommandModule,
 } from "./emitter"
+import {
+  store,
+} from "../store"
 
 export const Tp: CommandModule = {
   command: "tp",
   syntax: "tp [room name]",
+  aliases: ["teleport"],
 
   callback({ args }) {
     const [roomName] = args

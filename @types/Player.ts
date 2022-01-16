@@ -4,4 +4,5 @@ export interface Player {
   username: string
   roomId: number
   golts: number
+  description: string
 }
