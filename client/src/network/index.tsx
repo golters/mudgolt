@@ -6,6 +6,7 @@ import {
   CHAT_EVENT,
   CHAT_HISTORY_EVENT,
   PLAYER_EVENT, 
+  LOOK_EVENT,
 } from "../../../events"
 import {
   store, 
@@ -77,6 +78,11 @@ export const networkTask = () => new Promise<void>((resolve) => {
 
     if (code === CHAT_HISTORY_EVENT) {
       void (payload as Chat[]).forEach(chat => networkEmitter.emit(CHAT_EVENT, chat))
+<<<<<<< HEAD
+      sendEvent(LOOK_EVENT, store.player?.roomId)
+=======
+      sendEvent(LOOK_EVENT, null)
+>>>>>>> 8de10fcfd72b57b462eb9ceb0990ff852320bf12
 
       resolve()
     }

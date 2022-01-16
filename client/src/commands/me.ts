@@ -1,5 +1,5 @@
 import {
-  SHOUT_EVENT,
+  ME_EVENT,
 } from "../../../events"
 import {
   pushErrorToLog,
@@ -11,16 +11,17 @@ import {
   CommandModule, 
 } from "./emitter"
 
-export const Shout: CommandModule = {
-  command: "shout",
-  syntax: "shout [message]",
+export const Me: CommandModule = {
+  command: "me",
+  syntax: "me [action]",
+  aliases: ["act", "rp"],
 
   callback({ args }) {
     if(!args){      
-      pushErrorToLog(`Syntax: ${Shout.syntax}`)
+      pushErrorToLog(`Syntax: ${Me.syntax}`)
 
       return
-    }    
-    sendEvent(SHOUT_EVENT, args.join(" "))
+    }
+    sendEvent(ME_EVENT, args.join(" "))
   },
 }

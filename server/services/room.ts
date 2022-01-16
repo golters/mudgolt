@@ -13,6 +13,15 @@ import {
 import {
   broadcastToRoom,
 } from "../network"
+import {
+  online,
+} from "../network"
+import {
+  getDoorByRoom,
+} from "./door"
+import {
+  getItemByRoom,
+} from "./item"
 
 export const generateBanner = () => {
   return new Array(BANNER_WIDTH * BANNER_HEIGHT)
@@ -106,4 +115,49 @@ export const getRoomByName = async (name: string): Promise<Room> => {
   }
 
   return room
+}
+
+export const lookByID = async (id: number): Promise<string> => {
+  const room = await getRoomById(id)
+
+  let message = `${room.description}\nyou see`
+
+  online.forEach(({ player }) => {
+    if (player.roomId == room.id) {
+      message = `${message} ${player.username}`
+    }
+  })
+
+  const doors = await getDoorByRoom(id)
+  const names = doors.map(x => x.name);
+  const items = await getItemByRoom(id)
+  const itemnames = items.map(x => x.name);
+
+  if (!doors) {
+    throw new Error("doors null")
+  }
+
+  if (doors.length > 0) {
+    message = `${message}\nthe exits are ${names}`
+  } else {
+    message = `${message}\nthere are no exits`
+  }
+
+  if(!items){
+    throw new Error("items null")
+  }
+
+  if (items.length > 0) {
+    message = `${message}\non the floor is a ${itemnames}`
+  } else {
+    const dateObj = new Date();
+    const myDate = ((dateObj.getMonth() + 1)+ "/" + (dateObj.getUTCDate()));
+    if(myDate === "11/08"){
+      message = `${message}\nthe floor is bear`
+    }else{
+      message = `${message}\nthe floor is bare`
+    }
+  }    
+
+  return message
 }

@@ -1,5 +1,6 @@
 import {
   LOOK_EVENT,
+  LOOK_AT_EVENT,
 } from "../../../events"
 import {
   sendEvent, 
@@ -7,13 +8,20 @@ import {
 import {
   CommandModule, 
 } from "./emitter"
+import {
+  store,
+} from "../store"
 
 export const Look: CommandModule = {
   command: "look",
-  syntax: "look",
+  syntax: "look or look [user/item]",
+  aliases: ["examin","exam","read","check"],
 
-
-  callback() {
-    sendEvent(LOOK_EVENT, null)
+  callback({ args }) {
+    if(args.length <= 0){
+      sendEvent(LOOK_EVENT, store.player?.roomId)
+    }else{
+      sendEvent(LOOK_AT_EVENT, args)
+    }
   },
 }

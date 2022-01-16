@@ -19,14 +19,18 @@ export const initStore = async () => {
       "username" TEXT NOT NULL,
       "roomId" INTEGER NOT NULL,
       "golts" INTEGER NOT NULL,
+	    "description"	TEXT NOT NULL,
 
       FOREIGN KEY("roomId") REFERENCES rooms("id")
     );
 
     CREATE TABLE IF NOT EXISTS items (
       "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-      "name" TEXT NOT NULL,
-      "description" TEXT NOT NULL
+	    "name"	TEXT NOT NULL,
+	    "description"	TEXT NOT NULL,
+	    "macro"	TEXT NOT NULL,
+	    "holderId"	INTEGER NOT NULL,
+	    "holderType"	TEXT NOT NULL
     );
 
     CREATE TABLE IF NOT EXISTS inventories (

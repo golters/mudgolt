@@ -49,6 +49,28 @@ import {
 import{
   Shout,
 } from "./shout"
+import{
+  Whisper,
+} from "./whisper"
+import{
+  Me
+}from "./me"
+import{
+  Online
+}from "./online"
+import{
+  MakeItem
+}from "./makeItem"
+import{
+  Inv
+}from "./inv"
+import{
+  DropItem
+}from "./dropItem"
+import{
+  TakeItem
+}from "./takeItem"
+
 
 export const commandModules = [
   Look,
@@ -56,6 +78,7 @@ export const commandModules = [
 	Tp,
   Help,
   Nick,
+  Inv,
   Color,
   Roll,
   Brush,
@@ -65,6 +88,12 @@ export const commandModules = [
 	DeleteDoor,
 	Draw,
   Shout,
+  Whisper,
+  Me,
+  Online,
+  MakeItem,
+  DropItem,
+  TakeItem,
 ]
 
 const findCommand = (nameOrAlias: string) => {

@@ -3,18 +3,23 @@ import {
   networkEmitter,
 } from "./emitter"
 import {
+  online,
   sendEvent,
 } from "../"
 import {
-  LOOK_EVENT,
+  ONLINE_EVENT,
   LOG_EVENT,
   ERROR_EVENT,
 } from "../../../events"
-import { lookByID } from "../../services/room"
 
-const handler: NetworkEventHandler = async (socket, roomID: number, player) => {
+const handler: NetworkEventHandler = async (socket, roomID: string, player) => {
   try {
-    const message = await lookByID(player.roomId)
+
+    let message = "online ("+ online.length + "):\n"
+
+    online.forEach(({ player }) => {
+      message = `${message} ${player.username}\n`
+    })
 
     sendEvent<string>(socket, LOG_EVENT, message)
   } catch (error) {
@@ -23,4 +28,4 @@ const handler: NetworkEventHandler = async (socket, roomID: number, player) => {
   }
 }
 
-networkEmitter.on(LOOK_EVENT, handler)
+networkEmitter.on(ONLINE_EVENT, handler)

@@ -43,6 +43,16 @@ export const broadcastToRoom = <TPayload> (code: string, payload: TPayload, room
   console.log(`[${code}]`, `[ROOM: ${roomId}]`, payload)
 }
 
+export const broadcastToUser = <TPayload> (code:string, payload: TPayload, playerName: string) => {
+  online.forEach(({ socket, player }) => {
+    if (player.username !== playerName) return
+
+    sendEvent(socket, code, payload)
+  })
+
+  console.log(`[${code}]`, `[PLAYER: ${playerName}]`, payload)
+}
+
 export const sendEvent = <TPayload> (socket: WebSocket, code: string, payload: TPayload) => {
   socket.send(JSON.stringify({
     code,

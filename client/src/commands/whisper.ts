@@ -1,5 +1,5 @@
 import {
-  SHOUT_EVENT,
+  WHISPER_EVENT,
 } from "../../../events"
 import {
   pushErrorToLog,
@@ -11,16 +11,18 @@ import {
   CommandModule, 
 } from "./emitter"
 
-export const Shout: CommandModule = {
-  command: "shout",
-  syntax: "shout [message]",
+export const Whisper: CommandModule = {
+  command: "whisper",
+  syntax: "whisper [user] [message]",
+  aliases: ["dm", "pm"],
 
   callback({ args }) {
     if(!args){      
-      pushErrorToLog(`Syntax: ${Shout.syntax}`)
+      pushErrorToLog(`Syntax: ${Whisper.syntax}`)
 
       return
-    }    
-    sendEvent(SHOUT_EVENT, args.join(" "))
+    }
+    
+    sendEvent(WHISPER_EVENT, args)
   },
 }
