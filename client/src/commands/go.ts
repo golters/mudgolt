@@ -1,5 +1,6 @@
 import {
   GO_EVENT,
+  LOOK_EVENT,
 } from "../../../events"
 import {
   pushErrorToLog,
@@ -10,6 +11,9 @@ import {
 import {
   CommandModule, 
 } from "./emitter"
+import {
+  store,
+} from "../store"
 
 export const Go: CommandModule = {
   command: "go",
@@ -25,5 +29,6 @@ export const Go: CommandModule = {
     }
 
     sendEvent(GO_EVENT, roomName.trim())
+    sendEvent(LOOK_EVENT, store.player?.roomId)
   },
 }

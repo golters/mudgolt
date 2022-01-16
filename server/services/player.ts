@@ -1,4 +1,5 @@
 import {
+  Item,
   Player, Room, 
 } from "../../@types"
 import {
@@ -27,13 +28,14 @@ export const findOrCreatePlayer = async (publicKey: string): Promise<Player> => 
   hash.update(publicKey)
 
   await db.get(/*sql*/`
-    INSERT INTO players ("publicKey", "username", "roomId", "golts")
-      VALUES ($1, $2, $3, $4);
+    INSERT INTO players ("publicKey", "username", "roomId", "golts", "description")
+      VALUES ($1, $2, $3, $4, $5);
   `, [
     publicKey, 
-    `1_${hash.digest("hex").slice(0, 6)}`, 
+    `1_1${hash.digest("hex").slice(0, 5)}`, 
     1,
     500,
+    "a ninja clad in grey",
   ])
 
   const player = await getPlayerByPublicKey(publicKey) as Player
@@ -55,6 +57,14 @@ export const getPlayerById = async (id: number): Promise<Player | undefined> => 
   `, [id])
 
   return player
+}
+
+export const getPlayerByRoom = async (roomId: number): Promise<Player[]> => {
+  const players = await db.all<Player[]>(/*sql*/`
+    SELECT * FROM players WHERE roomId = $1;
+  `, [roomId])
+
+  return players
 }
 
 export const getPlayerByUsername = async (username: string): Promise<Player | undefined> => {
@@ -115,4 +125,34 @@ export const setPlayerUsername = async (playerId: number, username: string): Pro
   updateOnlinePlayerById(playerId, newPlayer)
 
   return newPlayer
+}
+
+export const setPlayerBio = async (playerId: number, bio: string): Promise<Player> => {
+
+  const player = await getPlayerById(playerId)
+  
+  if (!player) {
+    throw new Error("Player doesn't exist")
+  }
+
+  await db.run(/*sql*/`
+    UPDATE players
+      SET description = $1
+      WHERE id = $2;
+  `, [bio, playerId])
+
+  const newPlayer = await getPlayerById(playerId) as Player
+
+  updateOnlinePlayerById(playerId, newPlayer)
+
+  return newPlayer
+}
+
+
+export const getInvByPlayer = async (playerId: number): Promise<Item[]> => {
+  const items = await db.all<Item[]>(/*sql*/`
+    SELECT * FROM items WHERE holderId = $1 AND holderType = "player";
+  `, [playerId])
+
+  return items
 }

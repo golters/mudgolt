@@ -21,6 +21,11 @@ export const SHOUT_EVENT = "SHOUT"
 export const WHISPER_EVENT = "WHISPER"
 export const ME_EVENT = "ME"
 export const ONLINE_EVENT = "ONLINE"
+export const MAKE_ITEM_EVENT = "MAKE_ITEM"
+export const INV_EVENT = "INV"
+export const DROP_ITEM_EVENT = "DROP_ITEM"
+export const TAKE_ITEM_EVENT = "TAKE_ITEM"
+export const LOOK_AT_EVENT = "LOOK_AT"
 
 // command events
 export const LOG_EVENT = "LOG"

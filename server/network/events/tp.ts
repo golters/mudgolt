@@ -3,25 +3,23 @@ import {
 } from "./emitter"
 import {
   ERROR_EVENT,
-  LOG_EVENT,
   TP_EVENT,
   ROOM_UPDATE_EVENT,
   SERVER_LOG_EVENT,
+  LOG_EVENT,
 } from "../../../events"
 import {
   broadcastToRoom,
   sendEvent,
-  online,
 } from "../../network"
 import {
   setPlayerRoomByName,
 } from "../../services/player"
 import {
   getRoomById,
-  getRoomByName,
+  lookByID,
 } from "../../services/room"
 import { Room } from "@types"
-import { getDoorByRoom } from "../../services/door"
 
 const handler: NetworkEventHandler = async (socket, roomNameInput: string, player) => {
   try {
@@ -39,31 +37,15 @@ const handler: NetworkEventHandler = async (socket, roomNameInput: string, playe
       return
     }
 
-    const newRoom = await getRoomByName(roomName)
     const room = await setPlayerRoomByName(player.id, roomName)
-    const doors = await getDoorByRoom(player.roomId)
 
-    let message = `${newRoom.description}\nyou see`
-
-    online.forEach(({ player }) => {
-      if (player.roomId == room.id) {
-        message = `${message} ${player?.username}`
-      }
-    })
-
-    const names = doors.map(x => x.name);
-
-    if (doors) {
-      message = `${message}\nthe exits are ${names}`
-    } else {
-      message = `${message}\nthere are no exits`
-    }
+    const message = await lookByID(room.id)
 
     broadcastToRoom<Room>(ROOM_UPDATE_EVENT, oldRoom, oldRoom.id)
     broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has teleported from ${oldRoom.name}`, oldRoom.id)
     broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
     broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has teleported into ${room.name}`, room.id)
-    sendEvent<string>(socket, LOG_EVENT, message)
+    sendEvent<string>(socket, LOG_EVENT, message)    
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)

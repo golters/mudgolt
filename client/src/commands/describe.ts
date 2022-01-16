@@ -14,11 +14,9 @@ import {
 
 export const Describe: CommandModule = {
   command: "describe",
-  syntax: "describe [room description]",
+  syntax: "describe [me,room,item name] [description]",
 
-  callback({ input }) {
-    let bio = input
-    bio = bio.substring(10)
-    sendEvent(ROOM_DESCRIBE_EVENT, bio)
+  callback({ args }) {
+    sendEvent(ROOM_DESCRIBE_EVENT, args)
   },
 }

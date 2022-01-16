@@ -3,7 +3,6 @@ import {
   networkEmitter,
 } from "./emitter"
 import {
-  online,
   sendEvent,
 } from "../"
 import {
@@ -11,33 +10,11 @@ import {
   LOG_EVENT,
   ERROR_EVENT,
 } from "../../../events"
-import { getRoomById } from "../../services/room"
-import { getDoorByRoom } from "../../services/door"
+import { lookByID } from "../../services/room"
 
-const handler: NetworkEventHandler = async (socket, roomID: string, player) => {
+const handler: NetworkEventHandler = async (socket, roomID: number, player) => {
   try {
-    const room = await getRoomById(player.roomId)
-
-    let message = `${room.description}\nyou see`
-
-    online.forEach(({ player }) => {
-      if (player.roomId == room.id) {
-        message = `${message} ${player.username}`
-      }
-    })
-
-    const doors = await getDoorByRoom(player.roomId)
-    const names = doors.map(x => x.name);
-
-    if (!doors) {
-      return
-    }
-
-    if (doors.length > 0) {
-      message = `${message}\nthe exits are ${names}`
-    } else {
-      message = `${message}\nthere are no exits`
-    }
+    const message = await lookByID(player.roomId)
 
     sendEvent<string>(socket, LOG_EVENT, message)
   } catch (error) {

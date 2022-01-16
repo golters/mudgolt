@@ -78,7 +78,7 @@ export const networkTask = () => new Promise<void>((resolve) => {
 
     if (code === CHAT_HISTORY_EVENT) {
       void (payload as Chat[]).forEach(chat => networkEmitter.emit(CHAT_EVENT, chat))
-      sendEvent(LOOK_EVENT, null)
+      sendEvent(LOOK_EVENT, store.player?.roomId)
 
       resolve()
     }
