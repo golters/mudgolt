@@ -7,6 +7,7 @@ import {
   CHAT_HISTORY_EVENT,
   PLAYER_EVENT, 
   LOOK_EVENT,
+  PAY_EVENT,
 } from "../../../events"
 import {
   store, 
@@ -101,4 +102,5 @@ export const networkTask = () => new Promise<void>((resolve) => {
 
 setInterval(() => {
   sendEvent(PING_EVENT, null)
+  sendEvent(PAY_EVENT, store.player?.id)
 }, 15 * 1000)

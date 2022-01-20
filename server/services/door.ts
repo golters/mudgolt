@@ -7,11 +7,14 @@ import {
 } from "../store"
 
 export const createDoor = async (roomID: number, targetID: number | undefined, name: string): Promise<Door> => {
-  const existingRoom = await db.get<Partial<Door>>(/*sql*/`
-    SELECT id FROM rooms WHERE "room_id" = $1 AND ("target_room_id" = $2 OR "name" = $3)
+  const existingDoor = await db.get<Door>(/*sql*/`
+    SELECT * FROM doors 
+    WHERE "room_id" = $1 
+    AND ("target_room_id" = $2
+    OR "name" = $3)
   `, [roomID,targetID,name])
 
-  if (existingRoom) {
+  if (existingDoor) {
     throw new Error("Door already exists")
   }
 

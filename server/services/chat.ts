@@ -52,3 +52,30 @@ export const fetchRoomChats = async (roomId: number, limit = 500): Promise<Chat[
   
   return chats
 }
+
+export const countCharacters = async (firstString: string, secondString: string, maxString: number): Promise<number> => {
+  
+  const checked = new Array<number>()
+
+  for (let i = 0; i < firstString.length; i++) {
+    for (let b = 0; b < secondString?.length; b++) {
+      if (!checked.includes(b)) {
+        if (i <= secondString?.length && i <= firstString.length) {
+          if (firstString.charAt(i) === secondString.charAt(b)) {
+            checked.push(b)
+            console.log(secondString.charAt(b) + " " + b)
+            break
+          }
+        }
+      }
+    }
+  }
+
+  const remainder = firstString.length > secondString?.length 
+    ? (maxString - secondString?.length) - (maxString - firstString?.length)
+    : 0
+
+  const cost = (secondString?.length - checked.length) + remainder
+
+  return cost
+}

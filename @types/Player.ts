@@ -5,4 +5,5 @@ export interface Player {
   roomId: number
   golts: number
   description: string
+  lastPaid: number
 }

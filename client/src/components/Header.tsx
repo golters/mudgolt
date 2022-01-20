@@ -4,16 +4,21 @@ import {
 import {
   DRAW_EVENT,
   ROOM_UPDATE_EVENT, 
+  SERVER_LOG_EVENT,
 } from "../../../events"
 import {
   networkEmitter, 
 } from "../network/events"
 import {
   BANNER_WIDTH, 
+  GOLT,
 } from "../../../constants"
 import "./Header.css"
 import React, { useCallback, useEffect, useState } from "react"
 import { sendEvent } from "../network"
+import {
+  store,
+} from "../store"
 
 const BANNER_MINIMIZE_STORAGE_KEY = 'headerBannerMinimized'
 
@@ -27,7 +32,7 @@ export const setBrush = (newBrush: string) => {
 export const Header: React.FC = () => {
   const [room, setRoom] = useState<Room | null>(null)
   const [minimized, setMinimized] = useState(!!localStorage.getItem(BANNER_MINIMIZE_STORAGE_KEY) || false)
-
+  
   useEffect(() => {
     networkEmitter.on(ROOM_UPDATE_EVENT, (room: Room) => {
       setRoom(room)
@@ -46,6 +51,7 @@ export const Header: React.FC = () => {
 
   const Banner: React.FC<{ room: Room }> = ({ room }) => {
     const bannerParts: string[] = []
+    
   
     for (let i = 0; i < room.banner.length / BANNER_WIDTH; i++) {
       bannerParts.push(room.banner.substr(i * BANNER_WIDTH, BANNER_WIDTH))
