@@ -41,7 +41,7 @@ const handler: NetworkEventHandler = async (socket, playerID: number) => {
     if(!newgolts){
       return
     }
-    if(newgolts !== golts){
+    if(newgolts > golts){
       sendEvent<string>(socket, SERVER_LOG_EVENT, `you got ${GOLT}${newgolts - golts}`)
     }
   } catch (error) {
