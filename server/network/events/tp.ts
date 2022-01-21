@@ -20,6 +20,10 @@ import {
   lookByID,
 } from "../../services/room"
 import { Room } from "@types"
+import {
+  TELEPORT_COST,
+  GOLT,
+} from "../../../constants"
 
 const handler: NetworkEventHandler = async (socket, roomNameInput: string, player) => {
   try {
@@ -36,7 +40,14 @@ const handler: NetworkEventHandler = async (socket, roomNameInput: string, playe
     if (oldRoom.name === roomName) {
       return
     }
+    const cost = TELEPORT_COST
+    if(player.golts < cost){
+      sendEvent<string>(socket, SERVER_LOG_EVENT, `you need ${GOLT}${cost}`)
 
+      return
+    }
+
+    sendEvent<string>(socket, SERVER_LOG_EVENT, `-${GOLT}${cost}`)
     const room = await setPlayerRoomByName(player.id, roomName)
 
     const message = await lookByID(room.id)

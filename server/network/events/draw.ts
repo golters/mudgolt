@@ -8,11 +8,18 @@ import {
 import {
   DRAW_EVENT,
   ERROR_EVENT,
+  SERVER_LOG_EVENT,
 } from "../../../events"
 import {
   getRoomById,
   editBaner,
 } from "../../services/room"
+import {
+  takePlayerGolts,
+} from "../../services/player"
+import {
+  GOLT,
+} from "../../../constants"
 
 const handler: NetworkEventHandler = async (socket, payload: [number, number, string], player) => {
   try {
@@ -38,6 +45,14 @@ const handler: NetworkEventHandler = async (socket, payload: [number, number, st
       return
     }
     
+    const cost = 1
+    
+    if(player.golts <= 0){
+      sendEvent<string>(socket, ERROR_EVENT, `you need ${GOLT}${cost}`)
+
+      return
+    }
+    await takePlayerGolts(player.id, cost)
     await editBaner(x, y, char, room)
   }catch(error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)

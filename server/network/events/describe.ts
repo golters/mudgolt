@@ -12,7 +12,10 @@ import {
   Player,
 } from "../../../@types"
 import {
+  GOLT,
   ROOM_MAX_BIO,
+  PLAYER_MAX_BIO,
+  ITEM_MAX_BIO,
 } from "../../../constants"
 import {
   getRoomById,
@@ -21,7 +24,8 @@ import {
 import {
   getItemByPlayer, setItemBio,
 } from "../../services/item"
-import { setPlayerBio } from "../../services/player"
+import { setPlayerBio,takePlayerGolts } from "../../services/player"
+import { countCharacters } from "../../services/chat"
 
 const handler: NetworkEventHandler = async (
   socket,
@@ -33,6 +37,18 @@ const handler: NetworkEventHandler = async (
     bioTemp.shift();
     const bio = bioTemp.join(" ");
     if(args[0] === "me" || args[0] === "myself" || args[0] === "self"){
+      if (bio.length > PLAYER_MAX_BIO) {
+        throw new Error(`Description must not be greater than ${PLAYER_MAX_BIO} characters`)
+      }
+      
+      const cost = await countCharacters(bio, player.description, PLAYER_MAX_BIO)
+
+      if (cost > player.golts) {
+        throw new Error(`you need ${GOLT}${cost}`)
+      }
+
+      await takePlayerGolts(player.id, cost)
+      sendEvent<string>(socket, SERVER_LOG_EVENT, `-${GOLT}${cost}`)
       await setPlayerBio(player.id, bio)
       broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} changed apperance`,player.roomId)
     }else if(args[0] === "room"){
@@ -48,38 +64,32 @@ const handler: NetworkEventHandler = async (
         return
       }
 
-      const checked = new Array<number>()
+      const cost = await countCharacters(bio, oldBio, ROOM_MAX_BIO)
 
-      for (let i = 0; i < bio.length; i++) {
-        for (let b = 0; b < oldBio?.length; b++) {
-          if (!checked.includes(b)) {
-            if (i <= oldBio?.length && i <= bio.length) {
-              if (bio.charAt(i) === oldBio.charAt(b)) {
-                checked.push(b)
-                console.log(oldBio.charAt(b) + " " + b)
-                break
-              }
-            }
-          }
-        }
+      if (cost > player.golts) {
+        throw new Error(`you need ${GOLT}${cost}`)
       }
-
-      const remainder = bio.length > oldBio?.length 
-        ? (ROOM_MAX_BIO - oldBio?.length) - (ROOM_MAX_BIO - bio?.length)
-        : 0
-
-      const cost = (oldBio?.length - checked.length) + remainder
-
-      if (cost > 50) {
-        throw new Error("This edit is too much, try to change/add under 50 characters at a time")
-      }
-
+      
+      await takePlayerGolts(player.id, cost)
+      sendEvent<string>(socket, SERVER_LOG_EVENT, `-${GOLT}${cost}`)
       await editBio(bio, room)
       broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} edited room description`,player.roomId)
     }else{      
       let inventory = await getItemByPlayer(player.id);      
       inventory = inventory.filter(i => i.name === args[0])
       if(inventory.length > 0){
+        if (bio.length > ITEM_MAX_BIO) {
+          throw new Error(`Description must not be greater than ${ITEM_MAX_BIO} characters`)
+        }
+      
+        const cost = await countCharacters(bio, inventory[0].description, ITEM_MAX_BIO)
+
+        if (cost > player.golts) {
+          throw new Error(`you need ${GOLT}${cost}`)
+        }
+
+        await takePlayerGolts(player.id, cost)
+        sendEvent<string>(socket, SERVER_LOG_EVENT, `-${GOLT}${cost}`)
         await setItemBio(inventory[0].id, bio)
         sendEvent<string>(socket, SERVER_LOG_EVENT, `you edited ${args[0]}`)
       }else{

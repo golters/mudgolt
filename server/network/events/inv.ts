@@ -11,12 +11,13 @@ import {
   ERROR_EVENT,
 } from "../../../events"
 import { getInvByPlayer } from "../../../server/services/player"
+import { GOLT } from "../../../constants"
 
 const handler: NetworkEventHandler = async (socket, roomID: number, player) => {
   try {
     const items = await getInvByPlayer(player.id)
     const names = items.map(x => x.name);
-    let message = `you have ✪${player.golts}`
+    let message = `you have ${GOLT}${player.golts}`
     if(items.length > 0){
       message = message + ` and a ${names}`
     }
