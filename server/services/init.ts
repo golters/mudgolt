@@ -20,6 +20,7 @@ export const initStore = async () => {
       "roomId" INTEGER NOT NULL,
       "golts" INTEGER NOT NULL,
 	    "description"	TEXT NOT NULL,
+      "lastPaid" INTEGER NOT NULL,
 
       FOREIGN KEY("roomId") REFERENCES rooms("id")
     );

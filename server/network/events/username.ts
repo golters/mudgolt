@@ -12,10 +12,15 @@ import {
 } from "../../../@types"
 import {
   USERNAME_MAX_LENGTH, 
+  GOLT,
 } from "../../../constants"
 import {
   setPlayerUsername, 
+  takePlayerGolts,
 } from "../../services/player"
+import {
+  countCharacters, 
+} from "../../services/chat"
 
 const handler: NetworkEventHandler = async (
   socket,
@@ -30,6 +35,14 @@ const handler: NetworkEventHandler = async (
     }
 
     const newUsername = username.replace(/\s/g, "_")
+    const cost = await countCharacters(newUsername, username, USERNAME_MAX_LENGTH)
+
+    if (cost > player.golts) {
+      throw new Error(`you need ${GOLT}${cost}`)
+    }
+
+    await takePlayerGolts(player.id, cost)
+    sendEvent<string>(socket, SERVER_LOG_EVENT, `-${GOLT}${cost}`)
 
     broadcastToRoom<string>(
       SERVER_LOG_EVENT,

@@ -12,9 +12,9 @@ import {
 } from "./emitter"
 
 export const DropItem: CommandModule = {
-  command: "dropitem",
-  syntax: "dropitem [item name]",
-  aliases: ["drop","throw"],
+  command: "drop",
+  syntax: "drop [item name]",
+  aliases: ["drop","throw","dropitem"],
 
   callback({ args }) {
     const [name] = args

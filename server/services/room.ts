@@ -133,16 +133,6 @@ export const lookByID = async (id: number): Promise<string> => {
   const items = await getItemByRoom(id)
   const itemnames = items.map(x => x.name);
 
-  if (!doors) {
-    throw new Error("doors null")
-  }
-
-  if (doors.length > 0) {
-    message = `${message}\nthe exits are ${names}`
-  } else {
-    message = `${message}\nthere are no exits`
-  }
-
   if(!items){
     throw new Error("items null")
   }
@@ -157,7 +147,17 @@ export const lookByID = async (id: number): Promise<string> => {
     }else{
       message = `${message}\nthe floor is bare`
     }
-  }    
+  }  
+
+  if (!doors) {
+    throw new Error("doors null")
+  }
+
+  if (doors.length > 0) {
+    message = `${message}\nthe exits are ${names}`
+  } else {
+    message = `${message}\nthere are no exits`
+  }  
 
   return message
 }

@@ -1,6 +1,8 @@
 import {
   Item,
-  Player, Room, 
+  Player, 
+  Room, 
+  ChatHistory,
 } from "../../@types"
 import {
   db, 
@@ -8,6 +10,7 @@ import {
 import crypto from "crypto"
 import { getRoomByName } from "./room"
 import { online } from "../network"
+import { PAY_RATE, PAY_TIME } from "../../constants"
 
 export const updateOnlinePlayerById = (playerId: number, newPlayer: Partial<Player>) => {
   online.find(({ player }) => {
@@ -26,16 +29,18 @@ export const findOrCreatePlayer = async (publicKey: string): Promise<Player> => 
 
   const hash = crypto.createHash("md5")
   hash.update(publicKey)
+  const lastPaid = Date.now();
 
   await db.get(/*sql*/`
-    INSERT INTO players ("publicKey", "username", "roomId", "golts", "description")
-      VALUES ($1, $2, $3, $4, $5);
+    INSERT INTO players ("publicKey", "username", "roomId", "golts", "description","lastPaid")
+      VALUES ($1, $2, $3, $4, $5, $6);
   `, [
     publicKey, 
     `1_1${hash.digest("hex").slice(0, 5)}`, 
     1,
-    500,
+    20,
     "a ninja clad in grey",
+    lastPaid,
   ])
 
   const player = await getPlayerByPublicKey(publicKey) as Player
@@ -155,4 +160,100 @@ export const getInvByPlayer = async (playerId: number): Promise<Item[]> => {
   `, [playerId])
 
   return items
+}
+
+export const addPlayerGolts = async (playerId: number, golts: number): Promise<Player> => {
+
+  const player = await getPlayerById(playerId)
+  
+  if (!player) {
+    throw new Error("Player doesn't exist")
+  }
+
+  const newgolts = player.golts + golts;
+  const lastPaid = Date.now();
+
+  await db.run(/*sql*/`
+    UPDATE players
+      SET golts = $1,
+      lastPaid = $2
+      WHERE id = $3;
+  `, [newgolts, lastPaid, playerId])
+
+  const newPlayer = await getPlayerById(playerId) as Player
+
+  updateOnlinePlayerById(playerId, newPlayer)
+
+  return newPlayer
+}
+
+export const takePlayerGolts = async (playerId: number, golts: number): Promise<Player> => {
+
+  const player = await getPlayerById(playerId)
+  
+  if (!player) {
+    throw new Error("Player doesn't exist")
+  }
+
+  const newgolts = player.golts - golts;
+  const lastPaid = Date.now();
+
+  await db.run(/*sql*/`
+    UPDATE players
+      SET golts = $1,
+      lastPaid = $2
+      WHERE id = $3;
+  `, [newgolts, lastPaid, playerId])
+
+  const newPlayer = await getPlayerById(playerId) as Player
+
+  updateOnlinePlayerById(playerId, newPlayer)
+
+  return newPlayer
+}
+
+export const payPlayer = async (playerId: number): Promise<Player> => {
+
+  const player = await getPlayerById(playerId)
+  
+  if (!player) {
+    throw new Error("Player doesn't exist")
+  }
+  const latestMessage = await db.get<ChatHistory>(/*sql*/`
+  SELECT * FROM chats WHERE fromPlayerId = $1 AND roomId = $2 AND date > $3 ORDER BY date DESC LIMIT 1;
+`, [playerId, player.roomId, player.lastPaid])
+  if(!latestMessage){
+    return player
+  }
+
+  const lastMessage = await db.get<ChatHistory>(/*sql*/`
+  SELECT * FROM chats WHERE roomId = $1 AND date < $2 AND date >= $3 AND fromPlayerId != $4 ORDER BY date DESC LIMIT 1;
+  `, [player.roomId, latestMessage.date, player.lastPaid, playerId])
+  if(!lastMessage){
+    return player
+  }
+
+  console.log(latestMessage.fromPlayerId)
+  console.log(lastMessage.fromPlayerId)
+  if(latestMessage.fromPlayerId === lastMessage.fromPlayerId){
+    return player
+  }
+
+  const newgolts = player.golts + PAY_RATE;
+  const lastPaid = Date.now();
+
+  if(lastPaid >= player.lastPaid + PAY_TIME){
+    await db.run(/*sql*/`
+    UPDATE players
+      SET golts = $1,
+      lastPaid = $2
+      WHERE id = $3;
+  `, [newgolts, lastPaid, playerId])
+  }
+
+  const newPlayer = await getPlayerById(playerId) as Player
+
+  updateOnlinePlayerById(playerId, newPlayer)
+
+  return newPlayer
 }
