@@ -10,7 +10,7 @@ import {
 import crypto from "crypto"
 import { getRoomByName } from "./room"
 import { online } from "../network"
-import { PAY_RATE, PAY_TIME } from "../../constants"
+import { DAILY_PAY, PAY_RATE, PAY_TIME } from "../../constants"
 
 export const updateOnlinePlayerById = (playerId: number, newPlayer: Partial<Player>) => {
   online.find(({ player }) => {
@@ -219,6 +219,21 @@ export const payPlayer = async (playerId: number): Promise<Player> => {
   if (!player) {
     throw new Error("Player doesn't exist")
   }
+
+  const newgolts = player.golts + PAY_RATE;
+  const dailyGolts = player.golts + DAILY_PAY;
+  const lastPaid = Date.now();
+
+  console.log(`${player.lastPaid} < ${lastPaid - 86400000}`)
+  if(player.lastPaid < lastPaid - 86400000){
+    await db.run(/*sql*/`
+    UPDATE players
+      SET golts = $1,
+      lastPaid = $2
+      WHERE id = $3;
+  `, [dailyGolts, lastPaid, playerId])
+  }
+
   const latestMessage = await db.get<ChatHistory>(/*sql*/`
   SELECT * FROM chats WHERE fromPlayerId = $1 AND roomId = $2 AND date > $3 ORDER BY date DESC LIMIT 1;
 `, [playerId, player.roomId, player.lastPaid])
@@ -238,9 +253,6 @@ export const payPlayer = async (playerId: number): Promise<Player> => {
   if(latestMessage.fromPlayerId === lastMessage.fromPlayerId){
     return player
   }
-
-  const newgolts = player.golts + PAY_RATE;
-  const lastPaid = Date.now();
 
   if(lastPaid >= player.lastPaid + PAY_TIME){
     await db.run(/*sql*/`

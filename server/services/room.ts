@@ -154,7 +154,7 @@ export const lookByID = async (id: number): Promise<string> => {
   }
 
   if (doors.length > 0) {
-    message = `${message}\nthe exits are ${names}`
+    message = `${message}\nthe exits are: /go ${names}`
   } else {
     message = `${message}\nthere are no exits`
   }  
