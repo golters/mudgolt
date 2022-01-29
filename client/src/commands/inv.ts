@@ -11,7 +11,7 @@ import {
 
 export const Inv: CommandModule = {
   command: "inv",
-  syntax: "inv",
+  syntax: "inventory",
   aliases: ["inventory","bank","pocket"],
 
   callback() {
