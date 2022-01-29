@@ -16,8 +16,8 @@ import {
 
 export const Tp: CommandModule = {
   command: "tp",
-  syntax: "tp [room name]",
-  aliases: ["teleport"],
+  syntax: "teleport [room name]",
+  aliases: ["teleport", "warp", "portal"],
 
   callback({ args }) {
     const [roomName] = args
