@@ -20,6 +20,7 @@ const handler: NetworkEventHandler = async (socket, payload: null, player) => {
     const chats = await fetchRoomChats(player.roomId)
 
     sendEvent<Chat[]>(socket, CHAT_HISTORY_EVENT, chats)
+    
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)
