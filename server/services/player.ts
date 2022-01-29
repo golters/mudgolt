@@ -269,3 +269,14 @@ export const payPlayer = async (playerId: number): Promise<Player> => {
 
   return newPlayer
 }
+
+export const getRecentlyOnline = async (): Promise<Player[]> => {
+  const time = Date.now()
+  const recentTime = time - 86400000
+
+  const players = await db.all<Player[]>(/*sql*/`
+    SELECT * FROM players WHERE lastPaid > $1;
+  `, [recentTime])
+
+  return players
+}
