@@ -18,6 +18,9 @@ import {
 import {
   getPlayerByUsername,
 } from "../../services/player"
+import {
+  insertWhisper,
+} from "../../services/chat"
 
 const handler: NetworkEventHandler = async (
   socket,
@@ -60,6 +63,7 @@ const handler: NetworkEventHandler = async (
       sendEvent<string>(socket, ERROR_EVENT, name + " is not online")
     }
 
+    await insertWhisper(user.id, player.id, message, Date.now())
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)

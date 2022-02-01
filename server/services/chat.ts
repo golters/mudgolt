@@ -10,6 +10,13 @@ export const insertRoomChat = async (roomId: number, fromPlayerId: number, messa
   `, [roomId, fromPlayerId, message, date])
 }
 
+export const insertWhisper = async (toPlayerId: number, fromPlayerId: number, message: string, date: number) => {
+  await db.run(/*sql*/`
+    INSERT INTO chats ("toPlayerId", "fromPlayerId", "message", "date")
+      VALUES ($1, $2, $3, $4)
+  `, [toPlayerId, fromPlayerId, message, date])
+}
+
 export const fetchRoomChats = async (roomId: number, limit = 500): Promise<Chat[]> => {
   const chatHistories = await db.all<ChatHistory[]>(/*sql*/`
     SELECT * FROM (
@@ -45,6 +52,56 @@ export const fetchRoomChats = async (roomId: number, limit = 500): Promise<Chat[
       
       message,
       date,
+      recipiant: null,
+    }
+
+    return chat
+  })
+  
+  return chats
+}
+
+export const fetchInbox = async (playerId: number, limit = 500): Promise<Chat[]> => {
+  const chatHistories = await db.all<ChatHistory[]>(/*sql*/`
+    SELECT * FROM (
+      SELECT * FROM chats
+      WHERE toPlayerId IS NOT NULL
+      AND (fromPlayerId = $1 
+      OR toPlayerId = $1)
+      ORDER BY date DESC
+      LIMIT ${limit}
+    ) ORDER BY date ASC
+  `, [playerId])
+
+  const playerIds: number[] = []
+
+  chatHistories.forEach(chatHistory => {
+    if (playerIds.indexOf(chatHistory.fromPlayerId) === -1) {
+      playerIds.push(chatHistory.fromPlayerId)
+    }
+  })
+
+  // TODO: make safePlayer(Player) util, also needed in network/events/chat.ts
+  const players = await db.all<Player[]>(/*sql*/`
+    SELECT id, username FROM players
+  `)
+
+  const chats: Chat[] = chatHistories.map(({
+    fromPlayerId,
+    date,
+    message,
+    toPlayerId,
+  }) => {
+    const chat: Chat = {
+      player: {
+        username: players.find(({ id }) => id === fromPlayerId)!.username,
+      },
+      
+      message,
+      date,
+      recipiant: {
+        username: players.find(({ id }) => id === toPlayerId)!.username,
+      },
     }
 
     return chat

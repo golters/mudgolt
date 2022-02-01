@@ -70,6 +70,9 @@ import{
 import{
   TakeItem
 }from "./takeItem"
+import{
+  Inbox
+}from "./inbox"
 
 
 export const commandModules = [
@@ -89,6 +92,7 @@ export const commandModules = [
 	Draw,
   Shout,
   Whisper,
+  Inbox,
   Me,
   Online,
   MakeItem,

@@ -8,6 +8,8 @@ import {
   PLAYER_EVENT, 
   LOOK_EVENT,
   PAY_EVENT,
+  INBOX_HISTORY_EVENT,
+  WHISPER_LOG_EVENT,
 } from "../../../events"
 import {
   store, 
@@ -80,6 +82,12 @@ export const networkTask = () => new Promise<void>((resolve) => {
     if (code === CHAT_HISTORY_EVENT) {
       void (payload as Chat[]).forEach(chat => networkEmitter.emit(CHAT_EVENT, chat))
       sendEvent(LOOK_EVENT, null)
+
+      resolve()
+    }
+    
+    if (code === INBOX_HISTORY_EVENT) {
+      void (payload as Chat[]).forEach(chat => networkEmitter.emit(WHISPER_LOG_EVENT, chat))
 
       resolve()
     }

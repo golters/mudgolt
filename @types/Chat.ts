@@ -4,6 +4,7 @@ export interface Chat {
   player: Partial<Player>
   message: string
   date: number
+  recipiant: Partial<Player> | null
 }
 
 export interface ChatHistory {
