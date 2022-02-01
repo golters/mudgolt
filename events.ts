@@ -27,6 +27,9 @@ export const DROP_ITEM_EVENT = "DROP_ITEM"
 export const TAKE_ITEM_EVENT = "TAKE_ITEM"
 export const LOOK_AT_EVENT = "LOOK_AT"
 export const PAY_EVENT = "PAY"
+export const INBOX_EVENT = "INBOX"
+export const INBOX_HISTORY_EVENT = "INBOX_HISTORY"
+export const WHISPER_LOG_EVENT = "WHISPER_LOG"
 
 // command events
 export const LOG_EVENT = "LOG"
