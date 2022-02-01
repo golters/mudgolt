@@ -33,6 +33,7 @@ const handler: NetworkEventHandler = async (socket, message: string, player) => 
       },
       message,
       date: Date.now(),
+      recipiant: null,
     }
   
     broadcastToRoom<Chat>(CHAT_EVENT, chat, player.roomId)
