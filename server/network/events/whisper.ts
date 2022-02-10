@@ -11,6 +11,7 @@ import {
   SERVER_LOG_EVENT,
   ERROR_EVENT,
   LOG_EVENT,
+  NOTIFICATION_EVENT,
 } from "../../../events"
 import {
   Player,
@@ -53,6 +54,7 @@ const handler: NetworkEventHandler = async (
       if(element.player.username === user.username){
         sendEvent<string>(socket, SERVER_LOG_EVENT, "you whispered '" + message + "' to " + name)
         broadcastToUser<string>(SERVER_LOG_EVENT, player.username + " whispered '" + message + "' to you", name); 
+        broadcastToUser<string>(NOTIFICATION_EVENT, "whisper", name); 
         onlinecheck = true
 
         return     
@@ -60,7 +62,7 @@ const handler: NetworkEventHandler = async (
     });
        
     if(onlinecheck === false){
-      sendEvent<string>(socket, ERROR_EVENT, name + " is not online")
+      sendEvent<string>(socket, SERVER_LOG_EVENT, name + " is not online but you whispered '" + message + "' into their inbox")
     }
 
     await insertWhisper(user.id, player.id, message, Date.now())

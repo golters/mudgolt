@@ -224,7 +224,6 @@ export const payPlayer = async (playerId: number): Promise<Player> => {
   const dailyGolts = player.golts + DAILY_PAY;
   const lastPaid = Date.now();
 
-  console.log(`${player.lastPaid} < ${lastPaid - 86400000}`)
   if(player.lastPaid < lastPaid - 86400000){
     await db.run(/*sql*/`
     UPDATE players

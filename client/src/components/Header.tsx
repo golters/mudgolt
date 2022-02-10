@@ -16,9 +16,6 @@ import {
 import "./Header.css"
 import React, { useCallback, useEffect, useState } from "react"
 import { sendEvent } from "../network"
-import {
-  store,
-} from "../store"
 
 const BANNER_MINIMIZE_STORAGE_KEY = 'headerBannerMinimized'
 
@@ -32,6 +29,7 @@ export const setBrush = (newBrush: string) => {
 export const Header: React.FC = () => {
   const [room, setRoom] = useState<Room | null>(null)
   const [minimized, setMinimized] = useState(!!localStorage.getItem(BANNER_MINIMIZE_STORAGE_KEY) || false)
+  const [muted, setMuted] = useState(!!localStorage.getItem("muted") || false)
   
   useEffect(() => {
     networkEmitter.on(ROOM_UPDATE_EVENT, (room: Room) => {
@@ -48,6 +46,16 @@ export const Header: React.FC = () => {
       localStorage.setItem(BANNER_MINIMIZE_STORAGE_KEY, '1')
     }
   }, [minimized])
+  
+  const toggleMute = useCallback(() => {
+    setMuted(!muted)
+
+    if (muted) {
+      localStorage.removeItem("muted")
+    } else {
+      localStorage.setItem("muted", '1')
+    }
+  }, [muted])
 
   const Banner: React.FC<{ room: Room }> = ({ room }) => {
     const bannerParts: string[] = []
@@ -88,6 +96,13 @@ export const Header: React.FC = () => {
   return (
     <header id="header">
       <div id="header-wrapper">
+        <div className="controls">
+          <span
+            title={`${muted ? 'Unmute' : 'Mute'}`} 
+            className="mute" 
+            onClick={toggleMute}
+          >{muted ? <s>♫</s> : "♫"}</span>
+           </div>
         <div className="controls">
           <span
             title={`${minimized ? 'Expand' : 'Minimize'} banner`} 

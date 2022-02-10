@@ -30,6 +30,7 @@ export const PAY_EVENT = "PAY"
 export const INBOX_EVENT = "INBOX"
 export const INBOX_HISTORY_EVENT = "INBOX_HISTORY"
 export const WHISPER_LOG_EVENT = "WHISPER_LOG"
+export const NOTIFICATION_EVENT = "NOTIFICATION"
 
 // command events
 export const LOG_EVENT = "LOG"
