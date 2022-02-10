@@ -13,7 +13,7 @@ import {
   Player, Room, 
 } from "../../@types"
 import {
-  AUTH_EVENT, ERROR_EVENT, PLAYER_EVENT, ROOM_UPDATE_EVENT, SERVER_LOG_EVENT, 
+  AUTH_EVENT, ERROR_EVENT, PLAYER_EVENT, ROOM_UPDATE_EVENT, SERVER_LOG_EVENT, NOTIFICATION_EVENT,
 } from "../../events"
 import {
   createVerify, createPublicKey, 
@@ -109,7 +109,8 @@ server.on("connection", (socket, request) => {
             player,
           })
 
-          //broadcast(SERVER_LOG_EVENT, `${player.username} is now online`)
+          broadcastToRoom(SERVER_LOG_EVENT, `${player.username} is now online`, player.roomId)
+          broadcastToRoom(NOTIFICATION_EVENT, "online", player.roomId); 
           broadcastToRoom(SERVER_LOG_EVENT, `${player.username} has joined ${room.name}`, player.roomId)
         } else {
           sendEvent(socket, ERROR_EVENT, "Invalid signature")
@@ -133,7 +134,8 @@ server.on("connection", (socket, request) => {
 
     online.splice(online.findIndex(({ player }) => player.publicKey === publicKey), 1)
 
-    //broadcast(SERVER_LOG_EVENT, `${player.username} went offline`)
+    broadcastToRoom(SERVER_LOG_EVENT, `${player.username} went offline`, player.roomId)
+    broadcastToRoom(NOTIFICATION_EVENT, "offline", player.roomId); 
   })
 })
 

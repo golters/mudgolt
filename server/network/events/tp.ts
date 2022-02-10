@@ -7,6 +7,7 @@ import {
   ROOM_UPDATE_EVENT,
   SERVER_LOG_EVENT,
   LOG_EVENT,
+  NOTIFICATION_EVENT,
 } from "../../../events"
 import {
   broadcastToRoom,
@@ -54,8 +55,10 @@ const handler: NetworkEventHandler = async (socket, roomNameInput: string, playe
 
     broadcastToRoom<Room>(ROOM_UPDATE_EVENT, oldRoom, oldRoom.id)
     broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has teleported from ${oldRoom.name}`, oldRoom.id)
+    broadcastToRoom<string>(NOTIFICATION_EVENT, "teleportExit", oldRoom.id);
     broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
     broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has teleported into ${room.name}`, room.id)
+    broadcastToRoom<string>(NOTIFICATION_EVENT, "teleportEnter", room.id);
     sendEvent<string>(socket, LOG_EVENT, message)    
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
