@@ -27,6 +27,9 @@ import {
   pushErrorToLog, 
   pushToLog,
 } from "../components/Terminal"
+import {
+  iconUtil,
+} from "../utils/icon"
 
 export let client: WebSocket
 
@@ -105,6 +108,12 @@ export const networkTask = () => new Promise<void>((resolve) => {
         networkTask().catch(console.error)
       }, RECONNECT_DELAY)
     }
+  })
+
+  window.addEventListener("focus", () => {
+    store.notifications = 0
+    iconUtil.changeFavicon(iconUtil.getFaviconUrl(store.notifications))
+    document.title = "MUDGOLT"
   })
 })
 

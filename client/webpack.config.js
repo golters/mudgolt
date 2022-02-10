@@ -39,7 +39,7 @@ module.exports = () => ({
         ],
       },
       {
-        test: /\.(png|svg|jpg|webp|gif|woff|woff2|eot|ttf|otf)$/,
+        test: /\.(png|svg|jpg|webp|gif|woff|woff2|eot|ttf|otf|mp3)$/,
         use: [
           {
             loader: "file-loader",
@@ -57,7 +57,7 @@ module.exports = () => ({
   },
 
   resolve: {
-    extensions: [".js", ".jsx", ".ts", ".tsx"],
+    extensions: [".js", ".jsx", ".ts", ".tsx", ".mp3"],
   },
 
   output: {

@@ -7,6 +7,7 @@ import {
   ROOM_UPDATE_EVENT,
   SERVER_LOG_EVENT,
   LOG_EVENT,
+  NOTIFICATION_EVENT,
 } from "../../../events"
 import {
   broadcastToRoom,
@@ -48,8 +49,10 @@ const handler: NetworkEventHandler = async (socket, doorName: string, player) =>
 
     broadcastToRoom<Room>(ROOM_UPDATE_EVENT, oldRoom, oldRoom.id)
     broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has left ${oldRoom.name} through the ${doorName}`, oldRoom.id)
+    broadcastToRoom<string>(NOTIFICATION_EVENT, "doorExit", oldRoom.id);
     broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
     broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has joined ${room.name}`, room.id)
+    broadcastToRoom<string>(NOTIFICATION_EVENT, "doorEnter", room.id);
     sendEvent<string>(socket, LOG_EVENT, message)    
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
