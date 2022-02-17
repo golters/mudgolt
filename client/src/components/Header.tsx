@@ -4,7 +4,6 @@ import {
 import {
   DRAW_EVENT,
   ROOM_UPDATE_EVENT, 
-  SERVER_LOG_EVENT,
 } from "../../../events"
 import {
   networkEmitter, 

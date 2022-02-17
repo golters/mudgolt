@@ -5,16 +5,23 @@ import {
 
 export const insertRoomChat = async (roomId: number, fromPlayerId: number, message: string, date: number) => {
   await db.run(/*sql*/`
-    INSERT INTO chats ("roomId", "fromPlayerId", "message", "date")
-      VALUES ($1, $2, $3, $4)
-  `, [roomId, fromPlayerId, message, date])
+    INSERT INTO chats ("roomId", "fromPlayerId", "message", "date", "type")
+      VALUES ($1, $2, $3, $4, $5)
+  `, [roomId, fromPlayerId, message, date, "chat"])
 }
 
 export const insertWhisper = async (toPlayerId: number, fromPlayerId: number, message: string, date: number) => {
   await db.run(/*sql*/`
-    INSERT INTO chats ("toPlayerId", "fromPlayerId", "message", "date")
-      VALUES ($1, $2, $3, $4)
-  `, [toPlayerId, fromPlayerId, message, date])
+    INSERT INTO chats ("toPlayerId", "fromPlayerId", "message", "date", "type")
+      VALUES ($1, $2, $3, $4, $5)
+  `, [toPlayerId, fromPlayerId, message, date, "whisper"])
+}
+
+export const insertRoomCommand = async (roomId: number, fromPlayerId: number, message: string, date: number, type: string) => {
+  await db.run(/*sql*/`
+    INSERT INTO chats ("roomId", "fromPlayerId",  "message", "date", "type")
+      VALUES ($1, $2, $3, $4, $5)
+  `, [roomId, fromPlayerId, message, date, type])
 }
 
 export const fetchRoomChats = async (roomId: number, limit = 500): Promise<Chat[]> => {
@@ -44,15 +51,16 @@ export const fetchRoomChats = async (roomId: number, limit = 500): Promise<Chat[
     fromPlayerId,
     date,
     message,
+    type,
   }) => {
     const chat: Chat = {
       player: {
         username: players.find(({ id }) => id === fromPlayerId)!.username,
       },
-      
       message,
       date,
       recipiant: null,
+      type,
     }
 
     return chat
@@ -91,6 +99,7 @@ export const fetchInbox = async (playerId: number, limit = 500): Promise<Chat[]>
     date,
     message,
     toPlayerId,
+    type,
   }) => {
     const chat: Chat = {
       player: {
@@ -100,8 +109,9 @@ export const fetchInbox = async (playerId: number, limit = 500): Promise<Chat[]>
       message,
       date,
       recipiant: {
-        username: players.find(({ id }) => id === toPlayerId)!.username,
+        username: players.find(({ id }) => id === toPlayerId)!.username,        
       },
+      type,
     }
 
     return chat

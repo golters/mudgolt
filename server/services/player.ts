@@ -234,14 +234,23 @@ export const payPlayer = async (playerId: number): Promise<Player> => {
   }
 
   const latestMessage = await db.get<ChatHistory>(/*sql*/`
-  SELECT * FROM chats WHERE fromPlayerId = $1 AND roomId = $2 AND date > $3 ORDER BY date DESC LIMIT 1;
+  SELECT * FROM chats WHERE fromPlayerId = $1 
+  AND roomId = $2 
+  AND (type = "chat" OR type = "shout" OR type = "me")
+  AND date > $3 
+  ORDER BY date DESC LIMIT 1;
 `, [playerId, player.roomId, player.lastPaid])
   if(!latestMessage){
     return player
   }
 
   const lastMessage = await db.get<ChatHistory>(/*sql*/`
-  SELECT * FROM chats WHERE roomId = $1 AND date < $2 AND date >= $3 AND fromPlayerId != $4 ORDER BY date DESC LIMIT 1;
+  SELECT * FROM chats WHERE roomId = $1 
+  AND date < $2 
+  AND date >= $3 
+  AND (type = "chat" OR type = "shout" OR type = "me")
+  AND fromPlayerId != $4 
+  ORDER BY date DESC LIMIT 1;
   `, [player.roomId, latestMessage.date, player.lastPaid, playerId])
   if(!lastMessage){
     return player
