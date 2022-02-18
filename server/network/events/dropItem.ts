@@ -22,7 +22,7 @@ const handler: NetworkEventHandler = async (socket, item: string, player) => {
     await dropItem(player, item)
 
     broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} dropped ${item}`,player.roomId)
-    await insertRoomCommand(player.roomId, player.id, `${player.username} dropped ${item}`, Date.now(), "drop")
+    await insertRoomCommand(player.roomId, player.id, `dropped ${item}`, Date.now(), "drop")
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)

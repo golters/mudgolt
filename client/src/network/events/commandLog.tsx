@@ -15,7 +15,7 @@ import {
   Chat,
 } from "../../../../@types"
 
-const handler: NetworkEventHandler = ({ message, date}: Chat) => {
+const handler: NetworkEventHandler = ({ player, message, date}: Chat) => {
   const matches = message.matchAll(/\b(https?:\/\/\S*?\.(?:png|jpe?g|gif)(?:\?(?:(?:(?:[\w_-]+=[\w_-]+)(?:&[\w_-]+=[\w_-]+)*)|(?:[\w_-]+)))?)\b/g)
 
   const embeds: JSX.Element[] = [...matches].map(match => {
@@ -41,7 +41,7 @@ const handler: NetworkEventHandler = ({ message, date}: Chat) => {
     pushToLog(
       <span className="chat-message">
     <span className="date" title={new Date(date).toLocaleString()}>[{timestamp}] </span>
-    <span style={{ fontStyle: "italic", opacity: "0.7" }}>{message}{embeds}</span>
+    <span style={{ fontStyle: "italic", opacity: "0.7" }}>{player.username} {message}{embeds}</span>
     </span>
     )
 }
