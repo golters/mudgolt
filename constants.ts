@@ -16,9 +16,9 @@ export const ROOM_MAX_NAME = 32
 export const PLAYER_MAX_NAME = 32
 export const ITEM_MAX_NAME = 32
 
-export const PAY_RATE = 5
+export const PAY_RATE = 10
 export const PAY_TIME = 100000
-export const DAILY_PAY = 10
+export const DAILY_PAY = 20
 
 export const GOLT = "✪"
 

@@ -18,6 +18,7 @@ import teleportEnter from "../../assets/sfx/teleportEnter.mp3"
 import teleportExit from "../../assets/sfx/teleportExit.mp3"
 import online from "../../assets/sfx/online.mp3"
 import offline from "../../assets/sfx/offline.mp3"
+import coin from "../../assets/sfx/coin.mp3"
 import {
   pushToLog,
 } from "../../components/Terminal"
@@ -31,15 +32,10 @@ const sfx = {
   teleportExit: new Audio(teleportExit),
   online: new Audio(online),
   offline: new Audio(offline),
+  pay: new Audio(coin),
 }
 
 const handler: NetworkEventHandler = (sound: keyof typeof sfx) => {
-  if (sfx[sound] === undefined) {
-    pushToLog("undefined sound")
-    console.error("invalid sfx", sound)
-
-    return
-  }
   if(!store.notifications){
     store.notifications = 0
   }
@@ -49,6 +45,11 @@ const handler: NetworkEventHandler = (sound: keyof typeof sfx) => {
     document.title = `(${store.notifications}) MUDGOLT`
   }
   iconUtil.changeFavicon(iconUtil.getFaviconUrl(store.notifications))
+  if (sfx[sound] === undefined) {
+    console.error("invalid sfx", sound)
+
+    return
+  }
   if(!localStorage.getItem("muted")){
     sfx[sound].currentTime = 0
     sfx[sound].play()

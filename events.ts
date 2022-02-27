@@ -31,6 +31,7 @@ export const INBOX_EVENT = "INBOX"
 export const INBOX_HISTORY_EVENT = "INBOX_HISTORY"
 export const WHISPER_LOG_EVENT = "WHISPER_LOG"
 export const NOTIFICATION_EVENT = "NOTIFICATION"
+export const COMMAND_LOG_EVENT = "COMMAND_LOG"
 
 // command events
 export const LOG_EVENT = "LOG"

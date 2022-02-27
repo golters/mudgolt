@@ -5,6 +5,7 @@ export interface Chat {
   message: string
   date: number
   recipiant: Partial<Player> | null
+  type: string
 }
 
 export interface ChatHistory {
@@ -13,4 +14,5 @@ export interface ChatHistory {
   toPlayerId: number | null
   message: string
   date: number
+  type: string
 }

@@ -25,6 +25,9 @@ import {
   TELEPORT_COST,
   GOLT,
 } from "../../../constants"
+import {
+  insertRoomCommand,
+} from "../../services/chat"
 
 const handler: NetworkEventHandler = async (socket, roomNameInput: string, player) => {
   try {
@@ -56,9 +59,11 @@ const handler: NetworkEventHandler = async (socket, roomNameInput: string, playe
     broadcastToRoom<Room>(ROOM_UPDATE_EVENT, oldRoom, oldRoom.id)
     broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has teleported from ${oldRoom.name}`, oldRoom.id)
     broadcastToRoom<string>(NOTIFICATION_EVENT, "teleportExit", oldRoom.id);
+    await insertRoomCommand(oldRoom.id, player.id, `has teleported from ${oldRoom.name}`, Date.now(), "tp")
     broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
     broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has teleported into ${room.name}`, room.id)
     broadcastToRoom<string>(NOTIFICATION_EVENT, "teleportEnter", room.id);
+    await insertRoomCommand(room.id, player.id, `has teleported into ${room.name}`, Date.now(), "tp")
     sendEvent<string>(socket, LOG_EVENT, message)    
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
