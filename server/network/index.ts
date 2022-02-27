@@ -10,6 +10,9 @@ import {
   findOrCreatePlayer,
 } from "../services/player"
 import {
+  insertRoomCommand,
+} from "../services/chat"
+import {
   Player, Room, 
 } from "../../@types"
 import {
@@ -63,6 +66,7 @@ export const sendEvent = <TPayload> (socket: WebSocket, code: string, payload: T
 export const online: {
   socket: WebSocket
   player: Player
+  lastPinged: number
 }[] = []
 
 
@@ -95,23 +99,35 @@ server.on("connection", (socket, request) => {
         const pem = createPublicKey(`-----BEGIN PUBLIC KEY-----\n${publicKey}\n-----END PUBLIC KEY-----`)
   
         if (verify.verify(pem, signature, "base64")) {
+          
           authenticated = true
   
           player = await findOrCreatePlayer(publicKey)
 
           const room = await getRoomById(player.roomId) as Room
 
+          const lastPinged = Date.now()
+
           sendEvent(socket, PLAYER_EVENT, player)
           sendEvent(socket, ROOM_UPDATE_EVENT, room)
 
-          online.push({
-            socket,
-            player,
-          })
-
-          broadcastToRoom(SERVER_LOG_EVENT, `${player.username} is now online`, player.roomId)
-          broadcastToRoom(NOTIFICATION_EVENT, "online", player.roomId); 
-          broadcastToRoom(SERVER_LOG_EVENT, `${player.username} has joined ${room.name}`, player.roomId)
+          let onlinecheck = false
+          online.forEach(element => {      
+            if(element.player.username === player.username){
+              onlinecheck = true
+            }        
+          });
+          if(onlinecheck === false){
+            online.push({
+              socket,
+              player,
+              lastPinged,
+            })      
+            broadcastToRoom(SERVER_LOG_EVENT, `${player.username} is now online`, player.roomId)
+            broadcastToRoom(NOTIFICATION_EVENT, "online", player.roomId); 
+            broadcastToRoom(SERVER_LOG_EVENT, `${player.username} has joined ${room.name}`, player.roomId)
+            insertRoomCommand(player.roomId, player.id, "came online", Date.now(), "online")
+          }
         } else {
           sendEvent(socket, ERROR_EVENT, "Invalid signature")
         }
@@ -129,14 +145,23 @@ server.on("connection", (socket, request) => {
 
   socket.on("close", () => {
     console.log("Socket disconnected from server")
+    //online.splice(online.findIndex(({ player }) => player.publicKey === publicKey), 1)
 
-    if (!authenticated) return
-
-    online.splice(online.findIndex(({ player }) => player.publicKey === publicKey), 1)
-
-    broadcastToRoom(SERVER_LOG_EVENT, `${player.username} went offline`, player.roomId)
-    broadcastToRoom(NOTIFICATION_EVENT, "offline", player.roomId); 
+    
   })
 })
+
+setInterval((publicKey) => {
+  online.forEach(client => {
+    if(Date.now() > client.lastPinged + (30001)){
+      sendEvent(client.socket, SERVER_LOG_EVENT, "disconnected from server")
+      broadcastToRoom(SERVER_LOG_EVENT, `${client.player.username} went offline`, client.player.roomId)
+      broadcastToRoom(NOTIFICATION_EVENT, "offline", client.player.roomId); 
+      insertRoomCommand(client.player.roomId, client.player.id, "went offline", Date.now(), "offline")
+      online.splice(online.findIndex(({ player }) => player.publicKey === publicKey), 1)
+    }
+  });
+}, 15 * 1000)
+
 
 console.log(`WebSocket server started on port ${PORT}`)
