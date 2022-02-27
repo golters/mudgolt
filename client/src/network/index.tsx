@@ -11,7 +11,8 @@ import {
   INBOX_HISTORY_EVENT,
   WHISPER_LOG_EVENT,
   COMMAND_LOG_EVENT,
-  PING_EVENT, 
+  PING_EVENT,
+  FOCUS_EVENT, 
 } from "../../../events"
 import {
   store, 
@@ -29,6 +30,7 @@ import {
 import {
   iconUtil,
 } from "../utils/icon"
+import { Socket } from "dgram"
 
 export let client: WebSocket
 
@@ -120,10 +122,11 @@ export const networkTask = () => new Promise<void>((resolve) => {
     store.notifications = 0
     iconUtil.changeFavicon(iconUtil.getFaviconUrl(store.notifications))
     document.title = "MUDGOLT"
+    sendEvent(FOCUS_EVENT, store.player)
   })
 })
 
 setInterval(() => {
-  sendEvent(PING_EVENT, null)
+  sendEvent(PING_EVENT, client)
   sendEvent(PAY_EVENT, store.player?.id)
 }, 15 * 1000)
