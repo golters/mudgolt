@@ -157,7 +157,7 @@ setInterval((publicKey) => {
       sendEvent(client.socket, SERVER_LOG_EVENT, "disconnected from server")
       broadcastToRoom(SERVER_LOG_EVENT, `${client.player.username} went offline`, client.player.roomId)
       broadcastToRoom(NOTIFICATION_EVENT, "offline", client.player.roomId); 
-      insertRoomCommand(client.player.roomId, client.player.id, "went offline", Date.now(), "offline")
+      //insertRoomCommand(client.player.roomId, client.player.id, "went offline", Date.now(), "offline")
       online.splice(online.findIndex(({ player }) => player.publicKey === publicKey), 1)
     }
   });

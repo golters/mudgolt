@@ -32,7 +32,7 @@ const handler: NetworkEventHandler = async (socket, player) => {
     broadcastToRoom(SERVER_LOG_EVENT, `${player.username} is now online`, player.roomId)
     broadcastToRoom(NOTIFICATION_EVENT, "online", player.roomId); 
     broadcastToRoom(SERVER_LOG_EVENT, `${player.username} has joined ${room.name}`, player.roomId)
-    insertRoomCommand(player.roomId, player.id, "came online", Date.now(), "online")
+    //insertRoomCommand(player.roomId, player.id, "came online", Date.now(), "online")
     online.push({
       socket,
       player,
