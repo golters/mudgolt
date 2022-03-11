@@ -212,7 +212,7 @@ export const takePlayerGolts = async (playerId: number, golts: number): Promise<
   return newPlayer
 }
 
-export const payPlayer = async (playerId: number): Promise<Player> => {
+export const payPlayer = async (playerId: number) => {
 
   const player = await getPlayerById(playerId)
   
@@ -233,24 +233,53 @@ export const payPlayer = async (playerId: number): Promise<Player> => {
   `, [dailyGolts, lastPaid, playerId])
   }
 
-  const latestMessage = await db.get<ChatHistory>(/*sql*/`
-  SELECT * FROM chats WHERE fromPlayerId = $1 AND roomId = $2 AND date > $3 ORDER BY date DESC LIMIT 1;
-`, [playerId, player.roomId, player.lastPaid])
-  if(!latestMessage){
-    return player
-  }
+  const toWhispers = await db.all<ChatHistory[]>(/*sql*/`
+  SELECT * FROM chats WHERE toPlayerId = $1 
+  AND type = "whisper"
+  AND date > $2
+`, [playerId, player.lastPaid])
 
-  const lastMessage = await db.get<ChatHistory>(/*sql*/`
-  SELECT * FROM chats WHERE roomId = $1 AND date < $2 AND date >= $3 AND fromPlayerId != $4 ORDER BY date DESC LIMIT 1;
-  `, [player.roomId, latestMessage.date, player.lastPaid, playerId])
-  if(!lastMessage){
-    return player
-  }
+  const toWhisperers =toWhispers.map((chat) => chat.fromPlayerId)
 
-  console.log(latestMessage.fromPlayerId)
-  console.log(lastMessage.fromPlayerId)
-  if(latestMessage.fromPlayerId === lastMessage.fromPlayerId){
-    return player
+  const fromWhispers = await db.all<ChatHistory[]>(/*sql*/`
+SELECT * FROM chats WHERE fromPlayerId = $1 
+AND type = "whisper"
+AND date > $2
+`, [playerId, player.lastPaid])
+
+  const fromWhisperers = fromWhispers.map((chat) => chat.toPlayerId)
+  
+  const whispers = toWhisperers.filter(function(e) {
+    return fromWhisperers.indexOf(e) > -1;
+  });
+  
+  if(whispers.length === 0){ 
+    const latestMessage = await db.get<ChatHistory>(/*sql*/`
+    SELECT * FROM chats WHERE fromPlayerId = $1 
+    AND roomId = $2 
+    AND (type = "chat" OR type = "shout" OR type = "me")
+    AND date > $3 
+    ORDER BY date DESC LIMIT 1;
+  `, [playerId, player.roomId, player.lastPaid])
+    if(!latestMessage){
+      return
+    }
+  
+    const lastMessage = await db.get<ChatHistory>(/*sql*/`
+    SELECT * FROM chats WHERE roomId = $1 
+    AND date < $2 
+    AND date >= $3 
+    AND (type = "chat" OR type = "shout" OR type = "me")
+    AND fromPlayerId != $4 
+    ORDER BY date DESC LIMIT 1;
+    `, [player.roomId, latestMessage.date, player.lastPaid, playerId])
+    if(!lastMessage){
+      return
+    }
+  
+    if(latestMessage.fromPlayerId === lastMessage.fromPlayerId){
+      return
+    }
   }
 
   if(lastPaid >= player.lastPaid + PAY_TIME){

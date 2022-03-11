@@ -21,6 +21,9 @@ import { getDoorByName, getTargetDoor } from "../../services/door"
 import {
   Room,
 } from "@types"
+import {
+  insertRoomCommand,
+} from "../../services/chat"
 
 const handler: NetworkEventHandler = async (socket, doorName: string, player) => {
   try {
@@ -50,9 +53,11 @@ const handler: NetworkEventHandler = async (socket, doorName: string, player) =>
     broadcastToRoom<Room>(ROOM_UPDATE_EVENT, oldRoom, oldRoom.id)
     broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has left ${oldRoom.name} through the ${doorName}`, oldRoom.id)
     broadcastToRoom<string>(NOTIFICATION_EVENT, "doorExit", oldRoom.id);
+    await insertRoomCommand(oldRoom.id, player.id, `has left ${oldRoom.name} through the ${doorName}`, Date.now(), "go")
     broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
     broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has joined ${room.name}`, room.id)
     broadcastToRoom<string>(NOTIFICATION_EVENT, "doorEnter", room.id);
+    await insertRoomCommand(room.id, player.id, `has joined ${room.name}`, Date.now(), "go")
     sendEvent<string>(socket, LOG_EVENT, message)    
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)

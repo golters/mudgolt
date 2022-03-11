@@ -8,6 +8,7 @@ import {
 import {
   CHAT_EVENT, 
   ERROR_EVENT,
+  NOTIFICATION_EVENT,
 } from "../../../events"
 import {
   MESSAGE_MAX_LENGTH, 
@@ -34,11 +35,13 @@ const handler: NetworkEventHandler = async (socket, message: string, player) => 
       message,
       date: Date.now(),
       recipiant: null,
+      type: "chat",
     }
   
     broadcastToRoom<Chat>(CHAT_EVENT, chat, player.roomId)
   
     await insertRoomChat(player.roomId, player.id, message, chat.date)
+    broadcastToRoom<string>(NOTIFICATION_EVENT, "chat", player.roomId);
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)

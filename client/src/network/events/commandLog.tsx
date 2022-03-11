@@ -2,18 +2,20 @@ import {
   networkEmitter, NetworkEventHandler, 
 } from "./emitter"
 import {
-  WHISPER_LOG_EVENT,
+  COMMAND_LOG_EVENT, 
 } from "../../../../events"
 import {
-  Chat,
-} from "../../../../@types"
+  pushToLog, 
+} from "../../components/Terminal"
+import React from "react"
 import {
   Markdown, 
 } from "../../components/Markdown"
-import { pushToLog } from "../../components/Terminal"
-import React from "react"
+import {
+  Chat,
+} from "../../../../@types"
 
-const handler: NetworkEventHandler = ({ player, message, date, recipiant}: Chat) => {
+const handler: NetworkEventHandler = ({ player, message, date}: Chat) => {
   const matches = message.matchAll(/\b(https?:\/\/\S*?\.(?:png|jpe?g|gif)(?:\?(?:(?:(?:[\w_-]+=[\w_-]+)(?:&[\w_-]+=[\w_-]+)*)|(?:[\w_-]+)))?)\b/g)
 
   const embeds: JSX.Element[] = [...matches].map(match => {
@@ -36,18 +38,12 @@ const handler: NetworkEventHandler = ({ player, message, date, recipiant}: Chat)
     ? formattedTimeParts.join(" ")
     : `${formattedDate} ${formattedTimeParts.join(" ")}`
 
-    if(!recipiant){
-      return
-    }
-
-  pushToLog(
-    <span className="chat-message">
-      <span className="date" title={new Date(date).toLocaleString()}>[{timestamp}] </span>
-      <span className="username">[{player.username}]{`>`}[{recipiant.username}] </span>
-      <Markdown string={message} />
-      {embeds}
+    pushToLog(
+      <span className="chat-message">
+    <span className="date" title={new Date(date).toLocaleString()}>[{timestamp}] </span>
+    <span style={{ fontStyle: "italic", opacity: "0.7" }}>{player.username} {message}{embeds}</span>
     </span>
-  )
+    )
 }
 
-networkEmitter.on(WHISPER_LOG_EVENT, handler)
+networkEmitter.on(COMMAND_LOG_EVENT, handler)

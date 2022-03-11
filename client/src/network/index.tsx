@@ -10,6 +10,9 @@ import {
   PAY_EVENT,
   INBOX_HISTORY_EVENT,
   WHISPER_LOG_EVENT,
+  COMMAND_LOG_EVENT,
+  PING_EVENT,
+  FOCUS_EVENT, 
 } from "../../../events"
 import {
   store, 
@@ -17,9 +20,6 @@ import {
 import {
   networkEmitter, 
 } from "./events"
-import {
-  PING_EVENT, 
-} from "../../../events"
 import {
   RECONNECT_DELAY,
 } from "../../../constants"
@@ -30,6 +30,7 @@ import {
 import {
   iconUtil,
 } from "../utils/icon"
+import { Socket } from "dgram"
 
 export let client: WebSocket
 
@@ -79,12 +80,19 @@ export const networkTask = () => new Promise<void>((resolve) => {
       } else {
         sendEvent<null>(CHAT_HISTORY_EVENT, null)
         requestedChat = true
+        sendEvent(LOOK_EVENT, null)
       }
     }
 
     if (code === CHAT_HISTORY_EVENT) {
-      void (payload as Chat[]).forEach(chat => networkEmitter.emit(CHAT_EVENT, chat))
-      sendEvent(LOOK_EVENT, null)
+      const chats = payload as Chat[]
+      for (let i = 0; i < chats.length; i++){
+        if(chats[i].type === "chat" || chats[i].type === null){
+        networkEmitter.emit(CHAT_EVENT, chats[i])
+        }else{          
+        networkEmitter.emit(COMMAND_LOG_EVENT, chats[i])
+        }
+      }
 
       resolve()
     }
@@ -114,10 +122,11 @@ export const networkTask = () => new Promise<void>((resolve) => {
     store.notifications = 0
     iconUtil.changeFavicon(iconUtil.getFaviconUrl(store.notifications))
     document.title = "MUDGOLT"
+    sendEvent(FOCUS_EVENT, store.player)
   })
 })
 
 setInterval(() => {
-  sendEvent(PING_EVENT, null)
+  sendEvent(PING_EVENT, client)
   sendEvent(PAY_EVENT, store.player?.id)
 }, 15 * 1000)

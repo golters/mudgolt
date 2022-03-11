@@ -10,6 +10,9 @@ import {
 import {
   Player, 
 } from "../../../@types";
+import {
+  insertRoomCommand,
+} from "../../services/chat"
 
 export interface DiceProps{
   count: number
@@ -32,6 +35,7 @@ const handler: NetworkEventHandler = (socket, dice: DiceProps, player: Player) =
   const result = rollDice(dice);
 
   broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} rolled ${dice.count}d${dice.sides} - ${result}`, player.roomId)
+  insertRoomCommand(player.roomId, player.id, `rolled ${dice.count}d${dice.sides} - ${result}`, Date.now(), "roll")
 }
 
 networkEmitter.on(ROLL_EVENT, handler)

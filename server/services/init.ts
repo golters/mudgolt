@@ -49,6 +49,7 @@ export const initStore = async () => {
       "toPlayerId" INTEGER,
       "message" TEXT,
       "date" INTEGER,
+      "type" TEXT,
 
       FOREIGN KEY("roomId") REFERENCES rooms("id"),
       FOREIGN KEY("fromPlayerId") REFERENCES players("id"),
