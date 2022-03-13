@@ -15,33 +15,25 @@ import {
 import {
   getRoomById,
 } from "../../services/room"
-import {
-  insertRoomCommand,
-} from "../../services/chat"
 
 const handler: NetworkEventHandler = async (socket, player) => {
-  
-  let onlinecheck = false
-  online.forEach(element => {      
+  online.forEach(element => {    
     if(element.player.publicKey === player.publicKey){
-      onlinecheck = true
-    }        
+      online.splice(online.findIndex(({ player }) => player.publicKey === element.player.publicKey), 1)
+    }    
   });
-  if(onlinecheck === false){
-    const lastPinged = Date.now()
+  const lastPinged = Date.now()
+  if(Date.now() > player.lastPinged + (30001)){
     const room = await getRoomById(player.roomId)
     broadcastToRoom(SERVER_LOG_EVENT, `${player.username} is now online`, player.roomId)
     broadcastToRoom(NOTIFICATION_EVENT, "online", player.roomId); 
     broadcastToRoom(SERVER_LOG_EVENT, `${player.username} has joined ${room.name}`, player.roomId)
-    //insertRoomCommand(player.roomId, player.id, "came online", Date.now(), "online")
-    online.push({
-      socket,
-      player,
-      lastPinged,
-    })
-  }else{
-    
   }
+  online.push({
+    socket,
+    player,
+    lastPinged,
+  })
 }
 
 networkEmitter.on(FOCUS_EVENT, handler)
