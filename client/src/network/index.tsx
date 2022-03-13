@@ -107,7 +107,7 @@ export const networkTask = () => new Promise<void>((resolve) => {
   })
 
   client.addEventListener("close", () => {
-    pushErrorToLog(`Disconnected from server. Reconnecting...`)
+    //pushErrorToLog(`Disconnected from server. Reconnecting...`)
 
     if (reconnectAttempts === 0) {
       networkTask().catch(console.error)
@@ -119,6 +119,12 @@ export const networkTask = () => new Promise<void>((resolve) => {
   })
 
   window.addEventListener("focus", () => {
+    store.notifications = 0
+    iconUtil.changeFavicon(iconUtil.getFaviconUrl(store.notifications))
+    document.title = "MUDGOLT"
+    sendEvent(FOCUS_EVENT, store.player)
+  })
+  window.addEventListener("click", () =>{
     store.notifications = 0
     iconUtil.changeFavicon(iconUtil.getFaviconUrl(store.notifications))
     document.title = "MUDGOLT"
