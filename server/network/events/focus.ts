@@ -20,9 +20,10 @@ import {
 } from "../../services/chat"
 
 const handler: NetworkEventHandler = async (socket, player) => {
+  
   let onlinecheck = false
   online.forEach(element => {      
-    if(element.player.username === player.username){
+    if(element.player.publicKey === player.publicKey){
       onlinecheck = true
     }        
   });
@@ -38,6 +39,8 @@ const handler: NetworkEventHandler = async (socket, player) => {
       player,
       lastPinged,
     })
+  }else{
+    
   }
 }
 
