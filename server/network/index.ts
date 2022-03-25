@@ -66,6 +66,10 @@ export const sendEvent = <TPayload> (socket: WebSocket, code: string, payload: T
 export const online: {
   socket: WebSocket
   player: Player
+}[] = []
+
+export const recentOnline: {
+  player: Player
   lastPinged: number
 }[] = []
 
@@ -113,7 +117,7 @@ server.on("connection", (socket, request) => {
 
           let onlinecheck = false
           online.forEach(element => {      
-            if(element.player.username === player.username){
+            if(element.player.publicKey === player.publicKey){
               onlinecheck = true
             }        
           });
@@ -121,12 +125,23 @@ server.on("connection", (socket, request) => {
             online.push({
               socket,
               player,
-              lastPinged,
-            })      
-            broadcastToRoom(SERVER_LOG_EVENT, `${player.username} is now online`, player.roomId)
-            broadcastToRoom(NOTIFICATION_EVENT, "online", player.roomId); 
-            broadcastToRoom(SERVER_LOG_EVENT, `${player.username} has joined ${room.name}`, player.roomId)
-            //insertRoomCommand(player.roomId, player.id, "came online", Date.now(), "online")
+            })       
+            let recentcheck = false
+            recentOnline.forEach(element => {      
+              if(element.player.publicKey === player.publicKey){
+                recentcheck = true
+              }        
+            });
+            if(recentcheck === false){
+              recentOnline.push({
+                player,
+                lastPinged,
+              })
+              const room = await getRoomById(player.roomId)
+              broadcastToRoom(SERVER_LOG_EVENT, `${player.username} is now online`, player.roomId)
+              broadcastToRoom(NOTIFICATION_EVENT, "online", player.roomId); 
+              broadcastToRoom(SERVER_LOG_EVENT, `${player.username} has joined ${room.name}`, player.roomId)
+            }
           }
         } else {
           sendEvent(socket, ERROR_EVENT, "Invalid signature")
@@ -145,21 +160,24 @@ server.on("connection", (socket, request) => {
 
   socket.on("close", () => {
     console.log("Socket disconnected from server")
-    //online.splice(online.findIndex(({ player }) => player.publicKey === publicKey), 1)
+    online.splice(online.findIndex(({ player }) => player.publicKey === publicKey), 1)
 
     
   })
 })
 
 setInterval((publicKey) => {
-  online.forEach(client => {
-    if(Date.now() > client.lastPinged + (30001)){
-      sendEvent(client.socket, SERVER_LOG_EVENT, "disconnected from server")
-      broadcastToRoom(SERVER_LOG_EVENT, `${client.player.username} went offline`, client.player.roomId)
-      broadcastToRoom(NOTIFICATION_EVENT, "offline", client.player.roomId); 
-      //insertRoomCommand(client.player.roomId, client.player.id, "went offline", Date.now(), "offline")
-      online.splice(online.findIndex(({ player }) => player.publicKey === publicKey), 1)
-    }
+  recentOnline.forEach(p => {
+    online.forEach(c => {
+      if(c.player === p.player){
+        p.lastPinged = Date.now()
+      }
+      if(Date.now() > p.lastPinged + 30001){
+        broadcastToRoom(SERVER_LOG_EVENT, `${p.player.username} went offline`, p.player.roomId)
+        broadcastToRoom(NOTIFICATION_EVENT, "offline", p.player.roomId); 
+        recentOnline.splice(recentOnline.findIndex(({ player }) => player.publicKey === publicKey), 1)
+      }
+    })
   });
 }, 15 * 1000)
 
