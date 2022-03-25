@@ -173,7 +173,7 @@ setInterval((publicKey) => {
         if(c.player === p.player){
           p.lastPinged = Date.now()
         }
-        if(Date.now() > p.lastPinged + 30001){
+        if(Date.now() > p.lastPinged + 45001){
           broadcastToRoom(SERVER_LOG_EVENT, `${p.player.username} went offline`, p.player.roomId)
           broadcastToRoom(NOTIFICATION_EVENT, "offline", p.player.roomId); 
           recentOnline.splice(recentOnline.findIndex(({ player }) => player.publicKey === publicKey), 1)
