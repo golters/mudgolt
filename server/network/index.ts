@@ -168,16 +168,18 @@ server.on("connection", (socket, request) => {
 
 setInterval((publicKey) => {
   recentOnline.forEach(p => {
-    online.forEach(c => {
-      if(c.player === p.player){
-        p.lastPinged = Date.now()
-      }
-      if(Date.now() > p.lastPinged + 30001){
-        broadcastToRoom(SERVER_LOG_EVENT, `${p.player.username} went offline`, p.player.roomId)
-        broadcastToRoom(NOTIFICATION_EVENT, "offline", p.player.roomId); 
-        recentOnline.splice(recentOnline.findIndex(({ player }) => player.publicKey === publicKey), 1)
-      }
-    })
+    if(p.player.publicKey === publicKey){
+      online.forEach(c => {
+        if(c.player === p.player){
+          p.lastPinged = Date.now()
+        }
+        if(Date.now() > p.lastPinged + 45001){
+          broadcastToRoom(SERVER_LOG_EVENT, `${p.player.username} went offline`, p.player.roomId)
+          broadcastToRoom(NOTIFICATION_EVENT, "offline", p.player.roomId); 
+          recentOnline.splice(recentOnline.findIndex(({ player }) => player.publicKey === publicKey), 1)
+        }
+      })
+    }
   });
 }, 15 * 1000)
 
