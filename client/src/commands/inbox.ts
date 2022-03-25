@@ -4,6 +4,7 @@ import {
 import {
   sendEvent, 
 } from "../network"
+import { pushErrorToLog } from "../components/Terminal"
 import {
   CommandModule, 
 } from "./emitter"
@@ -13,9 +14,14 @@ import {
 
 export const Inbox: CommandModule = {
   command: "inbox",
-  syntax: "inbox",
+  syntax: "inbox or inbox [player name]",
 
-  callback() {
-    sendEvent(INBOX_EVENT, store.player?.id)
+  callback({ args }) {
+    if(args.length > 1){  
+      pushErrorToLog(`Syntax: ${Inbox.syntax}`)
+
+      return
+    }
+    sendEvent(INBOX_EVENT, args)
   },
 }
