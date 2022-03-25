@@ -14,7 +14,7 @@ import {
 
 export const Inbox: CommandModule = {
   command: "inbox",
-  syntax: "inbox or inbox [player name]",
+  syntax: "inbox or inbox [username]",
 
   callback({ args }) {
     if(args.length > 1){  
