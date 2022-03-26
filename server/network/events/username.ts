@@ -35,7 +35,7 @@ const handler: NetworkEventHandler = async (
     }
 
     const newUsername = username.replace(/\s/g, "_")
-    const cost = await countCharacters(newUsername, username, USERNAME_MAX_LENGTH)
+    const cost = await countCharacters(newUsername, oldUsername, USERNAME_MAX_LENGTH)
 
     if (cost > player.golts) {
       throw new Error(`you need ${GOLT}${cost}`)

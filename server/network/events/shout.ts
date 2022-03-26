@@ -39,7 +39,7 @@ const handler: NetworkEventHandler = async (
     for (let i = 0; i < doors.length; i++){
       broadcastToRoom<string>(NOTIFICATION_EVENT, "shout", doors[i].target_room_id)
       broadcastToRoom<string>(SERVER_LOG_EVENT, player.username + " shouted " + message + " from " + room.name, doors[i].target_room_id)
-      await insertRoomCommand(doors[i].target_room_id, player.id, "shouted" + message + " from " + room.name, Date.now(), "shout")
+      await insertRoomCommand(doors[i].target_room_id, player.id, " shouted" + message + " from " + room.name, Date.now(), "shout")
     }
 
   } catch (error) {

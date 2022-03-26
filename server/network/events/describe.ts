@@ -36,6 +36,9 @@ const handler: NetworkEventHandler = async (
     const bioTemp = [...args];
     bioTemp.shift();
     const bio = bioTemp.join(" ");
+    if(bio.length == 0){
+      throw new Error("Please add a description")      
+    }
     if(args[0] === "me" || args[0] === "myself" || args[0] === "self"){
       if (bio.length > PLAYER_MAX_BIO) {
         throw new Error(`Description must not be greater than ${PLAYER_MAX_BIO} characters`)
