@@ -18,6 +18,7 @@ import {
 } from "../../services/player"
 import {
   getRoomById,
+  getRoomByName,
   lookByID,
 } from "../../services/room"
 import { Room } from "@types"
@@ -33,7 +34,14 @@ const handler: NetworkEventHandler = async (socket, roomNameInput: string, playe
   try {
     const oldRoom = await getRoomById(player.roomId)
 
+    const newRoom = await getRoomByName(roomNameInput)
+ 
     if (!oldRoom) {
+      sendEvent<string>(socket, ERROR_EVENT, "Room doesn't exist")
+
+      return
+    }
+    if (!newRoom) {
       sendEvent<string>(socket, ERROR_EVENT, "Room doesn't exist")
 
       return
@@ -42,6 +50,8 @@ const handler: NetworkEventHandler = async (socket, roomNameInput: string, playe
     const roomName = roomNameInput.replace(/\s/g, "_")
 
     if (oldRoom.name === roomName) {
+      sendEvent<string>(socket, ERROR_EVENT, "You're already there")
+
       return
     }
     const cost = TELEPORT_COST
@@ -49,7 +59,7 @@ const handler: NetworkEventHandler = async (socket, roomNameInput: string, playe
       sendEvent<string>(socket, SERVER_LOG_EVENT, `you need ${GOLT}${cost}`)
 
       return
-    }
+    } 
 
     sendEvent<string>(socket, SERVER_LOG_EVENT, `-${GOLT}${cost}`)
     const room = await setPlayerRoomByName(player.id, roomName)
