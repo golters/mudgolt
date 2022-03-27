@@ -73,6 +73,9 @@ import{
 import{
   Inbox
 }from "./inbox"
+import{
+  Send
+}from "./send"
 
 
 export const commandModules = [
@@ -98,6 +101,7 @@ export const commandModules = [
   MakeItem,
   DropItem,
   TakeItem,
+  Send,
 ]
 
 const findCommand = (nameOrAlias: string) => {
