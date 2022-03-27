@@ -5,6 +5,9 @@ import {
 import {
   db,
 } from "../store"
+import {
+  insertWhisper,
+} from "./chat"
 
 export const createItem = async (playerID: number, name: string): Promise<Item> => {
   await db.get(/*sql*/`
@@ -83,6 +86,36 @@ export const takeItem = async (player: Player, itemName: string): Promise<Item[]
   `, [player.id, item.id])
 
   return items
+}
+
+export const sendItem = async (player:Player, args: string[]) => {
+  const itemName = args[0]
+
+  const items = await db.all<Item[]>(/*sql*/`
+  SELECT * FROM items WHERE "name" = $1 AND "holderId" = $2 AND "holderType" = "player"
+`, [itemName,player.id])
+  if(items.length <= 0){
+    throw new Error(`you have no ${itemName}s`)
+  }
+  const item = items[0]
+  const Recipiant = await db.get<Player>(/*sql*/`
+  SELECT * FROM players WHERE "username" = $1
+`, [args[1]])
+  if(!Recipiant){
+    throw new Error(`could not find ${args[1]}s`)
+
+    return
+  }
+
+  await db.run(/*sql*/`
+    UPDATE items
+      SET holderId = $1,
+      holderType = "player"
+      WHERE id = $2;
+  `, [Recipiant.id, item.id])
+  await insertWhisper(player.id, Recipiant.id, `sent ${item.name}`, Date.now())
+
+  return item
 }
 
 export const setItemBio = async (itemId: number, bio: string): Promise<Item> => {
