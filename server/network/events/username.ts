@@ -46,7 +46,7 @@ const handler: NetworkEventHandler = async (
 
     broadcastToRoom<string>(
       SERVER_LOG_EVENT,
-      `${oldUsername} is now known as ${newUsername}`,
+      `${oldUsername} is now known as ${newUsername}`, 
       player.roomId,
     )
 

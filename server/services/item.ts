@@ -113,7 +113,7 @@ export const sendItem = async (player:Player, args: string[]) => {
       holderType = "player"
       WHERE id = $2;
   `, [Recipiant.id, item.id])
-  await insertWhisper(player.id, Recipiant.id, `sent ${item.name}`, Date.now())
+  await insertWhisper(Recipiant.id, player.id, `sent ${item.name}`, Date.now())
 
   return item
 }

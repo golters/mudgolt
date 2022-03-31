@@ -9,8 +9,10 @@ import {
 } from "../store"
 import crypto from "crypto"
 import { getRoomByName } from "./room"
-import { online } from "../network"
+import { broadcastToUser, online } from "../network"
 import { DAILY_PAY, PAY_RATE, PAY_TIME } from "../../constants"
+import { SERVER_LOG_EVENT } from "../../events"
+import { insertWhisper } from "./chat"
 
 export const updateOnlinePlayerById = (playerId: number, newPlayer: Partial<Player>) => {
   online.find(({ player }) => {
@@ -108,12 +110,32 @@ export const setPlayerRoomByName = async (playerId: number, roomName: string): P
 
 export const setPlayerUsername = async (playerId: number, username: string): Promise<Player> => {
   const existingPlayer = await getPlayerByUsername(username)
-
-  if (existingPlayer) {
-    throw new Error("Username in use")
-  }
-
   const player = await getPlayerById(playerId)
+  if(player)
+    if (existingPlayer) { 
+      if(existingPlayer.lastPaid < Date.now() - 
+    604800000){
+
+        await db.all(/*sql*/`
+      UPDATE items
+        SET holderId = $1,
+        holderType = "room"
+        WHERE holderid = $2 AND
+        holderType = "player";
+    `, [existingPlayer.roomId, existingPlayer.id])
+
+        broadcastToUser<string>(SERVER_LOG_EVENT, "you took this username from an old user", player.username)
+        insertWhisper(existingPlayer.id,player.id,"your username was claimed due to inactivity, your inventory has dropped", Date.now())
+
+        await db.run(/*sql*/`
+  UPDATE players
+    SET username = $1
+    WHERE id = $2;
+`, [username + "(1)", existingPlayer.id])
+      }else{
+        throw new Error("Username in use, try again later")
+      }
+    }
   
   if (!player) {
     throw new Error("Player doesn't exist")
