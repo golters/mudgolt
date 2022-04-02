@@ -79,6 +79,9 @@ import{
 import{
   Reply
 }from "./reply"
+import{
+  History
+}from "./history"
 
 
 export const commandModules = [
@@ -106,6 +109,7 @@ export const commandModules = [
   TakeItem,
   Send,
   Reply,
+  History,
 ]
 
 const findCommand = (nameOrAlias: string) => {
