@@ -33,6 +33,7 @@ export const WHISPER_LOG_EVENT = "WHISPER_LOG"
 export const NOTIFICATION_EVENT = "NOTIFICATION"
 export const COMMAND_LOG_EVENT = "COMMAND_LOG"
 export const SEND_EVENT = "SEND"
+export const REPLY_EVENT = "REPLY"
 
 // command events
 export const LOG_EVENT = "LOG"
