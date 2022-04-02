@@ -76,6 +76,9 @@ import{
 import{
   Send
 }from "./send"
+import{
+  Reply
+}from "./reply"
 
 
 export const commandModules = [
@@ -102,6 +105,7 @@ export const commandModules = [
   DropItem,
   TakeItem,
   Send,
+  Reply,
 ]
 
 const findCommand = (nameOrAlias: string) => {
