@@ -134,3 +134,20 @@ export const setItemBio = async (itemId: number, bio: string): Promise<Item> => 
 
   return item
 }
+
+export const setItemMacro = async (itemId: number, bio: string): Promise<Item> => {
+
+  const item = await getItemById(itemId)
+  
+  if (!item) {
+    throw new Error("Item doesn't exist")
+  }
+
+  await db.run(/*sql*/`
+    UPDATE items
+      SET macro = $1
+      WHERE id = $2;
+  `, [bio, itemId])
+
+  return item
+}
