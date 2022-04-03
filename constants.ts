@@ -29,3 +29,5 @@ export const ITEM_COST = 10
 export const ROOM_COST = 20
 export const TELEPORT_COST = 5
 export const DELIVERY_COST = 2
+
+export const ENCHANT_MAX = 5000
