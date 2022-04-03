@@ -35,6 +35,8 @@ export const COMMAND_LOG_EVENT = "COMMAND_LOG"
 export const SEND_EVENT = "SEND"
 export const REPLY_EVENT = "REPLY"
 export const HISTORY_EVENT = "HISTORY"
+export const USE_ITEM_EVENT = "USE_ITEM"
+export const ENCHANT_ITEM_EVENT = "ENCHANT_ITEM"
 
 // command events
 export const LOG_EVENT = "LOG"
