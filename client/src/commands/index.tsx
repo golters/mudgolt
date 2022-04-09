@@ -88,6 +88,9 @@ import{
 import{
   EnchantItem
 }from "./enchantItem"
+import{
+  Pay
+}from "./pay"
 
 
 export const commandModules = [
@@ -118,6 +121,7 @@ export const commandModules = [
   History,
   UseItem,
   EnchantItem,
+  Pay,
 ]
 
 const findCommand = (nameOrAlias: string) => {

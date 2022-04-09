@@ -27,7 +27,7 @@ const handler: NetworkEventHandler = async (socket, name: string, player) => {
 
     const cost = name.length + ROOM_COST
     name = name.replace(/\s/g, "_")
-    if(player.golts < cost){
+    if(player.golts <= cost){
       sendEvent<string>(socket, SERVER_LOG_EVENT, `you need ${GOLT}${cost}`)
 
       return

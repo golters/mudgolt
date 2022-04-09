@@ -41,7 +41,7 @@ const handler: NetworkEventHandler = async (
     
       const cost = await countCharacters(bio, inventory[0].description, ENCHANT_MAX)
 
-      if (cost > player.golts) {
+      if (cost >= player.golts) {
         throw new Error(`you need ${GOLT}${cost}`)
       }
 
