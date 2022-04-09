@@ -32,7 +32,7 @@ const handler: NetworkEventHandler = async (socket, args: string[], player) => {
     const roomID = player.roomId
 
     const doorCost = DELETE_DOOR_COST
-    if(player.golts > doorCost){
+    if(player.golts >= doorCost){
       await deleteDoor(roomID, name)
       await takePlayerGolts(player.id, doorCost)
       sendEvent<string>(socket, SERVER_LOG_EVENT, `-${GOLT}${doorCost}`)
