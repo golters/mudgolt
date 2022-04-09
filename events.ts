@@ -37,6 +37,7 @@ export const REPLY_EVENT = "REPLY"
 export const HISTORY_EVENT = "HISTORY"
 export const USE_ITEM_EVENT = "USE_ITEM"
 export const ENCHANT_ITEM_EVENT = "ENCHANT_ITEM"
+export const PAY_USER_EVENT = "PAY_USER"
 
 // command events
 export const LOG_EVENT = "LOG"

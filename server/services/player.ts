@@ -209,6 +209,7 @@ export const addPlayerGolts = async (playerId: number, golts: number): Promise<P
   return newPlayer
 }
 
+
 export const takePlayerGolts = async (playerId: number, golts: number): Promise<Player> => {
 
   const player = await getPlayerById(playerId)

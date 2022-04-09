@@ -3,7 +3,7 @@ import {
 } from "./emitter"
 import {
   ERROR_EVENT,
-  SEND_EVENT,
+  PAY_USER_EVENT,
   SERVER_LOG_EVENT,
   NOTIFICATION_EVENT,
 } from "../../../events"
@@ -12,32 +12,39 @@ import {
   broadcastToUser,
 } from "../../network"
 import {
-  sendItem,
 } from "../../services/item"
 import {
-  DELIVERY_COST,
   GOLT,
 } from "../../../constants"
 import {
   getPlayerByUsername,
+  addPlayerGolts,
+  takePlayerGolts,
 } from "../../services/player"
+import { userInfo } from "os"
 
 const handler: NetworkEventHandler = async (socket, args: string[], player) => {
   try {    
-    const cost = DELIVERY_COST
-    if(args[1] === player.username){
+    const cost = Number(args[1])
+    if(cost <= 0){
+      sendEvent<string>(socket, SERVER_LOG_EVENT, "send a positive value")
+
+      return
+    }
+    if(args[0] === player.username){
       sendEvent<string>(socket, SERVER_LOG_EVENT, "you can't send it to yourself, you already have it")
 
       return
     }
     if(player.golts >= cost){
-      const user = await getPlayerByUsername(args[1])
+      const user = await getPlayerByUsername(args[0])
       if(!user){
-        sendEvent<string>(socket, ERROR_EVENT, `there is no user ${args[1]}`)
+        sendEvent<string>(socket, ERROR_EVENT, `there is no user ${args[0]}`)
 
         return
       }
-      await sendItem(player, args)
+      await addPlayerGolts(user.id, cost)
+      await takePlayerGolts(player.id, cost)
     }else{      
       sendEvent<string>(socket, SERVER_LOG_EVENT, `you need ${GOLT}${cost}`)
 
@@ -45,10 +52,10 @@ const handler: NetworkEventHandler = async (socket, args: string[], player) => {
     }
 
     sendEvent<string>(socket, SERVER_LOG_EVENT, `-${GOLT}${cost}`)
-    broadcastToUser<string>(SERVER_LOG_EVENT, "you sent a " + args[0] + " to " + args[1], player.username); 
-    broadcastToUser<string>(SERVER_LOG_EVENT, player.username + " sent a " + args[0] + " to you", args[1]); 
-    broadcastToUser<string>(NOTIFICATION_EVENT, "sentmail", player.username); 
-    broadcastToUser<string>(NOTIFICATION_EVENT, "gotmail", args[1]); 
+    broadcastToUser<string>(SERVER_LOG_EVENT, "you sent " + GOLT + cost + " to " + args[0], player.username); 
+    broadcastToUser<string>(SERVER_LOG_EVENT, player.username + " sent " + GOLT + cost + " to you", args[0]); 
+    broadcastToUser<string>(NOTIFICATION_EVENT, "pay", player.username); 
+    broadcastToUser<string>(NOTIFICATION_EVENT, "pay", args[0]); 
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)
@@ -56,4 +63,4 @@ const handler: NetworkEventHandler = async (socket, args: string[], player) => {
 }
 
 
-networkEmitter.on(SEND_EVENT, handler)
+networkEmitter.on(PAY_USER_EVENT, handler)

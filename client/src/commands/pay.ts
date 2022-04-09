@@ -1,5 +1,5 @@
 import {
-  SEND_EVENT,
+  PAY_USER_EVENT,
 } from "../../../events"
 import {
   pushErrorToLog,
@@ -11,18 +11,18 @@ import {
   CommandModule,
 } from "./emitter"
 
-export const Send: CommandModule = {
-  command: "send",
-  syntax: "send [item name] [user name]",
-  aliases: ["deliver","mail","post", "give"],
+export const Pay: CommandModule = {
+  command: "pay",
+  syntax: "pay [user name] [amount]",
+  aliases: ["transfer"],
 
   callback({ args }) {
     if (args.length != 2) {
-      pushErrorToLog(`Syntax: ${Send.syntax}`)
+      pushErrorToLog(`Syntax: ${Pay.syntax}`)
 
       return
     }
 
-    sendEvent(SEND_EVENT, args)
+    sendEvent(PAY_USER_EVENT, args)
   },
 }
