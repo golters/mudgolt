@@ -1,3 +1,4 @@
+import { ROOM_COST } from "../../../constants"
 import {
   MAKE_ROOM_EVENT,
 } from "../../../events"
@@ -14,6 +15,8 @@ import {
 export const MakeRoom: CommandModule = {
   command: "makeroom",
   syntax: "makeroom [room name]",
+  bio: "make a new room, by default it has no doors leading to it so make one to get in or just teleport",
+  cost: `${ROOM_COST}`,
 
   callback ({ args }) {
     const [name] = args

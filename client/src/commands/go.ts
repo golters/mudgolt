@@ -18,6 +18,7 @@ import {
 export const Go: CommandModule = {
   command: "go",
   syntax: "go [door name]",
+  bio: "enter another room through one of the exits you can check with the /look command",
 
   callback ({ args }) {
     const [roomName] = args

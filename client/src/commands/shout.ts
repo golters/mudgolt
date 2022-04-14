@@ -14,6 +14,7 @@ import {
 export const Shout: CommandModule = {
   command: "shout",
   syntax: "shout [message]",
+  bio: "send a message in all caps to all the surrounding rooms",
 
   callback({ args }) {
     if(!args){      

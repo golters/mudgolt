@@ -14,6 +14,7 @@ import {
 export const UseItem: CommandModule = {
   command: "use",
   syntax: "use [item name]",
+  bio: "activate the macro commands attached to an item",
 
   callback({ args }) {
     const [name] = args

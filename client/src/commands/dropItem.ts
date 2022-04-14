@@ -15,6 +15,7 @@ export const DropItem: CommandModule = {
   command: "drop",
   syntax: "drop [item name]",
   aliases: ["drop","throw","dropitem"],
+  bio: "drop an item from your inventory onto the room floor",
 
   callback({ args }) {
     const [name] = args
