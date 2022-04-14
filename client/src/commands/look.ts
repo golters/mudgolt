@@ -16,6 +16,7 @@ export const Look: CommandModule = {
   command: "look",
   syntax: "look or look [user/item]",
   aliases: ["examin","exam","read","check"],
+  bio: "just '/look' to see the room description, who/what is in it and the exits. /look [user/item] to see their descriptions",
 
   callback({ args }) {
     if(args.length <= 0){

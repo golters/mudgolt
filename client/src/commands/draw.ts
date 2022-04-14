@@ -16,6 +16,8 @@ import {
 export const Draw: CommandModule = {
   command: "draw",
   syntax: `draw [0-${BANNER_WIDTH}] [0-${BANNER_HEIGHT}] [character]`,
+  cost: "1",
+  bio: "place a character onto the room banner at those coordinates. this is an old command, just click on the banner to draw, left click to copy characters that are already on the banner",
 
   callback({ args }) {
     const x = parseInt(args[0])

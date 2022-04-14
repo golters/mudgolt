@@ -15,6 +15,7 @@ import {
 export const Inbox: CommandModule = {
   command: "inbox",
   syntax: "inbox or inbox [username]",
+  bio: "check the whispers between you and other users, follow /inbox with a specific username to narrow down only the whispers between you and that user",
 
   callback({ args }) {
     if(args.length > 1){  

@@ -7,7 +7,8 @@ import {
 
 export const Color: CommandModule = {
   command: "color",
-  syntax: "color [key] [value] or 'color themes' for a list of themes",
+  syntax: "color [key] [value] or '/color themes' for a list of themes",
+  bio: "edit the colors you see on screen, do '/color themes' to get a list of preset themes then do '/color [theme]' to change to that",
 
   callback ({ args }) {
     const [key, value] = args;

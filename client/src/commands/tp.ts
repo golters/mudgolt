@@ -13,11 +13,14 @@ import {
 import {
   store,
 } from "../store"
+import { TELEPORT_COST } from "../../../constants"
 
 export const Tp: CommandModule = {
   command: "tp",
   syntax: "teleport [room name]",
-  aliases: ["teleport", "warp", "portal"],
+  aliases: ["teleport", "warp", "portal", "jump"],
+  cost: `${TELEPORT_COST}`,
+  bio: "warp to another room without having a door leading directly to it",
 
   callback({ args }) {
     const [roomName] = args

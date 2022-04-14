@@ -14,6 +14,8 @@ import {
 export const EnchantItem: CommandModule = {
   command: "enchant",
   syntax: "enchant [item name] [action]",
+  bio: "add a command macro to an item that can be used with the /use command",
+  cost: "1 per changed character",
 
   callback({ args }) {
     sendEvent(ENCHANT_ITEM_EVENT, args)

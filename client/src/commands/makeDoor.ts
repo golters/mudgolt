@@ -1,3 +1,4 @@
+import { DOOR_COST, DOOR_MULTIPLIER, GOLT } from "../../../constants"
 import {
   MAKE_DOOR_EVENT,
 } from "../../../events"
@@ -14,6 +15,8 @@ import {
 export const MakeDoor: CommandModule = {
   command: "makedoor",
   syntax: "makedoor [door name] [destination room]",
+  bio: "create an exit from this room to another, the cost depends on how many doors are already in this room",
+  cost: `${DOOR_COST} + (${DOOR_COST} x ${DOOR_MULTIPLIER} x the amount of doors already in the room) + 1 ${GOLT} per character`,
 
   callback({ args }) {
     const [name, room] = args
