@@ -15,6 +15,7 @@ export const Pay: CommandModule = {
   command: "pay",
   syntax: "pay [user name] [amount]",
   aliases: ["transfer"],
+  bio: "send money to another user, they do not have to be online or in the same room",
 
   callback({ args }) {
     if (args.length != 2) {

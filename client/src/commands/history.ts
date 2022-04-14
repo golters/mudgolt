@@ -15,6 +15,7 @@ export const History: CommandModule = {
   command: "history",
   syntax: "history or history [1-200]",
   aliases: ["log","past"],
+  bio: "read old messages from the room you're in without having to refresh, just put /history to check the last message or follow it with a number to see that many messages",
 
   callback({ args }) {
     try{

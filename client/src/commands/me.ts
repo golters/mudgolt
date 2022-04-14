@@ -15,6 +15,7 @@ export const Me: CommandModule = {
   command: "me",
   syntax: "me [action]",
   aliases: ["act", "rp"],
+  bio: "describe an action you are performing it will appear after your name in the chat log",
 
   callback({ args }) {
     if(!args){      

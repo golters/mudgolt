@@ -54,6 +54,7 @@ const parseNumber = (value: string) => {
 const Roll: CommandModule = {
   command: "roll",
   syntax: "roll [int] or [int]d[int]",
+  bio: "generate a random number or dice roll",
 
   callback({ args }) {
     let dice: DiceProps | boolean;

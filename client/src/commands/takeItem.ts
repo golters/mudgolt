@@ -15,6 +15,7 @@ export const TakeItem: CommandModule = {
   command: "takeitem",
   syntax: "take [item name]",
   aliases: ["pickup","grab","take"],
+  bio: "take an item from the floor into your inventory",
 
   callback({ args }) {
     const [name] = args

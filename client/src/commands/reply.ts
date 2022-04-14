@@ -14,6 +14,7 @@ import {
 export const Reply: CommandModule = {
   command: "reply",
   syntax: "reply [message]",
+  bio: "whisper back the last person to whisper you",
 
   callback({ args }) {
     if(!args){      

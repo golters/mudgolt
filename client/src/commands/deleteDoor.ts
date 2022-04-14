@@ -1,3 +1,4 @@
+import { DELETE_DOOR_COST } from "../../../constants"
 import {
   DELETE_DOOR_EVENT,
 } from "../../../events"
@@ -14,6 +15,8 @@ import {
 export const DeleteDoor: CommandModule = {
   command: "deletedoor",
   syntax: "deletedoor [door name]",
+  bio: "remove a door from the room",
+  cost: `${DELETE_DOOR_COST}`,
 
   callback({ args }) {
     const [door] = args

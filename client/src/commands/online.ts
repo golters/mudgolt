@@ -11,6 +11,7 @@ import {
 export const Online: CommandModule = {
   command: "online",
   syntax: "online: for list of online users",
+  bio: "get a list of everyone who is currently online or was online in the last 24 hours",
 
 
   callback() {
