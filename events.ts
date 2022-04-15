@@ -40,6 +40,7 @@ export const ENCHANT_ITEM_EVENT = "ENCHANT_ITEM"
 export const PAY_USER_EVENT = "PAY_USER"
 export const HELP_EVENT = "HELP"
 export const HELP_AT_EVENT = "HELP_AT"
+export const REFRESH_EVENT = "REFRESH"
 
 // command events
 export const LOG_EVENT = "LOG"
