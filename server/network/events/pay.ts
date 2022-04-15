@@ -6,6 +6,7 @@ import {
   SERVER_LOG_EVENT,
   ERROR_EVENT,
   NOTIFICATION_EVENT,
+  REFRESH_EVENT,
 } from "../../../events"
 import {
   online,
@@ -35,6 +36,7 @@ const handler: NetworkEventHandler = async (socket, playerID: number) => {
       
     }else{
       sendEvent<string>(socket, ERROR_EVENT, "a bug has occured, you are no longer online")
+      sendEvent<string>(socket, REFRESH_EVENT, "oops")
     }
     const golts = player.golts
     if(!player.lastPaid){      
@@ -51,7 +53,7 @@ const handler: NetworkEventHandler = async (socket, playerID: number) => {
     }
     if(newgolts > golts){
       sendEvent<string>(socket, SERVER_LOG_EVENT, `you got ${GOLT}${newgolts - golts}`)
-      sendEvent<string>(socket, NOTIFICATION_EVENT, "pay");
+      sendEvent<string>(socket, NOTIFICATION_EVENT, "pay")
     }
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
