@@ -160,6 +160,7 @@ server.on("connection", (socket, request) => {
 
   socket.on("close", () => {
     console.log("Socket disconnected from server")
+    broadcastToUser(SERVER_LOG_EVENT, "you went offline", player.username)
     online.splice(online.findIndex(({ player }) => player.publicKey === publicKey), 1)
 
     
@@ -176,6 +177,7 @@ setInterval((publicKey) => {
         if(Date.now() > p.lastPinged + 45001){
           broadcastToRoom(SERVER_LOG_EVENT, `${p.player.username} went offline`, p.player.roomId)
           broadcastToRoom(NOTIFICATION_EVENT, "offline", p.player.roomId); 
+          broadcastToUser(SERVER_LOG_EVENT, "you went very offline", p.player.username)
           recentOnline.splice(recentOnline.findIndex(({ player }) => player.publicKey === publicKey), 1)
         }
       })
