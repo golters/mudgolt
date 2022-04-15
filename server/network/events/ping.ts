@@ -11,7 +11,12 @@ import {
 } from "../"
 
 const handler: NetworkEventHandler = (socket, player) => {
-  if(!online.includes(player)){
+  let test = false
+  online.forEach(c =>{
+    if(c.player === player)
+      test = true
+  });
+  if(test === false){
     sendEvent<string>(socket, ERROR_EVENT, "a bug has occured, you are no longer online")
   }
   sendEvent<null>(socket, PING_EVENT, null)
