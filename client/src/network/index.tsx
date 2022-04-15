@@ -79,7 +79,6 @@ export const networkTask = () => new Promise<void>((resolve) => {
       } else {
         sendEvent<null>(CHAT_HISTORY_EVENT, null)
         requestedChat = true
-        sendEvent(LOOK_EVENT, null)
       }
     }
 
@@ -92,6 +91,7 @@ export const networkTask = () => new Promise<void>((resolve) => {
         networkEmitter.emit(COMMAND_LOG_EVENT, chats[i])
         }
       }
+      sendEvent(LOOK_EVENT, null)
       resolve()
     }
     
