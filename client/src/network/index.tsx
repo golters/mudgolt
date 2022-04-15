@@ -29,7 +29,6 @@ import {
 import {
   iconUtil,
 } from "../utils/icon"
-import { Socket } from "dgram"
 
 export let client: WebSocket
 

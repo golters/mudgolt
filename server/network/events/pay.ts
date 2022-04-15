@@ -8,6 +8,7 @@ import {
   NOTIFICATION_EVENT,
 } from "../../../events"
 import {
+  online,
   sendEvent, 
 } from "../"
 import { 
@@ -28,6 +29,12 @@ const handler: NetworkEventHandler = async (socket, playerID: number) => {
       sendEvent<string>(socket, ERROR_EVENT, "no player")
 
       return
+    }
+    const list = online.map(o => o.player.username)
+    if(list.includes(player.username)){
+      
+    }else{
+      sendEvent<string>(socket, ERROR_EVENT, "a bug has occured, you are no longer online")
     }
     const golts = player.golts
     if(!player.lastPaid){      
