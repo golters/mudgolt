@@ -56,7 +56,7 @@ export const networkTask = () => new Promise<void>((resolve) => {
   reconnectAttempts++
 
   client.addEventListener("open", () => {
-    //pushToLog("Connected to server")
+    pushToLog("Connected to server")
 
     reconnectAttempts = 0
   })
@@ -79,6 +79,7 @@ export const networkTask = () => new Promise<void>((resolve) => {
       } else {
         sendEvent<null>(CHAT_HISTORY_EVENT, null)
         requestedChat = true
+        sendEvent(LOOK_EVENT, null)
       }
     }
 
@@ -91,8 +92,6 @@ export const networkTask = () => new Promise<void>((resolve) => {
         networkEmitter.emit(COMMAND_LOG_EVENT, chats[i])
         }
       }
-
-      sendEvent(LOOK_EVENT, null)
       resolve()
     }
     
@@ -106,7 +105,7 @@ export const networkTask = () => new Promise<void>((resolve) => {
   })
 
   client.addEventListener("close", () => {
-    //pushErrorToLog(`Disconnected from server. Reconnecting...`)
+    pushErrorToLog(`Disconnected from server. Reconnecting...`)
 
     if (reconnectAttempts === 0) {
       networkTask().catch(console.error)
