@@ -18,6 +18,11 @@ export const Pay: CommandModule = {
   bio: "send money to another user, they do not have to be online or in the same room",
 
   callback({ args }) {
+    if(isNaN(Number(args[1]))){
+      pushErrorToLog(`Syntax: ${Pay.syntax}`)
+
+      return
+    }
     if (args.length != 2) {
       pushErrorToLog(`Syntax: ${Pay.syntax}`)
 

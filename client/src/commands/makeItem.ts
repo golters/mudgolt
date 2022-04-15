@@ -1,4 +1,4 @@
-import { ITEM_COST } from "../../../constants"
+import { ITEM_COST, GOLT } from "../../../constants"
 import {
   MAKE_ITEM_EVENT,
 } from "../../../events"
@@ -16,7 +16,7 @@ export const MakeItem: CommandModule = {
   command: "makeitem",
   syntax: "makeitem [item name]",
   bio: "create a blank item with no description or enchantment",
-  cost: `${ITEM_COST}`,
+  cost: `${ITEM_COST} + ${GOLT}1 per character`,
 
   callback({ args }) {
     const [name] = args
