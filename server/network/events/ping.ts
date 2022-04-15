@@ -3,6 +3,7 @@ import {
 } from "./emitter"
 import {
   PING_EVENT, 
+  ERROR_EVENT,
 } from "../../../events"
 import {
   online,
@@ -10,6 +11,9 @@ import {
 } from "../"
 
 const handler: NetworkEventHandler = (socket, player) => {
+  if(!online.includes(player)){
+    sendEvent<string>(socket, ERROR_EVENT, "a bug has occured, you are no longer online")
+  }
   sendEvent<null>(socket, PING_EVENT, null)
 }
 
