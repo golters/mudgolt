@@ -9,7 +9,7 @@ import {
   sendEvent, 
 } from "../"
 
-const handler: NetworkEventHandler = (socket) => {
+const handler: NetworkEventHandler = (socket, player) => {
   sendEvent<null>(socket, PING_EVENT, null)
 }
 
