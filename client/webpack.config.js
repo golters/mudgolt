@@ -3,6 +3,10 @@ const HtmlWebpackPlugin = require("html-webpack-plugin")
 const CopyPlugin = require("copy-webpack-plugin")
 const webpack = require("webpack")
 
+const dist = path.join(__dirname, "./dist")
+
+console.log("dist path", dist)
+
 module.exports = () => ({
   plugins: [
     new HtmlWebpackPlugin({
@@ -61,7 +65,7 @@ module.exports = () => ({
   },
 
   output: {
-    path: path.join(path.resolve("client"), "./dist"),
+    path: dist,
     filename: "[name].bundle.js",
     chunkFilename: "[name].bundle.js",
   },
