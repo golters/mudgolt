@@ -61,7 +61,7 @@ module.exports = () => ({
   },
 
   output: {
-    path: path.join(__dirname, "dist"),
+    path: path.join(path.resolve("client"), "./dist"),
     filename: "[name].bundle.js",
     chunkFilename: "[name].bundle.js",
   },
