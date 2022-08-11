@@ -163,7 +163,7 @@ server.on("connection", (socket, request) => {
     broadcastToUser(SERVER_LOG_EVENT, "you went offline", player.username)
     online.splice(online.findIndex(({ player }) => player.publicKey === publicKey), 1)
 
-    
+    socket.terminate()
   })
 })
 
