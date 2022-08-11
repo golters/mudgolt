@@ -5,8 +5,8 @@
   "scripts": {
     "start:server": "cross-env NODE_ENV=production ts-node server",
     "dev:server": "cross-env NODE_ENV=development ts-node-dev server --rs",
-    "build:client": "cd client && cross-env webpack build --mode=production",
-    "dev:client": "cd client && cross-env NODE_ENV=development webpack serve --mode=development",
+    "build:client": "cd client && cross-env NODE_OPTIONS=--openssl-legacy-provider webpack build --mode=production",
+    "dev:client": "cd client && cross-env NODE_ENV=development NODE_OPTIONS=--openssl-legacy-provider webpack serve --mode=development",
     "lint": "eslint --fix --ext .js,.ts ."
   },
   "repository": {
@@ -37,7 +37,6 @@
     "eslint": "^7.26.0",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.1",
-    "parcel": "^2.0.0-beta.2",
     "raw-loader": "^4.0.2",
     "style-loader": "^2.0.0",
     "ts-loader": "^9.2.3",
