@@ -4,11 +4,13 @@ import {
 } from "./emitter"
 import {
   sendEvent,
+  broadcastToRoom,
 } from "../"
 import {
   DRAW_EVENT,
   ERROR_EVENT,
   SERVER_LOG_EVENT,
+  NOTIFICATION_EVENT,
 } from "../../../events"
 import {
   getRoomById,
@@ -54,6 +56,7 @@ const handler: NetworkEventHandler = async (socket, payload: [number, number, st
     }
     await takePlayerGolts(player.id, cost)
     await editBaner(x, y, char, room)
+    broadcastToRoom<string>(NOTIFICATION_EVENT, "pop", room.id);
   }catch(error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)

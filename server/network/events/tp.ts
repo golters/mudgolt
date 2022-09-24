@@ -8,6 +8,7 @@ import {
   SERVER_LOG_EVENT,
   LOG_EVENT,
   NOTIFICATION_EVENT,
+  MUSIC_UPDATE_EVENT,
 } from "../../../events"
 import {
   broadcastToRoom,
@@ -21,7 +22,7 @@ import {
   getRoomByName,
   lookByID,
 } from "../../services/room"
-import { Room } from "@types"
+import { Room,Music } from "@types"
 import {
   TELEPORT_COST,
   GOLT,
@@ -29,6 +30,10 @@ import {
 import {
   insertRoomCommand,
 } from "../../services/chat"
+import {
+  getMusicByRoom,
+  updateRoomMusic,
+} from "../../services/music"
 
 const handler: NetworkEventHandler = async (socket, roomNameInput: string, player) => {
   try {
@@ -65,6 +70,15 @@ const handler: NetworkEventHandler = async (socket, roomNameInput: string, playe
     const room = await setPlayerRoomByName(player.id, roomName)
 
     const message = await lookByID(room.id)
+    
+    //update room music
+    const oldMusic = await getMusicByRoom(room.id)
+    if(oldMusic === undefined){
+      const newMusic = await updateRoomMusic(room.id)
+      sendEvent<Music>(socket, MUSIC_UPDATE_EVENT, newMusic)
+    }else{      
+      sendEvent<Music>(socket, MUSIC_UPDATE_EVENT, oldMusic)
+    }
 
     broadcastToRoom<Room>(ROOM_UPDATE_EVENT, oldRoom, oldRoom.id)
     broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has teleported from ${oldRoom.name}`, oldRoom.id)

@@ -65,6 +65,50 @@ export const initStore = async () => {
       FOREIGN KEY("room_id") REFERENCES rooms("id"),
       FOREIGN KEY("target_room_id") REFERENCES rooms("id")
     );
+
+    CREATE TABLE IF NOT EXISTS music (
+      "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+      "room_id" INTEGER,
+      "banner" TEXT NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS games (
+      "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+      "type" TEXT NOT NULL,
+      "banner" TEXT NOT NULL,
+      "game_info" TEXT,
+      "player1" INTEGER NOT NULL,
+      "p1_score" INTEGER,
+      "p1_pieces" TEXT,
+      "player2" INTEGER,
+      "p2_score" INTEGER,
+      "p2_pieces" TEXT,
+      "player3" INTEGER,
+      "p3_score" INTEGER,
+      "p3_pieces" TEXT,
+      "player4" INTEGER,
+      "p4_score" INTEGER,
+      "p4_pieces" TEXT,
+
+      FOREIGN KEY("player1") REFERENCES players("id"),
+      FOREIGN KEY("player2") REFERENCES players("id"),
+      FOREIGN KEY("player3") REFERENCES players("id"),
+      FOREIGN KEY("player4") REFERENCES players("id"),
+    );
+
+    CREATE TABLE IF NOT EXISTS invites (
+      "id" INTEGER,
+      "player1" INTEGER NOT NULL,
+      "player2" INTEGER,
+      "player3" INTEGER,
+      "player4" INTEGER,
+
+      FOREIGN KEY("id") REFERENCES games("id"),
+      FOREIGN KEY("player1") REFERENCES players("id"),
+      FOREIGN KEY("player2") REFERENCES players("id"),
+      FOREIGN KEY("player3") REFERENCES players("id"),
+      FOREIGN KEY("player4") REFERENCES players("id"),
+    );
   `)
 
   const rooms = await db.all(/*sql*/`
