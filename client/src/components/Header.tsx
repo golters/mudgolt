@@ -1,9 +1,13 @@
 import {
   Room, 
+  Music,
 } from "../../../@types"
 import {
   DRAW_EVENT,
   ROOM_UPDATE_EVENT, 
+  ERROR_EVENT,
+  CHANGE_MUSIC_EVENT,
+  COMPOSE_EVENT,
 } from "../../../events"
 import {
   networkEmitter, 
@@ -15,24 +19,49 @@ import {
 import "./Header.css"
 import React, { useCallback, useEffect, useState } from "react"
 import { sendEvent } from "../network"
+import { Banner } from "src/commands/banner"
+import {
+  store,
+} from "../store"
 
 const BANNER_MINIMIZE_STORAGE_KEY = 'headerBannerMinimized'
 
 export let brush = localStorage.brush || "+"
+export let bannerT = localStorage.bannerT || "art"
 
 export const setBrush = (newBrush: string) => {
   localStorage.brush = newBrush
   brush = newBrush
 }
 
+export const changeBanner = (newBanner: string) => {
+  switch(newBanner){
+    case "art":
+      bannerT = "art"
+      localStorage.bannerT = "art"
+      break;
+    case "music":
+      bannerT = "music"
+      localStorage.bannerT = "music"
+      break;
+    default:
+      sendEvent(ERROR_EVENT, "invalid banner type")
+      break;
+  }
+}
+
 export const Header: React.FC = () => {
   const [room, setRoom] = useState<Room | null>(null)
+  const [music, setMusic] = useState<Music | null>(null)
   const [minimized, setMinimized] = useState(!!localStorage.getItem(BANNER_MINIMIZE_STORAGE_KEY) || false)
   const [muted, setMuted] = useState(!!localStorage.getItem("muted") || false)
   
   useEffect(() => {
     networkEmitter.on(ROOM_UPDATE_EVENT, (room: Room) => {
+      sendEvent(CHANGE_MUSIC_EVENT, room.id) 
+      sendEvent(ERROR_EVENT, "room update")
       setRoom(room)
+      setMusic(music)
     })
   }, [])
 
@@ -57,11 +86,27 @@ export const Header: React.FC = () => {
   }, [muted])
 
   const Banner: React.FC<{ room: Room }> = ({ room }) => {
-    const bannerParts: string[] = []
-    
+    const bannerParts: string[] = [] 
+
+    const music = store.music
+    let Mbanner = ""
+    if(music === undefined){
+      Mbanner = room.banner
+      bannerT = "art"
+      localStorage.bannerT = "art"
+    }else{
+      Mbanner = music.banner
+    }
   
     for (let i = 0; i < room.banner.length / BANNER_WIDTH; i++) {
-      bannerParts.push(room.banner.substr(i * BANNER_WIDTH, BANNER_WIDTH))
+      switch(bannerT){
+        case "art":
+          bannerParts.push(room.banner.substr(i * BANNER_WIDTH, BANNER_WIDTH))
+          break;
+        case "music":   
+          bannerParts.push(Mbanner.substr(i * BANNER_WIDTH, BANNER_WIDTH))
+          break;
+      }
     }
   
     const parts = bannerParts.map((part, y) => {
@@ -70,7 +115,7 @@ export const Header: React.FC = () => {
           .split("")
           .map((character, x) => {
             const [currentCharacter, setCurrentCharacter] = useState(character)
-  
+
             return <span
               onMouseOver={() => setCurrentCharacter(brush)}
               onMouseLeave={() => setCurrentCharacter(character)}
@@ -78,7 +123,14 @@ export const Header: React.FC = () => {
               
               onMouseDown={(event) => {
                 if (event.buttons === 1) {
-                  sendEvent(DRAW_EVENT, [x, y, brush])
+                  switch(bannerT){
+                    case "art":
+                      sendEvent(DRAW_EVENT, [x, y, brush])
+                      break;
+                    case "music":   
+                    sendEvent(COMPOSE_EVENT, [x, y, brush])
+                      break;
+                  }
                 } else if (event.buttons === 2) {
                   setBrush(character)
                   setCurrentCharacter(brush)

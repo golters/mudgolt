@@ -12,6 +12,7 @@ import {
   WHISPER_LOG_EVENT,
   COMMAND_LOG_EVENT,
   PING_EVENT,
+  MUSIC_EVENT,
 } from "../../../events"
 import {
   store, 
@@ -31,6 +32,7 @@ import {
 } from "../utils/icon"
 
 export let client: WebSocket
+export let context = new AudioContext()
 
 // TSX doens't like generics
 export const sendEvent = async <TPayload,> (code: string, payload: TPayload) => {
@@ -68,7 +70,8 @@ export const networkTask = () => new Promise<void>((resolve) => {
 
     console.log(`[${code}]`, payload)
 
-    if (code === PLAYER_EVENT) {
+    switch(code){
+    case PLAYER_EVENT:
       const player = payload as Player
 
       store.player = player
@@ -79,9 +82,9 @@ export const networkTask = () => new Promise<void>((resolve) => {
         sendEvent<null>(CHAT_HISTORY_EVENT, null)
         requestedChat = true
       }
-    }
+    break;
 
-    if (code === CHAT_HISTORY_EVENT) {
+    case CHAT_HISTORY_EVENT:
       const chats = payload as Chat[]
       for (let i = 0; i < chats.length; i++){
         if(chats[i].type === "chat" || chats[i].type === null){
@@ -91,14 +94,15 @@ export const networkTask = () => new Promise<void>((resolve) => {
         }
       }
       sendEvent(LOOK_EVENT, null)
-      resolve()
-    }
+      resolve()    
+    break;
     
-    if (code === INBOX_HISTORY_EVENT) {
+    case INBOX_HISTORY_EVENT:
       void (payload as Chat[]).forEach(chat => networkEmitter.emit(WHISPER_LOG_EVENT, chat))
 
       resolve()
-    }
+      break;
+  }
   
     networkEmitter.emit(code, payload)
   })
@@ -118,6 +122,13 @@ export const networkTask = () => new Promise<void>((resolve) => {
 })
 
 setInterval(() => {
-  sendEvent(PING_EVENT, client)
+  sendEvent(PING_EVENT, client)  
+  //networkEmitter.emit(NOTIFICATION_EVENT, "pay")
   sendEvent(PAY_EVENT, store.player?.id)
 }, 15 * 1000)
+
+setInterval(() => {
+  if(!localStorage.getItem("muted")){
+  networkEmitter.emit(MUSIC_EVENT, context)
+  }
+}, 15 * 10)

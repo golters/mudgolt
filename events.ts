@@ -41,6 +41,11 @@ export const PAY_USER_EVENT = "PAY_USER"
 export const HELP_EVENT = "HELP"
 export const HELP_AT_EVENT = "HELP_AT"
 export const REFRESH_EVENT = "REFRESH"
+export const COMPOSE_EVENT = "COMPOSE"
+export const CHANGE_MUSIC_EVENT = "CHANGE_MUSIC"
+export const MUSIC_UPDATE_EVENT = "MUSIC_UPDATE"
+export const MUSIC_EVENT = "MUSIC"
+export const UPDATE_BANNER_EVENT = "UPDATE_BANNER"
 
 // command events
 export const LOG_EVENT = "LOG"

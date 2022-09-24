@@ -21,6 +21,7 @@ import offline from "../../assets/sfx/offline.mp3"
 import coin from "../../assets/sfx/coin.mp3"
 import sentmail from "../../assets/sfx/sentmail.mp3"
 import gotmail from "../../assets/sfx/gotmail.mp3"
+import pop from "../../assets/sfx/pop.mp3"
 import {
   pushToLog,
 } from "../../components/Terminal"
@@ -37,6 +38,7 @@ const sfx = {
   pay: new Audio(coin),
   sentmail: new Audio(sentmail),
   gotmail: new Audio(gotmail),
+  pop: new Audio(pop),
 }
 
 const handler: NetworkEventHandler = (sound: keyof typeof sfx) => {
