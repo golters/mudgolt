@@ -46,6 +46,11 @@ export const CHANGE_MUSIC_EVENT = "CHANGE_MUSIC"
 export const MUSIC_UPDATE_EVENT = "MUSIC_UPDATE"
 export const MUSIC_EVENT = "MUSIC"
 export const UPDATE_BANNER_EVENT = "UPDATE_BANNER"
+export const INVITE_EVENT = "INVITE"
+export const GAME_UPDATE_EVENT = "GAME_UPDATE"
+export const GAME_EVENT = "GAME"
+export const BANNER_UPDATE_EVENT = "BANNER_UPDATE"
+export const CLICK_EVENT = "CLICK"
 
 // command events
 export const LOG_EVENT = "LOG"

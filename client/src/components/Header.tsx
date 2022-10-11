@@ -1,6 +1,7 @@
 import {
   Room, 
   Music,
+  Game,
 } from "../../../@types"
 import {
   DRAW_EVENT,
@@ -8,6 +9,7 @@ import {
   ERROR_EVENT,
   CHANGE_MUSIC_EVENT,
   COMPOSE_EVENT,
+  CLICK_EVENT,
 } from "../../../events"
 import {
   networkEmitter, 
@@ -19,7 +21,6 @@ import {
 import "./Header.css"
 import React, { useCallback, useEffect, useState } from "react"
 import { sendEvent } from "../network"
-import { Banner } from "src/commands/banner"
 import {
   store,
 } from "../store"
@@ -44,6 +45,10 @@ export const changeBanner = (newBanner: string) => {
       bannerT = "music"
       localStorage.bannerT = "music"
       break;
+    case "game":
+      bannerT = "game"
+      localStorage.bannerT = "game"
+      break;
     default:
       sendEvent(ERROR_EVENT, "invalid banner type")
       break;
@@ -53,6 +58,7 @@ export const changeBanner = (newBanner: string) => {
 export const Header: React.FC = () => {
   const [room, setRoom] = useState<Room | null>(null)
   const [music, setMusic] = useState<Music | null>(null)
+  const [game, setGame] = useState<Game | null>(null)
   const [minimized, setMinimized] = useState(!!localStorage.getItem(BANNER_MINIMIZE_STORAGE_KEY) || false)
   const [muted, setMuted] = useState(!!localStorage.getItem("muted") || false)
   
@@ -62,6 +68,7 @@ export const Header: React.FC = () => {
       sendEvent(ERROR_EVENT, "room update")
       setRoom(room)
       setMusic(music)
+      setGame(game)
     })
   }, [])
 
@@ -89,6 +96,7 @@ export const Header: React.FC = () => {
     const bannerParts: string[] = [] 
 
     const music = store.music
+    const game = store.game
     let Mbanner = ""
     if(music === undefined){
       Mbanner = room.banner
@@ -96,7 +104,16 @@ export const Header: React.FC = () => {
       localStorage.bannerT = "art"
     }else{
       Mbanner = music.banner
+    } 
+    let Gbanner = ""
+    if(bannerT === "game"){
+    if(!game){
+      bannerT = "art"
+      localStorage.bannerT = "art"
+    }else{
+      Gbanner = game?.banner
     }
+  }
   
     for (let i = 0; i < room.banner.length / BANNER_WIDTH; i++) {
       switch(bannerT){
@@ -105,6 +122,9 @@ export const Header: React.FC = () => {
           break;
         case "music":   
           bannerParts.push(Mbanner.substr(i * BANNER_WIDTH, BANNER_WIDTH))
+          break;
+        case "game":   
+          bannerParts.push(Gbanner.substr(i * BANNER_WIDTH, BANNER_WIDTH))
           break;
       }
     }
@@ -130,6 +150,9 @@ export const Header: React.FC = () => {
                     case "music":   
                     sendEvent(COMPOSE_EVENT, [x, y, brush])
                       break;
+                      case "game":   
+                      sendEvent(CLICK_EVENT, [x, y])
+                        break;
                   }
                 } else if (event.buttons === 2) {
                   setBrush(character)

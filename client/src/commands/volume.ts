@@ -4,7 +4,7 @@ import { pushErrorToLog } from "../components/Terminal"
 export const Volume: CommandModule = {
   command: "volume",
   syntax: "volume [number]",
-  bio: "test",
+  bio: "sets volume of background music. 0.2 recomended",
 
   callback ({ args }) {
     const [type] = args
