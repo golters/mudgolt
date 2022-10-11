@@ -71,7 +71,7 @@ export const editMusic = async (x: number, y: number, character: string, room: R
   }
   const music = await getMusicByRoom(room.id)
   if(music === undefined){
-    throw new Error("Room doesn't exist")
+    throw new Error("music doesn't exist")
   }
 
   const banner = music.banner.split("")

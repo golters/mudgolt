@@ -100,6 +100,15 @@ import{
 import {
   Volume
 }from "./volume"
+import {
+  Invite
+}from "./invite"
+import {
+  Game
+}from "./game"
+import {
+  Click
+}from "./click"
 
 
 export const commandModules = [
@@ -134,6 +143,9 @@ export const commandModules = [
   Banner,
   Compose,
   Volume,
+  Invite,
+  Game,
+  Click,
 ]
 
 const findCommand = (nameOrAlias: string) => {

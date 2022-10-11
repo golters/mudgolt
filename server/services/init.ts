@@ -93,21 +93,21 @@ export const initStore = async () => {
       FOREIGN KEY("player1") REFERENCES players("id"),
       FOREIGN KEY("player2") REFERENCES players("id"),
       FOREIGN KEY("player3") REFERENCES players("id"),
-      FOREIGN KEY("player4") REFERENCES players("id"),
+      FOREIGN KEY("player4") REFERENCES players("id")
     );
 
     CREATE TABLE IF NOT EXISTS invites (
-      "id" INTEGER,
+      "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+      "type" TEXT NOT NULL,
       "player1" INTEGER NOT NULL,
       "player2" INTEGER,
       "player3" INTEGER,
       "player4" INTEGER,
 
-      FOREIGN KEY("id") REFERENCES games("id"),
       FOREIGN KEY("player1") REFERENCES players("id"),
       FOREIGN KEY("player2") REFERENCES players("id"),
       FOREIGN KEY("player3") REFERENCES players("id"),
-      FOREIGN KEY("player4") REFERENCES players("id"),
+      FOREIGN KEY("player4") REFERENCES players("id")
     );
   `)
 
