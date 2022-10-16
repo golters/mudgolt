@@ -22,7 +22,8 @@
   justify-content: center;
   grid-template-rows: auto auto;
   gap: 1em;
-  padding: 1em;
+  padding-top: 0.2em;
+  padding-left: 0.5em;
   width: auto;
 }
 
@@ -33,30 +34,36 @@
 }
 
 #header-wrapper .controls {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0.5em;
+  position: fixed;
+  right: 0.5em;
+}
+
+#mini_button {
+  font-family: DOS16;
   font-size: 24px;
   cursor: pointer;
-  opacity: 0.7;
+  color:rgb(0, 0, 0, 0.7);
+  background-color: rgba(255, 255, 255);
   user-select: none;
 }
 
-#header-wrapper .controls:first-child {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0.5em; 
-  margin-right: 20px;
-  font-size: 24px;
-  cursor: pointer;
-  opacity: 0.7;
-  user-select: none;
+#mini_button:hover {
+  color:rgb(255, 255, 255);
+  background-color: rgb(0, 0, 0);
 }
 
+#banner-type {
+  font-size: 16px;
+  font-family: DOS16;
+  letter-spacing: 0;
+  margin-right: 1em;
+  user-select: none;
+  cursor: pointer;
+}
 
-#header-wrapper .controls:hover {
+#banner-type:hover {
+  color: var(--color-text-tertiary);
+  background-color: rgba(255, 255, 255, 0.3);
   opacity: 1;
 }
 
@@ -142,4 +149,9 @@
   #banner span {
     width: 4px;
   }
+}
+
+mark { 
+  background-color: rgb(255, 255, 255);
+  color: black;
 }

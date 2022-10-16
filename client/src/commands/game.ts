@@ -12,9 +12,9 @@ import {
 } from "./emitter"
 
 export const Game: CommandModule = {
-  command: "Game",
-  syntax: "Game [leave]",
-  bio: "game specific commands",
+  command: "game",
+  syntax: "game [leave]",
+  bio: "game specific commands. /game leave to leave game",
 
   //check correct amount of args
   callback({ args }) {

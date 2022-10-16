@@ -51,6 +51,10 @@ export const GAME_UPDATE_EVENT = "GAME_UPDATE"
 export const GAME_EVENT = "GAME"
 export const BANNER_UPDATE_EVENT = "BANNER_UPDATE"
 export const CLICK_EVENT = "CLICK"
+export const CHANGE_BANNER_EVENT = "CHANGE_BANNER"
+export const TOOLBAR_UPDATE_EVENT = "TOOLBAR_UPDATE"
+export const DOOR_UPDATE_EVENT = "DOOR_UPDATE"
+export const MAKE_POST_EVENT = "MAKE_POST"
 
 // command events
 export const LOG_EVENT = "LOG"

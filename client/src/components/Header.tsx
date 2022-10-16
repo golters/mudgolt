@@ -10,6 +10,9 @@ import {
   CHANGE_MUSIC_EVENT,
   COMPOSE_EVENT,
   CLICK_EVENT,
+  CHANGE_BANNER_EVENT,
+  GAME_EVENT,
+  TOOLBAR_UPDATE_EVENT,
 } from "../../../events"
 import {
   networkEmitter, 
@@ -29,6 +32,7 @@ const BANNER_MINIMIZE_STORAGE_KEY = 'headerBannerMinimized'
 
 export let brush = localStorage.brush || "+"
 export let bannerT = localStorage.bannerT || "art"
+let R = store.player?.roomId
 
 export const setBrush = (newBrush: string) => {
   localStorage.brush = newBrush
@@ -55,13 +59,47 @@ export const changeBanner = (newBanner: string) => {
   }
 }
 
+
+
 export const Header: React.FC = () => {
   const [room, setRoom] = useState<Room | null>(null)
+  const [arttab, setarttab] = useState(true)
   const [music, setMusic] = useState<Music | null>(null)
+  const [musictab, setmusictab] = useState(false)
   const [game, setGame] = useState<Game | null>(null)
+  const [gametab, setgametab] = useState(false)
   const [minimized, setMinimized] = useState(!!localStorage.getItem(BANNER_MINIMIZE_STORAGE_KEY) || false)
-  const [muted, setMuted] = useState(!!localStorage.getItem("muted") || false)
-  
+  const [inGame, setInGame] = useState(!!localStorage.getItem("inGame") || false)
+  R = room?.id
+
+  function bannerArt() {
+    bannerT = "art"
+    localStorage.bannerT = "art"  
+    sendEvent(CHANGE_BANNER_EVENT, R)
+    setarttab(true)
+    setmusictab(false)
+    setgametab(false)
+  }
+  function bannerMusic() {
+    bannerT = "music"
+    localStorage.bannerT = "music"  
+    sendEvent(CHANGE_BANNER_EVENT, R)
+    setarttab(false)
+    setmusictab(true)
+    setgametab(false)
+  }
+  function bannerGame() {
+    const args = []
+    args.push("game")
+    sendEvent(GAME_EVENT,args)
+    bannerT = "game"
+    localStorage.bannerT = "game" 
+    sendEvent(CHANGE_BANNER_EVENT, R) 
+    setarttab(false)
+    setmusictab(false)
+    setgametab(true)
+  }
+
   useEffect(() => {
     networkEmitter.on(ROOM_UPDATE_EVENT, (room: Room) => {
       sendEvent(CHANGE_MUSIC_EVENT, room.id) 
@@ -69,6 +107,7 @@ export const Header: React.FC = () => {
       setRoom(room)
       setMusic(music)
       setGame(game)
+      sendEvent(TOOLBAR_UPDATE_EVENT, room.id)
     })
   }, [])
 
@@ -82,16 +121,6 @@ export const Header: React.FC = () => {
     }
   }, [minimized])
   
-  const toggleMute = useCallback(() => {
-    setMuted(!muted)
-
-    if (muted) {
-      localStorage.removeItem("muted")
-    } else {
-      localStorage.setItem("muted", '1')
-    }
-  }, [muted])
-
   const Banner: React.FC<{ room: Room }> = ({ room }) => {
     const bannerParts: string[] = [] 
 
@@ -110,29 +139,38 @@ export const Header: React.FC = () => {
     if(!game){
       bannerT = "art"
       localStorage.bannerT = "art"
+      setInGame(false)
     }else{
       Gbanner = game?.banner
+      setInGame(true)
     }
   }
   
-    for (let i = 0; i < room.banner.length / BANNER_WIDTH; i++) {
+    for (let i = 0; i < room.banner.length / BANNER_WIDTH; i++) {      
       switch(bannerT){
         case "art":
-          bannerParts.push(room.banner.substr(i * BANNER_WIDTH, BANNER_WIDTH))
+          const artFrom = Array.from(room.banner);
+          bannerParts.push(artFrom.slice(i * BANNER_WIDTH, (i * BANNER_WIDTH) + BANNER_WIDTH).join(""))
+          
           break;
         case "music":   
-          bannerParts.push(Mbanner.substr(i * BANNER_WIDTH, BANNER_WIDTH))
+        const musicFrom = Array.from(Mbanner);
+          bannerParts.push(musicFrom.slice(i * BANNER_WIDTH, (i * BANNER_WIDTH) + BANNER_WIDTH).join(""))
+
           break;
         case "game":   
-          bannerParts.push(Gbanner.substr(i * BANNER_WIDTH, BANNER_WIDTH))
+        const gameFrom = Array.from(Gbanner);
+          bannerParts.push(gameFrom.slice(i * BANNER_WIDTH, (i * BANNER_WIDTH) + BANNER_WIDTH).join(""))
+
           break;
       }
     }
   
     const parts = bannerParts.map((part, y) => {
+      const usingArrayFrom = Array.from(part);
+      
       return <>{
-        part
-          .split("")
+        usingArrayFrom
           .map((character, x) => {
             const [currentCharacter, setCurrentCharacter] = useState(character)
 
@@ -148,11 +186,11 @@ export const Header: React.FC = () => {
                       sendEvent(DRAW_EVENT, [x, y, brush])
                       break;
                     case "music":   
-                    sendEvent(COMPOSE_EVENT, [x, y, brush])
+                      sendEvent(COMPOSE_EVENT, [x, y, brush])
                       break;
-                      case "game":   
+                    case "game":   
                       sendEvent(CLICK_EVENT, [x, y])
-                        break;
+                      break;
                   }
                 } else if (event.buttons === 2) {
                   setBrush(character)
@@ -170,22 +208,19 @@ export const Header: React.FC = () => {
   return (
     <header id="header">
       <div id="header-wrapper">
+        <div className="banner">
+    <h3 id="room-name">{room?.name}</h3>
+        <span id="banner-type" onClick={bannerArt}>{minimized ? "" : arttab ? <mark>Art</mark> : "Art"}</span>
+        <span id="banner-type" onClick={bannerMusic}>{minimized ? "" : musictab ? <mark>Music</mark> : "Music"}</span>
+        <span id="banner-type" onClick={bannerGame}>{minimized ? "" : inGame ? gametab ? <mark>Game</mark> : "Game" : "..."}</span>
+        </div>
         <div className="controls">
-          <span
-            title={`${muted ? 'Unmute' : 'Mute'}`} 
-            className="mute" 
-            onClick={toggleMute}
-          >{muted ? <s>♫</s> : "♫"}</span>
-           </div>
-        <div className="controls">
-          <span
+          <span id="mini_button"
             title={`${minimized ? 'Expand' : 'Minimize'} banner`} 
             className="minimize" 
             onClick={toggleBanner}
           >{minimized ? "+" : "-"}</span>
         </div>
-
-        <h3 id="room-name">{room?.name}</h3>
 
         {(!minimized && room) && <Banner room={room} />}
       </div>

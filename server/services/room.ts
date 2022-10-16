@@ -32,7 +32,7 @@ export const generateBanner = () => {
 export const editBaner = async (x: number, y: number, character: string, room: Room): Promise<Room> => {
   const pos = x + (y * BANNER_WIDTH)
 
-  const banner = room.banner.split("")
+  const banner = Array.from(room.banner);
 
   banner[pos] = character
 

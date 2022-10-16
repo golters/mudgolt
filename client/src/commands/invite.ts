@@ -12,8 +12,8 @@ import {
 } from "./emitter"
 
 export const Invite: CommandModule = {
-  command: "Invite",
-  syntax: "Invite [send/accept/check/decline] [user] [chess]",
+  command: "invite",
+  syntax: "invite [send/accept/check/decline] [user] [chess]",
   aliases: ["play"],
   bio: "invite [user] [game] to invite someone, invite [check] to see pending invites, invite [accept] [user] to begin game, invite [decline] [user] to delete invite",
 

@@ -13,7 +13,7 @@ export const Banner: CommandModule = {
 
   callback ({ args }) {
     const [type] = args
-
+    
     if(args[0] === "game"){
       sendEvent(GAME_EVENT, args)
     }
