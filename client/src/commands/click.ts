@@ -16,7 +16,7 @@ import {
 export const Click: CommandModule = {
   command: "click",
   syntax: `click [0-${BANNER_WIDTH}] [0-${BANNER_HEIGHT}]`,
-  bio: "test",
+  bio: "used to select and move game pieces",
 
   callback({ args }) {
     const x = parseInt(args[0])

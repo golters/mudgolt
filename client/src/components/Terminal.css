@@ -4,6 +4,7 @@
   overflow: auto;
   padding: 1em;
   overflow-x: hidden;
+  background-color: var(--color-terminal-back);
 }
 
 #terminal * {
@@ -18,6 +19,10 @@
 
 #terminal-input-container {
   pointer-events: none;
+  color: var(--color-input-text);
+  background-color: var(--color-input-back);
+  outline-style: var(--color-input-back-edge);
+  outline-color: var(--color-input-back);
 }
 
 #terminal-input-container * {
@@ -36,21 +41,20 @@
 }
 
 #terminal-input-container .char-limit {
-  color: var(--color-text-secondary);
-  opacity: 0.75;
+  color: var(--color-charlimit);
   float: right;
 }
 
 #terminal-input-container .char-limit.invalid {
-  color: var(--color-text-negative);
+  color: var(--color-charlimit-over);
 }
 
 .chat-message {
-  color: var(--color-text-secondary);
+  color: var(--color-chat-message);
 }
 
 .chat-message .username {
-  color: var(--color-text-tertiary);
+  color: var(--color-chat-name);
 }
 
 .chat-message .date, .chat-message .username  {
@@ -58,11 +62,11 @@
 }
 
 .chat-message .date {
-  opacity: 0.75;
+  color: var(--color-chat-date);
 }
 
 .error-message {
-  color: var(--color-text-negative);
+  color: var(--color-chat-error);
 }
 
 #terminal img {

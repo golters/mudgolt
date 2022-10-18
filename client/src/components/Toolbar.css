@@ -1,0 +1,262 @@
+@font-face {
+  font-family: DOS16;
+  src: url(../assets/ModernDOS8x16.ttf);
+  font-size: 16px;
+}
+
+@font-face {
+  font-family: DOS14;
+  src: url(../assets/ModernDOS8x14.ttf);
+  font-size: 14px;
+}
+
+#toolbar {
+  display: flex;
+  background-color: var(--color-toolbar-back);
+  border: var(--color-toolbar-edge);
+  outline-offset: -3px;
+}
+
+#title{
+  position:absolute;
+  margin: 4px;
+  right: 0.5em;
+  font-size: 24px;
+  font-family: DOS16;
+  color: var(--color-toolbar-title);
+}
+
+#button {
+  font-size: 24px;
+  cursor: pointer;
+  user-select: none;
+  color: var(--color-toolbar-button-logos);
+  background-color:  var(--color-toolbar-button-back);
+  border: var(--color-toolbar-button-edge);
+  margin: 2px;
+}
+
+#button:hover {
+  color: var(--color-toolbar-button-logos-hover);
+  background-color:  var(--color-toolbar-button-back-hover);
+  border: var(--color-toolbar-button-edge-hover);
+  margin: 2px;
+}
+
+.dropdown {
+  cursor: pointer;
+  user-select: none;
+}
+
+.dropdown-content {
+  display: none;
+  position: fixed;
+  left: 0;
+  min-width: 50%;
+  max-width: 100%;
+  flex-wrap: wrap;
+  color: var(--color-toolbar-dropdown-text);
+  background-color:  var(--color-toolbar-dropdown-back);
+  min-width: 160px;
+  box-shadow: var(--color-toolbar-dropdown-shadow);
+  padding: 12px 16px;
+  z-index: 2;
+  border: var(--color-toolbar-dropdown-edge);
+  outline-offset: -3px;
+}
+
+.dropdown:hover .dropdown-content {
+  display: flex;  
+  flex-wrap: wrap;
+}
+/* Tooltip container */
+.tooltip {
+  font-size: 24px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {  
+  font-family: DOS16;
+  pointer-events: none;
+  visibility: hidden;
+  width: 120px;
+  color: var(--color-toolbar-hovernames-text);
+  background-color:  var(--color-toolbar-hovernames-back);
+  text-align: center;
+  padding: 5px 0;
+  border: var(--color-toolbar-hovernames-edge);
+  outline-offset: -3px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 3;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.popup {
+  cursor: pointer;
+  user-select: text;
+}
+.post-box{
+  position: absolute;
+  left: 0;
+  color: var(--color-toolbar-dropdown-text);
+  background-color:  var(--color-toolbar-dropdown-back);
+  min-width: 160px;
+  box-shadow: var(--color-toolbar-dropdown-shadow);
+  padding: 12px 16px;
+  z-index: 1;
+  border: var(--color-toolbar-dropdown-edge);
+  outline-offset: -3px;
+}
+.popup-box{
+  position: fixed;
+  left: 0;
+  max-width: 100%;
+  color: var(--color-toolbar-dropdown-text);
+  background-color:  var(--color-toolbar-dropdown-back);
+  min-width: 160px;
+  box-shadow: var(--color-toolbar-dropdown-shadow);
+  padding: 12px 16px;
+  z-index: 1;
+  border: var(--color-toolbar-dropdown-edge);
+  outline-offset: -3px;
+
+}
+.popup-content {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.palette {
+  font-size: 25px;
+  font-family: DOS16;
+  color: var(--color-toolbar-palette-text);
+  background-color:  var(--color-toolbar-palette-back);
+}
+.palette:hover {
+  color: var(--color-toolbar-palette-text-hover);
+  background-color:  var(--color-toolbar-palette-back-hover);
+}
+.themes {
+  display: flex;  
+  flex-wrap: wrap;
+}
+.sub-button {
+  color: var(--color-toolbar-sub-button-text);
+  background-color:  var(--color-toolbar-sub-button-back);
+  margin-right: 1em;
+  margin-bottom: 0.5em;
+  border: var(--color-toolbar-sub-button-edge);
+  line-height: 1.5em;
+  width: fit-content;
+}
+.sub-button:hover {
+  color: var(--color-toolbar-sub-button-text-hover);
+  background-color:  var(--color-toolbar-sub-button-back-hover);
+  border: var(--color-toolbar-sub-button-edge-hover);
+}
+#tool-terminal-input-container {
+  pointer-events: none;
+  color: var(--color-toolbar-input-text);
+  background-color:  var(--color-toolbar-input-back);
+  border: var(--color-toolbar-input-edge);
+  min-width: 500px;
+}
+
+#tool-terminal-input-container * {
+  user-select: none;
+}
+
+#tool-terminal-input-container > span {
+  display: inline-block;
+}
+#tool-terminal-input-container div[contenteditable] {
+  outline: none;
+  pointer-events: all;
+  user-select: initial;
+  display: inline;
+}
+
+
+.tool-char-limit {
+  color: var(--color-toolbar-charlimit);
+  background-color:  var(--color-toolbar-charlimit-back);
+}
+
+.tool-char-limit.invalid {
+  color: var(--color-toolbar-charlimit-over);
+  background-color:  var(--color-toolbar-charlimit-over-back);
+}
+
+#publish-button {
+  height: fit-content;
+  font-family: DOS16;
+  float: right;
+  font-size: 24px;
+  cursor: pointer;
+  user-select: none;
+  color: var(--color-toolbar-publish-button-text);
+  background-color:  var(--color-toolbar-publish-button-back);
+  border: var(--color-toolbar-publish-button-edge);
+}
+
+#publish-button:hover {
+  color: var(--color-toolbar-publish-button-text-hover);
+  background-color:  var(--color-toolbar-publish-button-back-hover);
+  border: var(--color-toolbar-publish-button-edge-hover);
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 10px;
+  background:  var(--color-toolbar-slider-back);
+  border: var(--color-toolbar-slider-back-edge);
+}
+
+.slider:hover {
+  background:  var(--color-toolbar-slider-back-hover);
+  border: var(--color-toolbar-slider-back-edge-hover);
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  background:  var(--color-toolbar-slider-thumb);
+  cursor: pointer;
+  border: var(--color-toolbar-slider-thumb-edge);
+}
+
+.slider::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  background:  var(--color-toolbar-slider-thumb);
+  outline-color:  var(--color-toolbar-slider-thumb);
+  cursor: pointer;
+}
+.slider::-webkit-slider-thumb:hover {
+  background:  var(--color-toolbar-slider-thumb-hover);
+  outline-color:  var(--color-toolbar-slider-thumb-hover);
+}
+
+.slider::-moz-range-thumb:hover {
+  background:  var(--color-toolbar-slider-thumb-hover);
+  outline-color:  var(--color-toolbar-slider-thumb-hover);
+}
+
+.secret {
+  font-family: DOS16;
+  font-size: 100px;
+  position: fixed;
+  right: 0;
+  top: 50%;
+}

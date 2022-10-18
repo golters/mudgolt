@@ -4,8 +4,6 @@
   --color-background-primary: black;
   --color-background-code: rgb(26, 26, 39);
   --color-text-primary: white;
-  --color-text-secondary: rgba(255, 255, 255, 0.6);
-  --color-text-tertiary: rgb(212, 103, 255);
   --color-text-link: rgb(83, 143, 255);
   --color-text-negative: rgb(228, 34, 76);
   --color-divider: rgb(35, 32, 35);
@@ -27,11 +25,15 @@
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: var(--color-scrollbar);
+  background-color: var(--color-scrollbar-thumb);
+  outline-style: var(--color-scrollbar-thumb-edge);
+  outline-color: var(--color-toolbar-thumb);
 }
 
 *::-webkit-scrollbar {
-  background-color: transparent;
+  background-color: var(--color-scrollbar-back);
+  outline-style: var(--color-scrollbar-back-edge);
+  outline-color: var(--color-toolbar-back);
   width: 7px;
 }
 
@@ -49,27 +51,26 @@ body {
 body::after {
   content: " ";
   display: block;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
   background: rgba(18, 16, 16, 0.1);
-  opacity: 0;
-  z-index: 2;
+  z-index: 4;
   pointer-events: none;
   opacity: 0.27861;
 }
 body::before {
   content: " ";
   display: block;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
   background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-  z-index: 2;
+  z-index: 4;
   background-size: 100% 2px, 3px 100%;
   pointer-events: none;
 }

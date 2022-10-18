@@ -10,11 +10,13 @@ export const Brush: CommandModule = {
   callback ({ input }) {
     const character = input.replace("/brush ", "")
 
-    if (character.length > 1) {
+    const regex = /\p{RI}\p{RI}|\p{Emoji}(\p{EMod}|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?(\u{200D}\p{Emoji}(\p{EMod}|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?)*|./gus
+    const test = character.split(regex)
+    if(test.length !== 5){
       pushErrorToLog("Brush may only be one character")
 
       return
-    }
+    }   
 
     setBrush(character)
   },
