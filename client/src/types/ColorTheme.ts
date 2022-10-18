@@ -1,6 +1,8 @@
 export interface ColorTheme {
+  "name": string
   "toolbar-back": string
   "toolbar-edge": string
+  "toolbar-title": string
   "toolbar-button-back": string
   "toolbar-button-logos": string
   "toolbar-button-back-hover": string
@@ -10,6 +12,7 @@ export interface ColorTheme {
   "toolbar-dropdown-back": string
   "toolbar-dropdown-text": string
   "toolbar-dropdown-edge": string
+  "toolbar-dropdown-shadow":string
   "toolbar-hovernames-back": string
   "toolbar-hovernames-text": string
   "toolbar-hovernames-edge": string
@@ -44,15 +47,49 @@ export interface ColorTheme {
   "toolbar-palette-back":string
   "toolbar-palette-text-hover":string
   "toolbar-palette-back-hover":string
+  
+  "banner-line":string
+  "banner-mini":string
+  "banner-mini-edge":string
+  "banner-mini-back":string  
+  "banner-mini-hover":string
+  "banner-mini-edge-hover":string
+  "banner-mini-back-hover":string  
+  "banner-type":string
+  "banner-type-back":string
+  "banner-type-edge":string
+  "banner-type-hover":string
+  "banner-type-back-hover":string
+  "banner-type-edge-hover":string
+  "banner-type-select":string
+  "banner-type-select-back":string
+  "banner-type-select-back-edge":string
+  "banner-color":string
+  "banner-back":string
+  "banner-border":string
+  "banner-cursor":string
+  "banner-cursor-back":string
+  "banner-room-name":string
+
+  "terminal-back":string
+  "text-primary": string
+  "text-link": string
+  "chat-date":string
+  "chat-name":string
+  "chat-message":string
+  "chat-error":string
+  "charlimit": string
+  "charlimit-over": string
+  "input-text": string
+  "input-back": string
+  "input-back-edge": string 
+
+  "scrollbar-back":string
+  "scrollbar-thumb":string
+  "scrollbar-back-edge":string
+  "scrollbar-thumb-edge":string
 
   "background-primary": string
   "background-code": string
-  "text-primary": string
-  "text-secondary": string
-  "text-tertiary": string
-  "text-link": string
-  "text-negative": string
   "divider": string
-  "scrollbar": string
-  "brush": string
 }

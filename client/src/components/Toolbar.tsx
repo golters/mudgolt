@@ -42,13 +42,13 @@ function go(door: string) {
 }
 const symbols = [
   {id: "blocks", chars:["█","▓","▒","░"]},
-  {id: "plants", chars:["✿","❀","❁","❃","❋","✾","❦","❧","☙","☘","♣","♧","♠","♤","⚕","⚘","⚚","⚵","↑","↟","⯭","↡","෴"]},
+  {id: "plants", chars:["🏶","🏵","✿","❀","❁","❃","❋","✾","❦","❧","☙","☘","♣","♧","♠","♤","⚕","⚘","⚚","⚵","↑","↟","⯭","↡","෴"]},
   {id: "bricks", chars:["☲","☵","𒐪"]},
   {id: "characters", chars:["⛇","ඞ","𓃰","𓀠","𓀡","𓀁","𓅃"]},
   {id: "props", chars:["⚱","⛑","⛏","⛸","⛓","⛾","⛿","⛱","⛷","⚔","♰","♕","♔","♚","♛","☠","☎","☏",
   "✀","✂","✉","✎","✏","✐","✞","◷"]},
   {id: "vehicles", chars:["⛟","⛴","✈"]},
-  {id: "water", chars:["⛆","﹏","〰","﹌","෴","𓆛","𓆜","𓆝","𓆞","𓆟"]},
+  {id: "water", chars:["⛆","﹏","〰","﹌","𐩘","෴","𓆛","𓆜","𓆝","𓆞","𓆟"]},
   {id: "sky", chars:["☁","☀","★","☆","⛈","✦","✧","𓅛"]},
   {id: "bear", chars:["ﻌ","Ҁ","ҁ","⟟","⧪","ᴥ","ʔ","ʕ","ꮂ","㉨","ｴ","•","ᶘ","ᶅ"]},
   {id: "music", chars:["█","▓","▒","░","◆","◇","◈","◐","◑","◒","◓","★","☆","☀","☁","♠","♡","♣","♢"]},
@@ -70,12 +70,43 @@ export const Toolbar: React.FC = () => {
   const [doors, setDoors] = useState<Door[] | null>(null)
   let [roomMap, setRoomMap] = useState<(string)[]>(rooms)
   const [muted, setMuted] = useState(!!localStorage.getItem("muted") || false)
+  const [eye, setEye] = useState(false)
+  const [plane, setPlane] = useState(false)
+  const [letter, setLetter] = useState(false)
+  const [pen, setPen] = useState(false)
+  const [sound, setSound] = useState(false)
+  const [glyphs, setGlyphs] = useState(false)
+  const [alchemy, setAlchemy] = useState(false)
+  const [secret, setSecret] = useState(false)
   const [form, setForm] = useState(false)
   const [table, setTable] = useState(false)
   const [help, setHelp] = useState(false)
   const [textLength, setTextLength] = useState(0)
   const input = useRef<HTMLDivElement>(null)
 
+  if (Math.random() * 100000 < 1) {
+    setEye(true)
+  }
+  if (Math.random() * 100000 < 1) {
+    setPlane(true)
+  }
+  if (Math.random() * 100000 < 1) {
+    setLetter(true)
+  }
+  if (Math.random() * 100000 < 1) {
+    setPen(true)
+  }
+  if (Math.random() * 100000 < 1) {
+    setSound(true)
+  }
+  if (Math.random() * 100000 < 1) {
+    setAlchemy(false)
+    setGlyphs(true)
+  }
+  if (Math.random() * 100000 < 1) {
+    setGlyphs(false)
+    setAlchemy(true)
+  }
 
   localStorage.volume = volume/10
 
@@ -109,6 +140,11 @@ export const Toolbar: React.FC = () => {
           }
 
           setTextLength(value.length)
+          if(value.length > 5000){
+            setSecret(true)
+          }else{
+            setSecret(false)
+          }
         })
       }}
   
@@ -203,7 +239,7 @@ function setCommand(type: string) {
   command = ""
   const c = commandModules.find(Element => Element.aliases?.includes(type) || Element.command === type)
   if(c?.bio){
-    command = c.command + "\n"
+    command = "/"+ c.command + "\n"
     command = command + c.bio + "\n"
     if(c.aliases){
     command = command + "you can also use: " + c.aliases
@@ -220,67 +256,56 @@ if(doors){
 
   return (
     <main
-      id="toolbar"
     >
+      <div id="toolbar">
           <div className="tooltip">
           <span id="button"
             onClick={look}
-          >{"👁"}</span>
+          >{alchemy ? "🜏" : glyphs ? "𓂀" : eye ? "🕶" : "👁"}</span>
           <span className ="tooltiptext">Look</span>
         </div>
 
           <div className="dropdown">
           <div className="tooltip">
-          <span id= "button">{"✈"}</span>
+          <span id= "button">{alchemy ? "🜟" : glyphs ? "𓊝" : plane ? "⛴" : "✈"}</span>
           <span className ="tooltiptext">Go</span>
           <div className="dropdown-content">
       {roomMap.map((log, key) => {
-          return <span className= "sub-button" key={key} onClick={() => go(log)}>{log}<br></br></span>
+          return <span className= "sub-button" key={key} onClick={() => go(log)}>{log}</span>
       })}
       </div>
           </div>
         </div>
-          <div className="popup">
+
+          <div className="pop-up">
           <div className="tooltip">
           <span id="button"
             onClick={toggleForm}
-          >{"✉"}</span>
+          >{alchemy ? "🝮" : glyphs ? "𓅃" : letter ? "🗑" : "✉"}</span>
           <span className ="tooltiptext">Post</span>
         </div>
-          {form ?
-          <div className="popup-content">
-            <form>
-              <span>Share your thoughts</span><br></br>
-              <span id="tool-terminal-input-container">
-        <span>&gt;</span> {Input ? <Input /> : null}<br></br>
-      </span>
-        <small className={`tool-char-limit ${textLength > MESSAGE_MAX_LENGTH ? 'invalid' : ''}`}>
-          {String(textLength)}/{MESSAGE_MAX_LENGTH}
-        </small>
-            </form>
-          <span id="publish-button"
-            onClick={post}
-          >{"Publish"}</span>
-          </div> : ""}
         </div>
         
         <div className="popup">
           <div className="tooltip">
           <span id="button"
             onClick={toggleTable}
-          >{"🖌"}</span>
+          >{alchemy ? "🜲" : glyphs ? "𓆄" : pen ? "🗡" : "✐"}</span>
           <span className ="tooltiptext">Palette</span>
         </div>
           {table ?
+          <span className="popup-box">
           <div className="popup-content">
           {symbols.map((symbol, key) => {
               return <span className= "sub-button" key={key} onClick={() => setPalette(symbol.id)}>{symbol.id}</span>
           })}
+          </div>
+          <div className="popup-content">
           <br></br>
           {brushSymbols.map((symbol, key) => {
               return <span className= "palette" key={key} onClick={() => setBrush(symbol)}>{symbol}</span>
           })}
-          </div> : ""}
+          </div></span> : ""}
         </div>
 
 
@@ -288,37 +313,35 @@ if(doors){
           <div className="tooltip">
           <span id="button"
             onClick={toggleHelp}
-          >{"🛈"}</span>
+          >{alchemy ? "🜌" : glyphs ? "𓁟" : "🛈"}</span>
           <span className ="tooltiptext">Help</span>
         </div>
           {help ?
-          <div className="popup-content">
-            <span className="wrap">
+          <div className="popup-box">
+            <div className="popup-content">
           {commands.map((symbol, key) => {
               return <span className= "sub-button" key={key} onClick={() => setHelpType(symbol.id)}>{symbol.id}</span>
-          })}</span>
-          <br></br>
-          <span className="wrap">
+          })}</div>
+          <div className="popup-content">
           {helpCommands.map((symbol, key) => {
               return <span className= "sub-button" key={key} onClick={() => setCommand(symbol)}>{symbol}</span>
-          })}</span>
-          <br></br>
-          <span className="wrap">
+          })}</div>
+          <div className="popup-content">
           {command}
-          </span>
+          </div>
           </div> : ""}
         </div>
         
           <div className="tooltip">
           <span id="button"
             onClick={toggleMute}
-          >{muted ? <s>𝅘𝅥𝅮</s> : "𝅘𝅥𝅮"}</span>
+          >{alchemy ? "🜪" : glyphs ? muted ? <s>𓏢</s> : "𓏢" : sound ? muted ? <s>🕬</s> : "🕬" : muted ? <s>🎜</s> : "🎜"}</span>
           <span className ="tooltiptext">{muted ? "Unmute" : "Mute"}</span>
         </div>
         
         <div className="dropdown">
           <div className="tooltip">
-          <span id= "button">{"⚙"}</span>
+          <span id= "button">{alchemy ? "🜾" : glyphs ? "𓁶" : "⚙"}</span>
           <span className ="tooltiptext">Settings</span>
           <div className="dropdown-content">
             Music Volume
@@ -337,7 +360,23 @@ if(doors){
         
       <div className ="title">
         <span id="title">MUDGOLT.COM</span>
-      </div>      
+      </div>   </div>
+      <div className="secret">{secret ? "👁" : ""}</div>
+      {form ?
+          <div className="post-box">
+            <form>
+              <span>Share your thoughts</span><br></br>
+              <span id="tool-terminal-input-container">
+        <span>&gt;</span> {Input ? <Input /> : null}<br></br>
+      </span>
+        <small className={`tool-char-limit ${textLength > MESSAGE_MAX_LENGTH ? 'invalid' : ''}`}>
+          {String(textLength)}/{MESSAGE_MAX_LENGTH}
+        </small>
+            </form>
+          <span id="publish-button"
+            onClick={post}
+          >{"Publish"}</span>
+          </div> : ""}   
     </main>
   )
 }

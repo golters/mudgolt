@@ -210,9 +210,12 @@ export const Header: React.FC = () => {
       <div id="header-wrapper">
         <div className="banner">
     <h3 id="room-name">{room?.name}</h3>
-        <span id="banner-type" onClick={bannerArt}>{minimized ? "" : arttab ? <mark>Art</mark> : "Art"}</span>
-        <span id="banner-type" onClick={bannerMusic}>{minimized ? "" : musictab ? <mark>Music</mark> : "Music"}</span>
-        <span id="banner-type" onClick={bannerGame}>{minimized ? "" : inGame ? gametab ? <mark>Game</mark> : "Game" : "..."}</span>
+    <span>{minimized ? "" : <span>
+        <span id="banner-type" onClick={bannerArt}>{arttab ? <mark>Art</mark> : "Art"}</span>
+        <span id="banner-type" onClick={bannerMusic}>{musictab ? <mark>Music</mark> : "Music"}</span>
+        <span id="banner-type" onClick={bannerGame}>{inGame ? gametab ? <mark>Game</mark> : "Game" : "..."}</span>
+        </span> }
+        </span>
         </div>
         <div className="controls">
           <span id="mini_button"
@@ -221,7 +224,6 @@ export const Header: React.FC = () => {
             onClick={toggleBanner}
           >{minimized ? "+" : "-"}</span>
         </div>
-
         {(!minimized && room) && <Banner room={room} />}
       </div>
     </header>

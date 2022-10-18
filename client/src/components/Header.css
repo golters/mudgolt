@@ -11,7 +11,7 @@
 }
 
 #header {
-  border-bottom: 1px solid rgb(35, 32, 35);
+  border-bottom: var(--color-banner-line);
   display: flex;
   justify-content: flex-start;
 }
@@ -21,7 +21,6 @@
   align-items: flex-start;
   justify-content: center;
   grid-template-rows: auto auto;
-  gap: 1em;
   padding-top: 0.2em;
   padding-left: 0.5em;
   width: auto;
@@ -42,14 +41,16 @@
   font-family: DOS16;
   font-size: 24px;
   cursor: pointer;
-  color:rgb(0, 0, 0, 0.7);
-  background-color: rgba(255, 255, 255);
+  color: var(--color-banner-mini);
+  background-color: var(--color-banner-mini-back);
   user-select: none;
+  border: var(--color-banner-mini-edge);
 }
 
 #mini_button:hover {
-  color:rgb(255, 255, 255);
-  background-color: rgb(0, 0, 0);
+  color: var(--color-banner-mini-hover);
+  background-color: var(--color-banner-mini-back-hover);
+  border: var(--color-banner-mini-edge-hover);
 }
 
 #banner-type {
@@ -59,16 +60,23 @@
   margin-right: 1em;
   user-select: none;
   cursor: pointer;
+  color: var(--color-banner-type);
+  background-color: var(--color-banner-type-back);
+  border: var(--color-banner-type-edge);
 }
 
 #banner-type:hover {
-  color: var(--color-text-tertiary);
-  background-color: rgba(255, 255, 255, 0.3);
-  opacity: 1;
+  color: var(--color-banner-type-hover);
+  background-color: var(--color-banner-type-back-hover);
+  border: var(--color-banner-type-edge-hover);
 }
 
 #banner {
   line-height: 1;
+  height:fit-content;
+  color: var(--color-banner-color);
+  background-color: var(--color-banner-back);
+  border: var(--color-banner-border);
 }
 
 #banner, #banner * {
@@ -91,16 +99,15 @@
 }
 
 #banner span:hover {
-  color: var(--color-text-tertiary);
-  background-color: rgba(255, 255, 255, 0.3);
+  color: var(--color-banner-cursor);
+  background-color: var(--color-banner-cursor-back);
 }
 
 #room-name {
   font-weight: 600;
-}
-
-#room-description {
-  opacity: 0.7;
+  margin-top: 0.2em;
+  margin-bottom: 0.3em;
+  color: var(--color-banner-room-name);
 }
 
 @media (max-width: 900px) {
@@ -152,6 +159,10 @@
 }
 
 mark { 
-  background-color: rgb(255, 255, 255);
-  color: black;
+  font-size: 16px;
+  font-family: DOS16;
+  color: var(--color-banner-type-select);
+  background-color: var(--color-banner-type-select-back);
+  outline-style: var(--color-banner-type-select-edge);
+  outline-color: var(--color-banner-type-select-back);
 }
