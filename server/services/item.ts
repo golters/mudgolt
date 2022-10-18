@@ -8,6 +8,7 @@ import {
 import {
   insertWhisper,
 } from "./chat"
+import { getPlayerById } from "./player"
 
 export const createItem = async (playerID: number, name: string): Promise<Item> => {
   await db.get(/*sql*/`
@@ -19,6 +20,24 @@ export const createItem = async (playerID: number, name: string): Promise<Item> 
     "",
     playerID,
     "player",
+  ])
+
+  const item = await getItemById(1) as Item
+
+  return item
+}
+
+export const createPost = async (playerID: number, bio: string): Promise<Item> => {
+  const user = await getPlayerById(playerID)
+  await db.get(/*sql*/`
+  INSERT INTO items ("name", "description", "macro", "holderId", "holderType")
+    VALUES ($1, $2, $3, $4, $5);
+`, [    
+    `${user?.username}_post${Math.round(Math.random()*(999-100+1)+100)}`,
+    `${bio} -${user?.username} ${new Date()}`,
+    "",
+    user?.roomId,
+    "room",
   ])
 
   const item = await getItemById(1) as Item
