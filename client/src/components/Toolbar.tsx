@@ -255,12 +255,6 @@ if(doors){
   });
 }
 
-const urlParams = new URLSearchParams(window.location.search);
-const myParam = urlParams.get('go');
-if(myParam){
-  sendEvent(TP_EVENT, myParam)
-  window.location.href = "https://mudgolt.com";
-}
 
   return (
     <main

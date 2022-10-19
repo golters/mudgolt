@@ -13,6 +13,7 @@ import {
   COMMAND_LOG_EVENT,
   PING_EVENT,
   MUSIC_EVENT,
+  TP_EVENT,
 } from "../../../events"
 import {
   store, 
@@ -78,6 +79,12 @@ export const networkTask = () => new Promise<void>((resolve) => {
       if (requestedChat) {
         resolve()
       } else {
+        const urlParams = new URLSearchParams(window.location.search);
+        const myParam = urlParams.get('go');
+        if(myParam){
+          sendEvent(TP_EVENT, myParam)
+          //window.location.href = "http://mudgolt.com";
+        }        
         sendEvent<null>(CHAT_HISTORY_EVENT, null)
         requestedChat = true
       }
