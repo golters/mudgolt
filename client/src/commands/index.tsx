@@ -109,6 +109,9 @@ import {
 import {
   Click
 }from "./click"
+import {
+  Link
+}from "./link"
 
 
 export const commandModules = [
@@ -146,6 +149,7 @@ export const commandModules = [
   Invite,
   Game,
   Click,
+  Link,
 ]
 
 const findCommand = (nameOrAlias: string) => {

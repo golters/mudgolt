@@ -67,7 +67,6 @@ export const networkTask = () => new Promise<void>((resolve) => {
       code: string
       payload: unknown
     }
-
     console.log(`[${code}]`, payload)
 
     switch(code){
@@ -99,7 +98,6 @@ export const networkTask = () => new Promise<void>((resolve) => {
     
     case INBOX_HISTORY_EVENT:
       void (payload as Chat[]).forEach(chat => networkEmitter.emit(WHISPER_LOG_EVENT, chat))
-
       resolve()
       break;
   }
