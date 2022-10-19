@@ -7,6 +7,7 @@ import {
   GO_EVENT,
   MAKE_POST_EVENT,
   TOOLBAR_UPDATE_EVENT,
+  TP_EVENT,
 } from "../../../events"
 import {
   store,
@@ -252,6 +253,13 @@ if(doors){
   doors.forEach(element => {
     roomMap.push(element.name)
   });
+}
+
+const urlParams = new URLSearchParams(window.location.search);
+const myParam = urlParams.get('go');
+if(myParam){
+  sendEvent(TP_EVENT, myParam)
+  window.location.href = "https://mudgolt.com";
 }
 
   return (
