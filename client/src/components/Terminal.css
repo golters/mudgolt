@@ -1,10 +1,15 @@
 #terminal {
   /* pointer-events: none; */
   line-height: 1.5;
-  overflow: auto;
+  overflow: scroll;
   padding: 1em;
   overflow-x: hidden;
   background-color: var(--color-terminal-back);
+}
+@supports (-moz-appearance:none) {
+  #terminal {
+    height:50%;
+  }
 }
 
 #terminal * {
@@ -14,7 +19,6 @@
   word-break: break-word;
   pointer-events: all;
   display: inline;
-  overflow-x: visible;
 }
 
 #terminal-input-container {
