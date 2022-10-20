@@ -160,7 +160,8 @@ server.on("connection", (socket, request) => {
 
   socket.on("close", () => {
     console.log("Socket disconnected from server")
-    broadcastToUser(SERVER_LOG_EVENT, "you went offline", player.username)
+    //VVV this line crashes the server when refresh on firefox
+    //broadcastToUser(SERVER_LOG_EVENT, "you went offline", player.username)
     online.splice(online.findIndex(({ player }) => player.publicKey === publicKey), 1)
 
     socket.terminate()
