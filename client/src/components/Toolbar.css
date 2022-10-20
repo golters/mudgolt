@@ -256,7 +256,7 @@
 .secret {
   font-family: DOS16;
   font-size: 100px;
-  position: fixed;
+  position:fixed;
   right: 0;
   top: 50%;
 }

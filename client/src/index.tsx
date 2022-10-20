@@ -16,6 +16,9 @@ import {
 import {
   Toolbar,
 } from "./components/Toolbar"
+import {
+  Welcome,
+} from "./components/Welcome"
 import "./commands"
 
 import React from "react"
@@ -23,6 +26,7 @@ import ReactDOM from "react-dom"
 
 ReactDOM.render(
   <>
+    <Welcome />
     <Toolbar />
     <Header />
     <Terminal />

@@ -7,7 +7,6 @@ import {
   GO_EVENT,
   MAKE_POST_EVENT,
   TOOLBAR_UPDATE_EVENT,
-  TP_EVENT,
 } from "../../../events"
 import {
   store,
@@ -141,8 +140,9 @@ export const Toolbar: React.FC = () => {
           }
 
           setTextLength(value.length)
-          if(value.length > 5000){
+          if(value.length > 666){
             setSecret(true)
+            setAlchemy(true)
           }else{
             setSecret(false)
           }
@@ -363,7 +363,7 @@ if(doors){
       <div className ="title">
         <span id="title">MUDGOLT.COM</span>
       </div>   </div>
-      <div className="secret">{secret ? "👁" : ""}</div>
+      <div className="secret">{secret ? "ᚴᚭ ᛓᛆᚴᚴ" : ""}</div>
       {form ?
           <div className="post-box">
             <form>
