@@ -17,7 +17,7 @@ export const Welcome: React.FC = () => {
         <div className="welcome-content">
           <span id="welcome-text">{"What is mudgolt.com?"}</span>
           <br></br>
-          <span id="welcome-text">{"It's your favourite community as a place! Linking rooms together to create an online landscape of discussion."}</span>
+          <span id="welcome-text">{"It's your favourite community as a place! An innovation on the chatroom format, Linking rooms together to create an online landscape of discussion."}</span>
           <br></br>
           <br></br>
           <span id="welcome-text">{"How to start using mudgolt.com:"}</span>
