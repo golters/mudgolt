@@ -1,9 +1,10 @@
 .welcome{
-  top:25%;
-  left:25%;
+  top:10%;
+  left:10%;
   position: fixed;
-  width: 50%;
-  height: 50%;
+  min-width: 25%;
+  max-width: 75%;
+  height: fit-content;
   color: var(--color-toolbar-dropdown-text);
   background-color:  var(--color-toolbar-dropdown-back);
   box-shadow: var(--color-toolbar-dropdown-shadow);
@@ -23,6 +24,7 @@
 }
 
 .welcome-content {
+  padding: 10px;
   margin-top:30px;
   font-size:18px;
 }
