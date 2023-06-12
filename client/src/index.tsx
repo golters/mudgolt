@@ -8,7 +8,7 @@ import {
   Terminal, 
 } from "./components/Terminal"
 import {
-  networkTask, 
+  networkTask, sendEvent, 
 } from "./network"
 import {
   Header, 
@@ -23,6 +23,7 @@ import "./commands"
 
 import React from "react"
 import ReactDOM from "react-dom"
+import { EVENT_EVENT } from "../../events"
 
 ReactDOM.render(
   <>
@@ -43,6 +44,8 @@ const init = async () => {
   pushToLog(/* html */`Welcome to MUDGOLT! <small>Leave your shoes at the door.</small>`)
   // pushToLog(/* html */`Want to contribute? https://github.com/golters/mudgolt`)
   pushToLog(/* html */`Type <code>/help</code> for a list of commands.`)
+  sendEvent(EVENT_EVENT,"/event check")
+  
 }
 
 init().catch(console.error)

@@ -56,6 +56,8 @@ export const TOOLBAR_UPDATE_EVENT = "TOOLBAR_UPDATE"
 export const DOOR_UPDATE_EVENT = "DOOR_UPDATE"
 export const MAKE_POST_EVENT = "MAKE_POST"
 export const LINK_EVENT = "LINK"
+export const EVENT_EVENT = "EVENT"
+export const EVENT_UPDATE_EVENT = "EVENT_UPDATE"
 
 // command events
 export const LOG_EVENT = "LOG"

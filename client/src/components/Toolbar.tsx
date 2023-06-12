@@ -7,6 +7,8 @@ import {
   GO_EVENT,
   MAKE_POST_EVENT,
   TOOLBAR_UPDATE_EVENT,
+  EVENT_EVENT,
+  SERVER_LOG_EVENT,
 } from "../../../events"
 import {
   store,
@@ -28,6 +30,10 @@ import { commandModules } from "../../src/commands"
 import { colorUtil } from "../../src/utils"
 import { VALID_COLOR_THEMES } from "../../src/utils/color"
 import { Volume } from "src/commands/volume"
+import {
+  commandEmitter, 
+} from "../commands/emitter"
+import { pushToLog } from "./Terminal"
 
 const rooms: (string)[] = []
 let brushSymbols: (string)[] = ["█","▓","▒","░"]
@@ -65,10 +71,15 @@ const commands = [
 
 let Input: ReturnType<typeof React.memo> | null = null
 
+let event: string = ""
+
+
+
 export const Toolbar: React.FC = () => { 
   const [volume, setVolume] = useState(localStorage.volume*10)
   const [doors, setDoors] = useState<Door[] | null>(null)
   let [roomMap, setRoomMap] = useState<(string)[]>(rooms)
+  let [event, setEvent] = useState<(string)>()
   const [muted, setMuted] = useState(!!localStorage.getItem("muted") || false)
   const [eye, setEye] = useState(false)
   const [plane, setPlane] = useState(false)
@@ -117,11 +128,12 @@ export const Toolbar: React.FC = () => {
     setTextLength(0)
     toggleForm()
   }
-  roomMap = []
+  roomMap = []  
   useEffect(() => {
   networkEmitter.on(DOOR_UPDATE_EVENT, (doors: Door[]) => {
     setDoors(doors)
   })
+  
 
   Input = React.memo(() => (
     <div
@@ -256,6 +268,61 @@ if(doors){
 }
 
 
+sendEvent(EVENT_EVENT,"/event check")
+getCount()
+setInterval(getCount, 1000);
+
+function getCount(){
+  let eventName = localStorage.event.split(",")[0]
+  let eventStart = localStorage.event.split(",")[1]
+  let eventEnd = localStorage.event.split(",")[2]
+
+  var now = Date.now();
+  var countdown = eventStart - now;
+  var countup = eventEnd - now;
+  let cd = document.getElementById('countDown')
+  if(countdown > 0){
+
+  const days = Math.floor(countdown / 86400000)
+  const hours = Math.floor((countdown - (days * 1.15741e-8)) / 3.6e+6)
+  const minutes = Math.round((countdown - (days * 1.15741e-8) - (hours * 3.6e+6)) / 60000)
+  const seconds = Math.round((countdown - (days * 1.15741e-8) - (hours * 3.6e+6) - (minutes * 60000)) / 1000 + 30)
+
+  let timestamp = countdown > 86400000
+  ? `${days} days ${hours} hours ${minutes} minutes`
+  : countdown < 3.6e+6 ? `${minutes} minutes ${seconds} seconds` : `${hours} hours ${minutes} minutes ${seconds} seconds`
+  if(cd){
+    cd.innerHTML = eventName + " " + timestamp;
+  }
+    return timestamp
+  }else 
+  if(countup > 0){
+    if(localStorage.eventStart !== localStorage.event){
+    localStorage.eventStart = localStorage.event
+    pushToLog("The floor has flooded")
+    }
+  const days = Math.floor(countup / 86400000)
+  const hours = Math.floor((countup - (days * 1.15741e-8)) / 3.6e+6)
+  const minutes = Math.round((countup - (days * 1.15741e-8) - (hours * 3.6e+6)) / 60000)
+  const seconds = Math.round((countup - (days * 1.15741e-8) - (hours * 3.6e+6) - (minutes * 60000)) / 1000 + 30)
+  
+  let timestamp = countdown > 86400000
+  ? `${days} days ${hours} hours ${minutes} minutes`
+  : countdown < 3.6e+6 ? `${minutes} minutes ${seconds} seconds` : `${hours} hours ${minutes} minutes ${seconds} seconds`
+  
+  if(cd){
+  cd.innerHTML = eventName + " " + timestamp + " to end";
+  }
+  }else
+    if(cd){
+      cd.innerHTML = "";
+      //investigate command spam
+      sendEvent(EVENT_EVENT,"/event check")
+    }
+    
+  } 
+ 
+
   return (
     <main
     >
@@ -359,6 +426,9 @@ if(doors){
       </div>
           </div>
         </div>  
+        <span id = "button"><p id = "countDown"></p></span>
+
+        
         
       <div className ="title">
         <span id="title">MUDGOLT.COM</span>

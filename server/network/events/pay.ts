@@ -17,6 +17,13 @@ import {
   getPlayerById, 
   payPlayer,
 } from "../../services/player"
+import {
+  getCurrentEvent,
+  clearOldEvents,
+  getUpcomingEvents,
+  getCountdown,
+  getDateString,
+} from "../../services/event"
 import { GOLT } from "../../../constants"
 
 const handler: NetworkEventHandler = async (socket, playerID: number) => {
