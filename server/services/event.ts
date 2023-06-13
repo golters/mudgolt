@@ -173,6 +173,21 @@ export const clearOldEvents = async (time: number): Promise<void> => {
 }
 
 export const fishWinner = async (event: number): Promise<void> => {
+  const fishCheck = await db.get<Event>(/*sql*/`
+    SELECT * FROM events 
+    WHERE "id" = $1 
+  `, [event])	
+  if(fishCheck?.type !== "Fishing_Tournament"){
+
+    return
+  }
+
+  await db.run(/*sql*/`
+    UPDATE events
+      SET type = $1
+      WHERE id = $2;
+  `, ["", event])
+  //running multiple times when should only happen once
   const score = await db.all<EventTag[]>(/*sql*/`
   SELECT * FROM eventTags 
   WHERE eventId = $1

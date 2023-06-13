@@ -136,7 +136,7 @@ const handler: NetworkEventHandler = (context: AudioContext) => {
     localStorage.Mstep = 0
   }
   if(localStorage.volume === undefined){
-    localStorage.volume = 0.2
+    localStorage.volume = 0
   }
   if(Number(localStorage.Mstep) < 0 || Number(localStorage.Mstep) >= 96){
     localStorage.Mstep = 0

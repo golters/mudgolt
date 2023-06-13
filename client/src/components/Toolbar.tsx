@@ -299,7 +299,7 @@ function getCount(){
   if(countup > 0){
     if(localStorage.eventStart !== localStorage.event){
     localStorage.eventStart = localStorage.event
-    pushToLog("The floor has flooded")
+    pushToLog("The floor has flooded with water! use /fish to try catch something")
     }
   const days = Math.floor(countup / 86400000)
   const hours = Math.floor((countup - (days * 1.15741e-8)) / 3.6e+6)

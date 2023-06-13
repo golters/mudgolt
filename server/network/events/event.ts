@@ -124,7 +124,7 @@ const handler: NetworkEventHandler = async (
         const event = await getCurrentEvent(Date.now())
         if(event && event.type === "Fishing_Tournament"){
           const fishSucess = Math.random() * 100
-          if(fishSucess > 90){
+          if(fishSucess > 50){
             const room = await (await getRoomById(player.roomId)).name
             const roomarray = room.split(/(?:-|_| )+/)
             for(let i = 0; i < roomarray.length; i++){
