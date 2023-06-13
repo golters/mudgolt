@@ -187,7 +187,7 @@ export const fishWinner = async (event: number): Promise<void> => {
       SET type = $1
       WHERE id = $2;
   `, ["", event])
-  //running multiple times when should only happen once
+  
   const score = await db.all<EventTag[]>(/*sql*/`
   SELECT * FROM eventTags 
   WHERE eventId = $1
