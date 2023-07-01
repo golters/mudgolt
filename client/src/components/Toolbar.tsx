@@ -57,7 +57,7 @@ const symbols = [
   {id: "water", chars:["⛆","﹏","〰","﹌","𐩘","෴","𓆛","𓆜","𓆝","𓆞","𓆟"]},
   {id: "sky", chars:["☁","☀","★","☆","⛈","✦","✧","𓅛"]},
   {id: "bear", chars:["ﻌ","Ҁ","ҁ","⟟","⧪","ᴥ","ʔ","ʕ","ꮂ","㉨","ｴ","•","ᶘ","ᶅ"]},
-  {id: "music", chars:["█","▓","▒","░","◆","◇","◈","◐","◑","◒","◓","★","☆","☀","☁","♠","♡","♣","♢"]},
+  {id: "music", chars:["👁","✈","✉","✐","∙"]},
 ]
 
 const commands = [
@@ -299,7 +299,12 @@ function getCount(){
   if(countup > 0){
     if(localStorage.eventStart !== localStorage.event){
     localStorage.eventStart = localStorage.event
-    pushToLog("The floor has flooded with water! use /fish to try catch something")
+    if(eventName === "Fishing_Tournament"){
+    pushToLog(/* html */`The floor has flooded with water! use <code>/fish</code> to try catch something`)
+    }
+    if(eventName === "Zombie_Invasion"){
+    pushToLog(/* html */`A green mist crawls across the floor. Tonight the dead will rise!`)
+    }
     }
   const days = Math.floor(countup / 86400000)
   const hours = Math.floor((countup - (days * 1.15741e-8)) / 3.6e+6)
@@ -317,7 +322,7 @@ function getCount(){
     if(cd){
       cd.innerHTML = "";
       //investigate command spam
-      sendEvent(EVENT_EVENT,"/event check")
+      //sendEvent(EVENT_EVENT,"/event check")
     }
     
   } 

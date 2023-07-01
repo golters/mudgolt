@@ -1,7 +1,8 @@
 /* eslint-disable camelcase */
 import { error } from "console"
 import {
-  Event, EventTag,
+  Door,
+  Event, EventTag, Room, Player,
 } from "../../@types"
 import {
   db,
@@ -9,12 +10,17 @@ import {
 import {
   broadcast,
   broadcastToUser,
+  broadcastToRoom,
+  online,
 } from "../network"
 import {
   LOG_EVENT,
+  NOTIFICATION_EVENT,
+  SERVER_LOG_EVENT,
 } from "../../events"
-import { getPlayerById } from "./player"
+import { getPlayerById, getPlayerByRoom, getPlayerByUsername, getRecentlyOnline } from "./player"
 import { createItem,setItemBio } from "./item"
+import { getDoorsIntoRoom } from "./door"
 
 export const events = [
   "Zombie_Invasion",
@@ -25,9 +31,10 @@ export const events = [
   "Summoning_Ritual",
   "Dimensional_Rift",
   "Nuclear_Fallout",
+  "Cryptid_Hunt",
+  "Monopoly",
 ]
-//add murder mystery/cluedo event
-//add monopoly event
+//add murder mystery/cluedo, treasure hunt, circus, heist events
 //add bear week event that only triggers august 11th for 7 days
 //add events for every major holiday
 //add quest events e.g. draw banners, describe rooms etc
@@ -45,15 +52,16 @@ export const createEvent = async (type: string, start: number, end: number): Pro
     //throw new Error("Event overlaps with another")
 
     return
+  }else{
+    await db.get(/*sql*/`
+      INSERT INTO events ("type", "start", "end")
+        VALUES ($1, $2, $3);
+    `, [
+      type,
+      start,
+      end,
+    ])
   }
-  await db.get(/*sql*/`
-    INSERT INTO events ("type", "start", "end")
-      VALUES ($1, $2, $3);
-  `, [
-    type,
-    start,
-    end,
-  ])
 
   return
 }
@@ -111,18 +119,20 @@ export const getEventByType = async (type: string): Promise<Event> => {
   return event
 }
 
-export const getCurrentEvent = async (time: number): Promise<Event | null> => {
+export const getCurrentEvent = async (time: number): Promise<Event|undefined> => {
   const event = await db.get<Event>(/*sql*/`
     SELECT * FROM events WHERE "start" <= $1 AND "end" >= $1;
   `, [time])
 
-  if (!event) {
-    const oops = null
-
-    return oops
-  }
-  
   return event
+}
+
+export const getEventTag = async (id:number, type: string, event:number): Promise<EventTag|undefined> => {
+  const eventTag = await db.get<EventTag>(/*sql*/`
+    SELECT * FROM eventTags WHERE id = $1 AND type = $2 AND eventId = $3;
+  `, [id, type, event])
+
+  return eventTag
 }
 
 export const getUpcomingEvents = async (time: number): Promise<Event[]> => {
@@ -144,56 +154,82 @@ export const clearOldEvents = async (time: number): Promise<void> => {
   for(let i = 0; i < oldEvents.length; i++){
     const eventId = oldEvents[i].id
 
-    if(oldEvents[i].type === "Fishing_Tournament"){
-      await fishWinner(eventId)
+    
+    const score = await db.all<EventTag[]>(/*sql*/`
+    SELECT * FROM eventTags 
+    WHERE eventId = $1
+    AND type = ('player')
+  `, [oldEvents[i].id])	
+    broadcast<string>(SERVER_LOG_EVENT, score.length.toString())
+
+    //is spamming because events backlog and only clear when a user is active
+    //also triggers on draw on banner???
+    switch (oldEvents[i].type){
+      case "Fishing_Tournament":
+
+        await fishWinner(score)
+
+        await db.run(/*sql*/`
+          DELETE FROM eventTags 
+          WHERE "eventId" = $1;
+        `, [eventId])	
+    
+        await db.run(/*sql*/`
+        DELETE FROM events 
+        WHERE "id" = $1; 
+      `, [eventId])	
+
+        break
+      case "Zombie_Invasion":
+
+        const infected = score.map(x => x.id)
+        online.forEach(user => {
+          if(!infected.includes(user.player.id)){
+            broadcastToUser<string>(SERVER_LOG_EVENT, "You survived the zombie invasion", user?.player.username)      
+          }else{
+            broadcastToUser<string>(SERVER_LOG_EVENT, "Your immune system has fought off the zombie infection", user?.player.username) 
+          }
+        
+        });
+        broadcast<string>(LOG_EVENT, "The zombies burrow back into the dirt")
+
+        await db.run(/*sql*/`
+          DELETE FROM eventTags 
+          WHERE "eventId" = $1;
+        `, [eventId])	
+    
+        await db.run(/*sql*/`
+        DELETE FROM events 
+        WHERE "id" = $1; 
+      `, [eventId])	
+        break
+      default:
+        await db.run(/*sql*/`
+          DELETE FROM eventTags 
+          WHERE "eventId" = $1;
+        `, [eventId])	
+    
+        await db.run(/*sql*/`
+        DELETE FROM events 
+        WHERE "id" = $1; 
+      `, [eventId])	
+
+        break
     }
-
-    await db.run(/*sql*/`
-      DELETE FROM eventTags 
-      WHERE "eventId" = $1;
-    `, [eventId])	
-
-    await db.run(/*sql*/`
-    DELETE FROM events 
-    WHERE "id" = $1; 
-  `, [eventId])	
   }
 
   //old tags clearup
-  const allEvents = await db.all<number[]>(/*sql*/`
-    SELECT id FROM events 
-  `)	
   await db.run(/*sql*/`
       DELETE FROM eventTags 
-      WHERE "eventId" IN ($1)
-    `, [allEvents])	
+      WHERE "eventId" NOT IN (SELECT id FROM events)
+    `)	
 
 
   return
 }
 
-export const fishWinner = async (event: number): Promise<void> => {
-  const fishCheck = await db.get<Event>(/*sql*/`
-    SELECT * FROM events 
-    WHERE "id" = $1 
-  `, [event])	
-  if(fishCheck?.type !== "Fishing_Tournament"){
 
-    return
-  }
-
-  await db.run(/*sql*/`
-    UPDATE events
-      SET type = $1
-      WHERE id = $2;
-  `, ["", event])
-  
-  const score = await db.all<EventTag[]>(/*sql*/`
-  SELECT * FROM eventTags 
-  WHERE eventId = $1
-  AND type = ('player')
-`, [event])	
-
+export const fishWinner = async (score: EventTag[]): Promise<void> => {
   const scoreBoard = score.sort((a, b) => Number(b.info.split(",").reduce(function(prev, current){
     return ((Number(prev) + Number(current)).toString())
   }))-Number(b.info.split(",").reduce(function(prev, current){
@@ -212,7 +248,7 @@ export const fishWinner = async (event: number): Promise<void> => {
     }
     if(i > 3){
       broadcastToUser<string>(LOG_EVENT, "you came in " + (i+1) +  " in the fishing tournament! with " + points + " points", user?.username)
-    }else{    
+    }else {    
       const [formattedDate] = new Date(Date.now())
         .toLocaleString()
         .split(",")
@@ -223,40 +259,194 @@ export const fishWinner = async (event: number): Promise<void> => {
           const goldtrophy = await createItem(user.id, "Gold_Fishing_Trophy")
           await setItemBio(goldtrophy.id, "A 1st place fishing tournament trophy won by " + user.username + " on " + timestamp)
           broadcast<string>(LOG_EVENT, user.username + " won the fishing tournament! with " + points + " points")
+          broadcastToUser<string>(SERVER_LOG_EVENT, "you got a gold trophy", user?.username)
+          broadcastToUser<string>(NOTIFICATION_EVENT, "gotmail", user?.username); 
 
           break;
         case 1:
           broadcastToUser<string>(LOG_EVENT, "you came 2nd in the fishing tournament! with " + points + " points", user?.username)
+          broadcastToUser<string>(SERVER_LOG_EVENT, "you got a silver trophy", user?.username)
           const silvertrophy = await createItem(user.id, "Silver_Fishing_Trophy")
           await setItemBio(silvertrophy.id, "A 2nd place fishing tournament trophy won by " + user.username + " on " + timestamp)
+          broadcastToUser<string>(NOTIFICATION_EVENT, "gotmail", user?.username); 
 
           break;
         case 2:
           broadcastToUser<string>(LOG_EVENT, "you came 3rd in the fishing tournament! with " + points + " points", user?.username)
+          broadcastToUser<string>(SERVER_LOG_EVENT, "you got a bronze trophy", user?.username)
           const bronzetrophy = await createItem(user.id, "Bronze_Fishing_Trophy")
           await setItemBio(bronzetrophy.id, "A 3rd place fishing tournament trophy won by " + user.username + " on " + timestamp)
+          broadcastToUser<string>(NOTIFICATION_EVENT, "gotmail", user?.username); 
 
           break;
+      }      
+    }
+  }
+
+  return
+}
+
+export const getZombieRooms = async (event: number): Promise<Room[]> => {
+  const zombieRooms = await db.all<Room[]>(/*sql*/`
+  SELECT * FROM rooms WHERE id IN (SELECT id FROM eventTags WHERE type = $1
+  AND eventId = $2);
+  `, ["room", event])
+
+  return zombieRooms
+}
+
+export const getZombieDoors = async (room: number, event: number): Promise<Door[]> => {
+  const zombiedoors = await db.all<Door[]>(/*sql*/`
+  SELECT * FROM doors WHERE target_room_id IN (SELECT id FROM rooms WHERE id IN (SELECT id FROM eventTags WHERE type = $1
+  AND eventId = $2)) 
+  AND room_id = $3;
+`, ["room", event, room])
+
+  return zombiedoors
+}
+
+export const moveZombies = async (event: number): Promise<void> => {
+  const infectedRooms = await db.all<Room[]>(/*sql*/`
+  SELECT id FROM eventTags WHERE type = $1
+  AND eventId = $2 AND info = "infected";
+`, ["room", event])
+  
+  const infectedRooms2 = await db.all<EventTag[]>(/*sql*/`
+SELECT * FROM eventTags WHERE type = $1
+AND eventId = $2;
+`, ["room", event])
+
+  if(infectedRooms2.length < 1){
+    //infect random room
+    const rooms = await db.all<Room[]>(/*sql*/`
+    SELECT * FROM rooms;
+  `)
+    if(!rooms){
+      return
+    }
+    const roomid = 1
+    const timer = Date.now() + (Math.random() * 1 * 60000)
+    await createEventTag(roomid, "room", timer.toString(), event)
+    broadcastToRoom<string>(SERVER_LOG_EVENT, "a hoard of zombies burst into the room. leave quickly!", roomid); 
+    const zdoors = await getDoorsIntoRoom(roomid)
+    zdoors.forEach(door => {            
+      broadcastToRoom<string>(SERVER_LOG_EVENT, "zombies are trying to get in through " + door.name, door.room_id); 
+    });
+
+    return
+  }
+  for(let i = 0; i < infectedRooms2.length; i++){
+    if(!Number.isNaN(infectedRooms2[i].info) && Number(infectedRooms2[i].info) < Date.now()){
+      await db.run(/*sql*/`
+  UPDATE eventTags
+    SET info = "infected"
+    WHERE info = $1;
+`, [infectedRooms2[i].info])
+    }
+  }
+
+
+  //for each room
+  for(let i = 0; i < infectedRooms.length; i++){
+    const zombiedoors = await db.all<Door[]>(/*sql*/`
+    SELECT * FROM doors WHERE target_room_id = $1;
+  `, [infectedRooms[i].id])
+  
+    if(zombiedoors.length > 0){
+      for(let z = 0; z < zombiedoors.length; z++){
+        const roomcheck = await getZombieRooms(event)
+
+        const zcheck = roomcheck.map(x => x.id);
+        if(!zcheck.includes(zombiedoors[z].room_id)){
+          const timer = Date.now() + (Math.random() * 5 * 60000)
+          await createEventTag(zombiedoors[z].room_id, "room", timer.toString(), event)
+          broadcastToRoom<string>(SERVER_LOG_EVENT, "a hoard of zombies burst into the room. leave quickly!", zombiedoors[z].room_id); 
+          broadcastToRoom<string>(NOTIFICATION_EVENT, "zombie", zombiedoors[z].room_id)
+          const zdoors = await getDoorsIntoRoom(zombiedoors[z].room_id)
+          zdoors.forEach(door => {            
+            broadcastToRoom<string>(SERVER_LOG_EVENT, "zombies are trying to get in through " + door.name, door.room_id); 
+            broadcastToRoom<string>(NOTIFICATION_EVENT, "zombie", zombiedoors[z].room_id)
+          });
+        }
+      }
+    }
+
+  }
+  await infectPlayer(event)
+
+
+  return
+}
+
+export const infectPlayer = async(event: number): Promise<void> => {
+  //get infected rooms
+  const zrooms = await db.all<Room[]>(/*sql*/`
+  SELECT * FROM rooms WHERE id IN (SELECT id FROM eventTags WHERE type = $1
+  AND eventId = $2 AND info = "infected");
+  `, ["room", event])
+  //get player by room  
+  const infectedPlayers = await db.all<EventTag[]>(/*sql*/`
+      SELECT * FROM eventTags WHERE type = $1
+      AND eventId = $2;
+      `, ["player", event])
+  const infectedPlayerMap = infectedPlayers.map(x => x.id)
+  
+  for(let z = 0; z < zrooms.length; z++){
+    const zplayers = await getPlayerByRoom(zrooms[z].id)
+    for(let p = 0; p < zplayers.length; p++){
+      if(Math.random() > 0.5){
+        if(!zplayers[p]){
+          return
+        }
+        if(!infectedPlayerMap.includes(zplayers[p].id)){
+          await createEventTag(zplayers[p].id, "player", "infected", event)
+          broadcastToUser<string>(SERVER_LOG_EVENT, "you have been bitten by a zombie. use /Bite [user] to spread the infection", zplayers[p].username)
+          broadcastToUser<string>(NOTIFICATION_EVENT, "zombie", zplayers[p].username)
+        }
       }
     }
   }
-  
-  await db.run(/*sql*/`
-  DELETE FROM eventTags 
-  WHERE "eventId" = $1;
-`, [event])	
+
+  return
+}
+
+export const bitePlayer = async(event: number, player:string, zombie:number): Promise<void> => {
+  const bitee = await getPlayerByUsername(player)
+  const biter = await getPlayerById(zombie)
+  if(!bitee){
+    throw new Error("There is no brain with that name")
+  }
+  if(!biter){
+    
+    return
+  }
+  if(bitee?.roomId === biter?.roomId){
+    const infectedPlayers = await db.all<EventTag[]>(/*sql*/`
+        SELECT * FROM eventTags WHERE type = $1
+        AND eventId = $2;
+        `, ["player", event])
+    const infectedPlayerMap = infectedPlayers.map(x => x.id)
+    if(!infectedPlayerMap.includes(bitee.id)){
+      await createEventTag(bitee.id, "player", "infected", event)
+      broadcastToUser<string>(SERVER_LOG_EVENT, "you have been bitten by a zombie. use /Bite [user] to spread the infection", bitee.username)
+      broadcastToUser<string>(NOTIFICATION_EVENT, "zombie", bitee.username)
+    }
+    broadcastToRoom<string>(SERVER_LOG_EVENT, biter.username + " has bitten " + bitee.username, bitee.roomId)
+  }else{    
+    throw new Error("They are out of range of your teeth and also in another room")
+  }
 
   return
 }
 
 export const createRandomEvent = async (time: number): Promise<void> => {
   const upcomingEvents = getUpcomingEvents(time)
-  if ((await upcomingEvents).length < 3){
-    const start = Math.random() * 10 * 60000
-    const length = Math.random() * 10 * 60000
+  if ((await upcomingEvents).length < 1){
+    const start = 1 * 6000
+    const length = 3 * 60000
     const type = Math.random() * (await events).length
     //createEvent(events[Math.round(type)],time + start, time + start + length)
-    createEvent(events[1],time + start, time + start + length)
+    createEvent(events[0],time + start, time + start + length)
   }
 
   return

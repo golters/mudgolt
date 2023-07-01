@@ -26,7 +26,9 @@ import {
 } from "../../../@types"
 import {
   clearOldEvents,
-  createEvent, createEventTag, createRandomEvent, fishWinner, getCurrentEvent, getUpcomingEvents, givePoints,
+  createEvent, createEventTag, createRandomEvent, fishWinner, getCurrentEvent, getUpcomingEvents, givePoints, moveZombies,
+  getEventTag,
+  bitePlayer,
 } from "../../services/event"
 import {
   insertRoomChat,
@@ -75,6 +77,8 @@ const handler: NetworkEventHandler = async (
     }
   
     const now = new Date();
+    
+    const event = await getCurrentEvent(Date.now())
     switch(args[0]){
       case "/event":
         switch(args[1]){
@@ -121,10 +125,9 @@ const handler: NetworkEventHandler = async (
 
         return;
       case "/fish":
-        const event = await getCurrentEvent(Date.now())
         if(event && event.type === "Fishing_Tournament"){
           const fishSucess = Math.random() * 100
-          if(fishSucess > 90){
+          if(fishSucess > 90-((Number(String(player.roomId).slice(-1))/2)*10)){
             const room = await (await getRoomById(player.roomId)).name
             const roomarray = room.split(/(?:-|_| )+/)
             for(let i = 0; i < roomarray.length; i++){
@@ -152,6 +155,7 @@ const handler: NetworkEventHandler = async (
           }else{
             broadcastToUser<string>(SERVER_LOG_EVENT, "you caught nothing, try again", player.username); 
           }
+          broadcastToUser<string>(NOTIFICATION_EVENT, "fish", player.username); 
           
         }else{
           broadcastToRoom<Chat>(CHAT_EVENT, chat, player.roomId)  
@@ -160,6 +164,25 @@ const handler: NetworkEventHandler = async (
         }
 
         return;
+      case "/bite":
+        if(event && event.type === "Zombie_Invasion"){
+          const tag = await getEventTag(player.id, "player", event.id)
+          if(tag){
+            if(args.length === 2){
+              await bitePlayer(event.id, args[1], player.id)
+            }else{
+              broadcastToUser<string>(ERROR_EVENT,"bite who?", player.username); 
+            }
+          }
+        }
+
+        break;
+      case "/zombie":
+        if(event){
+          await moveZombies(event?.id)
+        }
+
+        break;
     }    
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)

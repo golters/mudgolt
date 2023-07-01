@@ -1,5 +1,6 @@
 import {
   Room, 
+  Event,
 } from "../../@types"
 import {
   db,
@@ -22,6 +23,7 @@ import {
 import {
   getItemByRoom,
 } from "./item"
+import { getCurrentEvent, getZombieDoors, getZombieRooms } from "./event"
 
 export const generateBanner = () => {
   return new Array(BANNER_WIDTH * BANNER_HEIGHT)
@@ -158,6 +160,23 @@ export const lookByID = async (id: number): Promise<string> => {
   } else {
     message = `${message}\nthere are no exits`
   }  
+
+  const event = await getCurrentEvent(Date.now())
+  if(event && event.type === "Zombie_Invasion") {
+    const zombies = await getZombieDoors(id, event.id)
+    const zroom = await getZombieRooms(event.id)
+    const zroomid = zroom.map(x => x.id)
+    if(zroomid.includes(id)){
+      message = `${message}\nthis room is crawling with zombies`
+    }else
+    if(zombies.length > 0){
+      const znames = zombies.map(x => x.name);
+      message = `${message}\nzombies are trying to get in through ${znames}`
+    }else {
+      message = `${message}\nthere are no zombies trying to get in... yet`
+    }
+  }
+
 
   return message
 }

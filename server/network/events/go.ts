@@ -31,6 +31,10 @@ import {
   getMusicByRoom,
   updateRoomMusic,
 } from "../../services/music"
+import {
+  getCurrentEvent,
+  getEventTag,
+} from "../../services/event"
 
 const handler: NetworkEventHandler = async (socket, doorName: string, player) => {
   try {
@@ -65,12 +69,26 @@ const handler: NetworkEventHandler = async (socket, doorName: string, player) =>
       sendEvent<Music>(socket, MUSIC_UPDATE_EVENT, oldMusic)
     }
     
+    let leaveMessage = `${player.username} has left ${oldRoom.name} through the ${doorName}`
+    let enterMessage = `${player.username} has joined ${room.name}`
+    const event = await getCurrentEvent(Date.now())
+    if(event){
+      if(event.type === "Zombie_Invasion"){
+        const tag = await getEventTag(player.id, "player", event.id)
+        if(tag){
+          leaveMessage = `${player.username} shuffles out of ${oldRoom.name} through the ${doorName}`
+          enterMessage = `${player.username} shuffled into ${room.name}`
+          broadcastToRoom<string>(NOTIFICATION_EVENT, "zombie", oldRoom.id);
+          broadcastToRoom<string>(NOTIFICATION_EVENT, "zombie", room.id)
+        }
+      }
+    }
     broadcastToRoom<Room>(ROOM_UPDATE_EVENT, oldRoom, oldRoom.id)
-    broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has left ${oldRoom.name} through the ${doorName}`, oldRoom.id)
+    broadcastToRoom<string>(SERVER_LOG_EVENT, leaveMessage, oldRoom.id)
     broadcastToRoom<string>(NOTIFICATION_EVENT, "doorExit", oldRoom.id);
     //await insertRoomCommand(oldRoom.id, player.id, `has left ${oldRoom.name} through the ${doorName}`, Date.now(), "go")
     broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
-    broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has joined ${room.name}`, room.id)
+    broadcastToRoom<string>(SERVER_LOG_EVENT, enterMessage, room.id)
     broadcastToRoom<string>(NOTIFICATION_EVENT, "doorEnter", room.id)
     //await insertRoomCommand(room.id, player.id, `has joined ${room.name}`, Date.now(), "go")
     sendEvent<string>(socket, LOG_EVENT, message)    

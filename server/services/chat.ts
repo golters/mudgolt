@@ -1,7 +1,8 @@
-import { Chat, ChatHistory, Player } from "../../@types"
+import { Chat, ChatHistory, Player, Event } from "../../@types"
 import {
   db, 
 } from "../store"
+import { getCurrentEvent } from "./event"
 
 export const insertRoomChat = async (roomId: number, fromPlayerId: number, message: string, date: number) => {
   await db.run(/*sql*/`

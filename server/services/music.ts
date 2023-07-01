@@ -73,8 +73,8 @@ export const editMusic = async (x: number, y: number, character: string, room: R
   if(music === undefined){
     throw new Error("music doesn't exist")
   }
-
-  const banner = music.banner.split("")
+  
+  const banner = Array.from(music.banner);
 
   banner[pos] = character
 

@@ -17,9 +17,14 @@ import {
   getItemByPlayer,
   getItemByRoom,
 } from "../../services/item"
+import {
+  getCurrentEvent,
+  getEventTag,
+} from "../../services/event"
 
 const handler: NetworkEventHandler = async (socket, args: string[], player) => {
   try {
+    const event = await getCurrentEvent(Date.now())
     let players = await getPlayerByRoom(player.roomId);
     let items = await getItemByRoom(player.roomId);
     let inventory = await getItemByPlayer(player.id);
@@ -39,7 +44,16 @@ const handler: NetworkEventHandler = async (socket, args: string[], player) => {
       }
     });
     if(players.length > 0){
-      sendEvent<string>(socket, LOG_EVENT, `${players[0].description}`)
+      let playerDesc = players[0].description
+      if(event){
+        if(event.type === "Zombie_Invasion"){
+          const tag = await getEventTag(players[0].id, "player", event.id)
+          if(tag){
+            playerDesc = "A ghoulish zombie. " + playerDesc
+          }
+        }
+      }
+      sendEvent<string>(socket, LOG_EVENT, playerDesc)
     }else if (items.length > 0){
       sendEvent<string>(socket, LOG_EVENT, `${items[0].description}`)
     }else if (inventory.length > 0){
