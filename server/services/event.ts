@@ -160,7 +160,6 @@ export const clearOldEvents = async (time: number): Promise<void> => {
     WHERE eventId = $1
     AND type = ('player')
   `, [oldEvents[i].id])	
-    broadcast<string>(SERVER_LOG_EVENT, score.length.toString())
 
     //is spamming because events backlog and only clear when a user is active
     //also triggers on draw on banner???
@@ -444,9 +443,9 @@ export const createRandomEvent = async (time: number): Promise<void> => {
   if ((await upcomingEvents).length < 1){
     const start = 1 * 6000
     const length = 3 * 60000
-    const type = Math.random() * (await events).length
-    //createEvent(events[Math.round(type)],time + start, time + start + length)
-    createEvent(events[0],time + start, time + start + length)
+    const type = Math.random() * 1
+    createEvent(events[Math.round(type)],time + start, time + start + length)
+    //createEvent(events[0],time + start, time + start + length)
   }
 
   return

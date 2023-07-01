@@ -321,8 +321,6 @@ function getCount(){
   }else
     if(cd){
       cd.innerHTML = "";
-      //investigate command spam
-      //sendEvent(EVENT_EVENT,"/event check")
     }
     
   } 
