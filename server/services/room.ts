@@ -1,5 +1,7 @@
 import {
   Room, 
+  Event,
+  EventTag,
 } from "../../@types"
 import {
   db,
@@ -22,6 +24,7 @@ import {
 import {
   getItemByRoom,
 } from "./item"
+import { getAllBearNames, getBearName, getCurrentEvent, getZombieDoors, getZombieRooms } from "./event"
 
 export const generateBanner = () => {
   return new Array(BANNER_WIDTH * BANNER_HEIGHT)
@@ -121,12 +124,22 @@ export const lookByID = async (id: number): Promise<string> => {
   const room = await getRoomById(id)
 
   let message = `${room.description}\nyou see`
+  const event = await getCurrentEvent(Date.now())
 
-  online.forEach(({ player }) => {
-    if (player.roomId == room.id) {
-      message = `${message} ${player.username}`
+  if(event?.type === "Bear_Week"){
+    for (let i = 0; i < online.length; i++){   
+      if (online[i].player.roomId == room.id) { 
+        const bearTag = await getBearName(event?.id, online[i].player.id)
+        message = `${message} ${bearTag}`
+      }
     }
-  })
+  }else{
+    online.forEach(({ player }) => {
+      if (player.roomId == room.id) {
+        message = `${message} ${player.username}`
+      }
+    })
+  }
 
   const doors = await getDoorByRoom(id)
   const names = doors.map(x => x.name);
@@ -158,6 +171,22 @@ export const lookByID = async (id: number): Promise<string> => {
   } else {
     message = `${message}\nthere are no exits`
   }  
+
+  if(event && event.type === "Zombie_Invasion") {
+    const zombies = await getZombieDoors(id, event.id)
+    const zroom = await getZombieRooms(event.id)
+    const zroomid = zroom.map(x => x.id)
+    if(zroomid.includes(id)){
+      message = `${message}\nthis room is crawling with zombies`
+    }else
+    if(zombies.length > 0){
+      const znames = zombies.map(x => x.name);
+      message = `${message}\nzombies are trying to get in through ${znames}`
+    }else {
+      message = `${message}\nthere are no zombies trying to get in... yet`
+    }
+  }
+
 
   return message
 }

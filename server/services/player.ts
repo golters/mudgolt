@@ -13,6 +13,7 @@ import { broadcastToUser, online } from "../network"
 import { DAILY_PAY, PAY_RATE, PAY_TIME } from "../../constants"
 import { SERVER_LOG_EVENT } from "../../events"
 import { insertWhisper } from "./chat"
+import { getCurrentEvent,getZombieDoors } from "./event"
 
 export const updateOnlinePlayerById = (playerId: number, newPlayer: Partial<Player>) => {
   online.find(({ player }) => {
@@ -104,6 +105,12 @@ export const setPlayerRoomByName = async (playerId: number, roomName: string): P
   const newPlayer = await getPlayerById(playerId) as Player
 
   updateOnlinePlayerById(playerId, newPlayer)
+
+  
+  const event = await getCurrentEvent(Date.now())
+  if(event && event.type === "Zombie_Invasion") {
+    //infect player
+  }
 
   return room
 }

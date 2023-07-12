@@ -109,6 +109,21 @@ export const initStore = async () => {
       FOREIGN KEY("player3") REFERENCES players("id"),
       FOREIGN KEY("player4") REFERENCES players("id")
     );
+
+    CREATE TABLE IF NOT EXISTS eventTags (
+      "id" INTEGER,
+      "type" TEXT NOT NULL,
+      "info" TEXT,
+      "eventId" INTEGER
+    );
+
+    CREATE TABLE IF NOT EXISTS events (
+      "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+      "type" TEXT NOT NULL,
+      "start" INTEGER NOT NULL,
+      "end" INTEGER NOT NULL
+    );
+
   `)
 
   const rooms = await db.all(/*sql*/`

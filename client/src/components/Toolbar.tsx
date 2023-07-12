@@ -7,6 +7,8 @@ import {
   GO_EVENT,
   MAKE_POST_EVENT,
   TOOLBAR_UPDATE_EVENT,
+  EVENT_EVENT,
+  SERVER_LOG_EVENT,
 } from "../../../events"
 import {
   store,
@@ -28,6 +30,10 @@ import { commandModules } from "../../src/commands"
 import { colorUtil } from "../../src/utils"
 import { VALID_COLOR_THEMES } from "../../src/utils/color"
 import { Volume } from "src/commands/volume"
+import {
+  commandEmitter, 
+} from "../commands/emitter"
+import { pushToLog } from "./Terminal"
 
 const rooms: (string)[] = []
 let brushSymbols: (string)[] = ["█","▓","▒","░"]
@@ -51,7 +57,7 @@ const symbols = [
   {id: "water", chars:["⛆","﹏","〰","﹌","𐩘","෴","𓆛","𓆜","𓆝","𓆞","𓆟"]},
   {id: "sky", chars:["☁","☀","★","☆","⛈","✦","✧","𓅛"]},
   {id: "bear", chars:["ﻌ","Ҁ","ҁ","⟟","⧪","ᴥ","ʔ","ʕ","ꮂ","㉨","ｴ","•","ᶘ","ᶅ"]},
-  {id: "music", chars:["█","▓","▒","░","◆","◇","◈","◐","◑","◒","◓","★","☆","☀","☁","♠","♡","♣","♢"]},
+  {id: "music", chars:["👁","✈","✉","✐","∙"]},
 ]
 
 const commands = [
@@ -65,10 +71,15 @@ const commands = [
 
 let Input: ReturnType<typeof React.memo> | null = null
 
+let event: string = ""
+
+
+
 export const Toolbar: React.FC = () => { 
   const [volume, setVolume] = useState(localStorage.volume*10)
   const [doors, setDoors] = useState<Door[] | null>(null)
   let [roomMap, setRoomMap] = useState<(string)[]>(rooms)
+  let [event, setEvent] = useState<(string)>()
   const [muted, setMuted] = useState(!!localStorage.getItem("muted") || false)
   const [eye, setEye] = useState(false)
   const [plane, setPlane] = useState(false)
@@ -117,11 +128,12 @@ export const Toolbar: React.FC = () => {
     setTextLength(0)
     toggleForm()
   }
-  roomMap = []
+  roomMap = []  
   useEffect(() => {
   networkEmitter.on(DOOR_UPDATE_EVENT, (doors: Door[]) => {
     setDoors(doors)
   })
+  
 
   Input = React.memo(() => (
     <div
@@ -256,6 +268,70 @@ if(doors){
 }
 
 
+sendEvent(EVENT_EVENT,"/event check")
+getCount()
+setInterval(getCount, 1000);
+
+function getCount(){
+  let eventName = localStorage.event.split(",")[0]
+  let eventStart = localStorage.event.split(",")[1]
+  let eventEnd = localStorage.event.split(",")[2]
+
+  var now = Date.now();
+  var countdown = eventStart - now;
+  var countup = eventEnd - now;
+  let cd = document.getElementById('countDown')
+  let event = document.getElementById('eventName')
+  if(countdown > 0){
+      const days = Math.floor(countdown / 86400000)  
+    let milliseconds = Math.floor((countdown % 1000) / 100),
+      seconds = Math.floor((countdown / 1000) % 60),
+      minutes = Math.floor((countdown / (1000 * 60)) % 60),
+      hours = Math.floor((countdown / (1000 * 60 * 60)) % 24);  
+
+  let timestamp = countdown > 86400000 ? `${days} days`: hours + ":" + minutes + ":" + seconds
+  if(cd){
+    cd.innerHTML = eventName + " " + timestamp + " to start";
+  }
+    return timestamp
+  }else 
+  if(countup > 0){
+    if(localStorage.eventStart !== localStorage.event){
+    localStorage.eventStart = localStorage.event
+    switch (eventName){
+      case "Fishing_Tournament":
+        pushToLog(/* html */`The floor has flooded with water! use <code>/fish</code> to try catch something`)
+
+        break
+      case "Zombie_Invasion":
+        pushToLog(/* html */`A green mist crawls across the floor. Tonight the dead will rise!`)
+
+        break
+      case "Bear_Week":
+        pushToLog(/* html */`A Strange transformation has taken over you as you become a bear`)
+
+        break
+    }
+    }
+    const days = Math.floor(countup / 86400000)  
+  let milliseconds = Math.floor((countup % 1000) / 100),
+    seconds = Math.floor((countup / 1000) % 60),
+    minutes = Math.floor((countup / (1000 * 60)) % 60),
+    hours = Math.floor((countup / (1000 * 60 * 60)) % 24);  
+
+let timestamp = countup > 86400000 ? `${days} days`: hours + ":" + minutes + ":" + seconds
+  
+  if(cd){
+  cd.innerHTML = eventName + " " + timestamp + " to end";
+  }
+  }else
+    if(cd){
+      cd.innerHTML = "";
+    }
+    
+  } 
+ 
+
   return (
     <main
     >
@@ -359,6 +435,9 @@ if(doors){
       </div>
           </div>
         </div>  
+        <span id = "button"><p id = "countDown"></p></span>
+
+        
         
       <div className ="title">
         <span id="title">MUDGOLT.COM</span>

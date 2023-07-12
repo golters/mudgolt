@@ -1,7 +1,10 @@
-import { Chat, ChatHistory, Player } from "../../@types"
+import { broadcast } from "server/network"
+import { Chat, ChatHistory, Player, Event } from "../../@types"
 import {
   db, 
 } from "../store"
+import { getBearName, getCurrentEvent } from "./event"
+import { getPlayerByUsername } from "./player"
 
 export const insertRoomChat = async (roomId: number, fromPlayerId: number, message: string, date: number) => {
   await db.run(/*sql*/`
@@ -35,6 +38,7 @@ export const fetchRoomChats = async (roomId: number, limit = 500): Promise<Chat[
   `, [roomId])
 
   const playerIds: number[] = []
+  
 
   chatHistories.forEach(chatHistory => {
     if (playerIds.indexOf(chatHistory.fromPlayerId) === -1) {
@@ -46,6 +50,8 @@ export const fetchRoomChats = async (roomId: number, limit = 500): Promise<Chat[
   const players = await db.all<Player[]>(/*sql*/`
     SELECT id, username FROM players
   `)
+
+  const event = await getCurrentEvent(Date.now())
 
   const chats: Chat[] = chatHistories.map(({
     fromPlayerId,
@@ -65,6 +71,14 @@ export const fetchRoomChats = async (roomId: number, limit = 500): Promise<Chat[
 
     return chat
   })
+  
+  if(event?.type === "Bear_Week"){ 
+    for(let i = 0; i < chats.length; i++){
+      const bearname = await getBearName(event.id, 
+        chatHistories[i].fromPlayerId)
+      chats[i].player.username = bearname
+    }
+  }
   
   return chats
 }

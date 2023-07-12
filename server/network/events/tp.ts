@@ -34,6 +34,11 @@ import {
   getMusicByRoom,
   updateRoomMusic,
 } from "../../services/music"
+import {
+  getCurrentEvent,
+  getEventTag,
+  getBearName,
+} from "../../services/event"
 
 const handler: NetworkEventHandler = async (socket, roomNameInput: string, player) => {
   try {
@@ -79,13 +84,34 @@ const handler: NetworkEventHandler = async (socket, roomNameInput: string, playe
     }else{      
       sendEvent<Music>(socket, MUSIC_UPDATE_EVENT, oldMusic)
     }
+    const event = await getCurrentEvent(Date.now())
+    let username = player.username
+    if(event){
+      switch (event.type){
+        case "Zombie_Invasion":
+          const tag = await getEventTag(player.id, "player", event.id)
+          if(tag){
+            broadcastToRoom<string>(NOTIFICATION_EVENT, "zombie", oldRoom.id);
+            broadcastToRoom<string>(NOTIFICATION_EVENT, "zombie", room.id)
+          }
+  
+          break;
+        case "Bear_Week":
+          const bearname = await getBearName(event.id, player.id)
+          if(bearname){
+            username = bearname
+          }
+  
+          break;
+      }
+    }
 
     broadcastToRoom<Room>(ROOM_UPDATE_EVENT, oldRoom, oldRoom.id)
-    broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has teleported from ${oldRoom.name}`, oldRoom.id)
+    broadcastToRoom<string>(SERVER_LOG_EVENT, `${username} has teleported from ${oldRoom.name} like a zombie`, oldRoom.id)
     broadcastToRoom<string>(NOTIFICATION_EVENT, "teleportExit", oldRoom.id);
     //await insertRoomCommand(oldRoom.id, player.id, `has teleported from ${oldRoom.name}`, Date.now(), "tp")
     broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
-    broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} has teleported into ${room.name}`, room.id)
+    broadcastToRoom<string>(SERVER_LOG_EVENT, `${username} has teleported into ${room.name} like a zombie`, room.id)
     broadcastToRoom<string>(NOTIFICATION_EVENT, "teleportEnter", room.id);
     //await insertRoomCommand(room.id, player.id, `has teleported into ${room.name}`, Date.now(), "tp")
     sendEvent<string>(socket, LOG_EVENT, message)    
