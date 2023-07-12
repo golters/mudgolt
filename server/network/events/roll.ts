@@ -13,6 +13,10 @@ import {
 import {
   insertRoomCommand,
 } from "../../services/chat"
+import {
+  getCurrentEvent,
+  getBearName,
+} from "../../services/event"
 
 export interface DiceProps{
   count: number
@@ -31,10 +35,23 @@ const rollDice = (dice: DiceProps) => {
   return total;
 }
 
-const handler: NetworkEventHandler = (socket, dice: DiceProps, player: Player) => {
+const handler: NetworkEventHandler = async (socket, dice: DiceProps, player: Player) => {
   const result = rollDice(dice);
+  let username = player.username
+  const event = await getCurrentEvent(Date.now())    
+  if(event){
+    switch (event.type){
+      case "Bear_Week":
+        const bearname = await getBearName(event.id, player.id)
+        if(bearname){
+          username = bearname
+        }
 
-  broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} rolled ${dice.count}d${dice.sides} - ${result}`, player.roomId)
+        break;
+    }
+  }
+
+  broadcastToRoom<string>(SERVER_LOG_EVENT, `${username} rolled ${dice.count}d${dice.sides} - ${result}`, player.roomId)
   insertRoomCommand(player.roomId, player.id, `rolled ${dice.count}d${dice.sides} - ${result}`, Date.now(), "roll")
 }
 

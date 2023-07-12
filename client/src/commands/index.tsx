@@ -112,6 +112,9 @@ import {
 import {
   Link
 }from "./link"
+import {
+  Event
+}from "./event"
 
 
 export const commandModules = [
@@ -150,6 +153,7 @@ export const commandModules = [
   Game,
   Click,
   Link,
+  Event,
 ]
 
 const findCommand = (nameOrAlias: string) => {

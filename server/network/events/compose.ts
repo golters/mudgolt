@@ -48,10 +48,15 @@ const handler: NetworkEventHandler = async (socket, payload: [number, number, st
       return
     }
 
-    if (char.length !== 1) {
-      sendEvent<string>(socket, ERROR_EVENT, "You may only draw one character at a time")
+    
+    if(char){
+      const regex = /\p{RI}\p{RI}|\p{Emoji}(\p{EMod}|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?(\u{200D}\p{Emoji}(\p{EMod}|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?)*|./gus
+      const test = char.split(regex)
+      if(test.length !== 5){
+        sendEvent<string>(socket, ERROR_EVENT, "You may only draw one character at a time")
 
-      return
+        return
+      }      
     }
     
     const cost = 1

@@ -25,6 +25,10 @@ import {
 import{
   getItemByPlayer,
 }from "../../services/item"
+import {
+  getCurrentEvent,
+  getBearName,
+} from "../../services/event"
 
 const handler: NetworkEventHandler = async (
   socket,
@@ -32,6 +36,19 @@ const handler: NetworkEventHandler = async (
   player: Player,
 ) => {
   try {
+    let username = player.username
+    const event = await getCurrentEvent(Date.now())    
+    if(event){
+      switch (event.type){
+        case "Bear_Week":
+          const bearname = await getBearName(event.id, player.id)
+          if(bearname){
+            username = bearname
+          }
+
+          break;
+      }
+    }
     const room = await getRoomById(player.roomId)      
     const inv = await getItemByPlayer(player.id)
     let items = inv
@@ -45,7 +62,7 @@ const handler: NetworkEventHandler = async (
     if(message.length === 0){
       message = `uses ${item}`
     }
-    broadcastToRoom<string>(SERVER_LOG_EVENT, player.username + " " + message, room.id);
+    broadcastToRoom<string>(SERVER_LOG_EVENT, username + " " + message, room.id);
     await insertRoomCommand(room.id, player.id, message, Date.now(), "me")
     broadcastToRoom<string>(NOTIFICATION_EVENT, "me", room.id);
   } catch (error) {

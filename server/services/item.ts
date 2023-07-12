@@ -22,7 +22,11 @@ export const createItem = async (playerID: number, name: string): Promise<Item> 
     "player",
   ])
 
-  const item = await getItemById(1) as Item
+  const inventory = await getItemByPlayer(playerID)
+  const max = inventory.reduce(function(prev, current) {
+    return (prev.id > current.id) ? prev : current
+  })
+  const item = await getItemById(max.id) as Item
 
   return item
 }

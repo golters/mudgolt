@@ -60,6 +60,14 @@ export const getDoorByRoom = async (roomId: number): Promise<Door[]> => {
   return doors
 }
 
+export const getDoorsIntoRoom = async (roomId: number): Promise<Door[]> => {
+  const doors = await db.all<Door[]>(/*sql*/`
+    SELECT * FROM doors WHERE target_room_id = $1;
+  `, [roomId])
+
+  return doors
+}
+
 export const getTargetDoor = async (roomId: number, doorName: string): Promise<Door> => {
   const targetDoor = await db.get<Door>(/*sql*/`
     SELECT target_room_id FROM doors WHERE "room_id" = $1 AND "name" = $2;

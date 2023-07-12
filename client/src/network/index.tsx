@@ -14,6 +14,7 @@ import {
   PING_EVENT,
   MUSIC_EVENT,
   TP_EVENT,
+  LOG_EVENT,
 } from "../../../events"
 import {
   store, 
