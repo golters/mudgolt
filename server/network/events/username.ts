@@ -21,6 +21,10 @@ import {
 import {
   countCharacters, 
 } from "../../services/chat"
+import {
+  getBearName,
+  getCurrentEvent,
+} from "../../services/event"
 
 const handler: NetworkEventHandler = async (
   socket,
@@ -29,6 +33,7 @@ const handler: NetworkEventHandler = async (
 ) => {
   try {
     const oldUsername = player.username
+    const event = await getCurrentEvent(Date.now())
 
     if (username.length > USERNAME_MAX_LENGTH) {
       throw new Error(`Username must not be greater than ${USERNAME_MAX_LENGTH} characters`)
@@ -44,13 +49,17 @@ const handler: NetworkEventHandler = async (
     await takePlayerGolts(player.id, cost)
     sendEvent<string>(socket, SERVER_LOG_EVENT, `-${GOLT}${cost}`)
 
-    broadcastToRoom<string>(
-      SERVER_LOG_EVENT,
-      `${oldUsername} is now known as ${newUsername}`, 
-      player.roomId,
-    )
+    if(event?.type === "Bear_Week"){
+      sendEvent<string>(socket, SERVER_LOG_EVENT, "you are stuck as a bear and cannot change")        
+    }else{
+      broadcastToRoom<string>(
+        SERVER_LOG_EVENT,
+        `${oldUsername} is now known as ${newUsername}`, 
+        player.roomId,
+      )
+      await setPlayerUsername(player.id, newUsername)
+    }
 
-    await setPlayerUsername(player.id, newUsername)
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)

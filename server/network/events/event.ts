@@ -29,6 +29,7 @@ import {
   createEvent, createEventTag, createRandomEvent, fishWinner, getCurrentEvent, getUpcomingEvents, givePoints, moveZombies,
   getEventTag,
   bitePlayer,
+  endEvent,
 } from "../../services/event"
 import {
   insertRoomChat,
@@ -47,11 +48,16 @@ const fishTypes =[
   "haddock",
   "fish",
   "shark",
+  "dolphin",
   "whale",
   "crab",
   "lobster",
   "shrimp",
   "squid",
+  "mermaid",
+  "kraken",
+  "seagul",
+  "ray",
 ]
 
 const handler: NetworkEventHandler = async (
@@ -82,18 +88,11 @@ const handler: NetworkEventHandler = async (
     switch(args[0]){
       case "/event":
         switch(args[1]){
-          case "new":
-            const start = Number(now) + 60000 * 3
-            const length = 60000 * 3
-            await createEvent(args[2],start, start + length);
-            broadcastToUser<string>(SERVER_LOG_EVENT,"new event", player.username); 
-  
-            return;
           case "list":
             const events = await getUpcomingEvents(Date.now());
             let list = ""
             for (let i = 0; i < events.length; i++) {
-              list = list + events[i].type + " "
+              list = list + events[i].type + " starting:" + new Date(events[i].start) + " ending:" + new Date(events[i].end) + " , "
             }
             if(events.length === 0){
               list = "there are no upcoming events"
@@ -116,10 +115,6 @@ const handler: NetworkEventHandler = async (
               }
             }
             
-            return;
-          default:
-            broadcastToUser<string>(SERVER_LOG_EVENT,"don't use this command", player.username); 
-  
             return;
         }
 
@@ -174,12 +169,6 @@ const handler: NetworkEventHandler = async (
               broadcastToUser<string>(ERROR_EVENT,"bite who?", player.username); 
             }
           }
-        }
-
-        break;
-      case "/zombie":
-        if(event){
-          await moveZombies(event?.id)
         }
 
         break;

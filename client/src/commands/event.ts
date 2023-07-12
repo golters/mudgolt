@@ -13,9 +13,9 @@ import {
 
 export const Event: CommandModule = {
   command: "event",
-  syntax: "event [new]",
+  syntax: "",
   bio: "event specific commands",
-  aliases: ["fish","zombie","bite"],
+  aliases: ["fish","bite"],
 
   //check correct amount of args
   callback({ args , input }) {

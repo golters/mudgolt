@@ -34,10 +34,24 @@ import {
 import {
   getCurrentEvent,
   getEventTag,
+  getBearName,
 } from "../../services/event"
 
 const handler: NetworkEventHandler = async (socket, doorName: string, player) => {
   try {
+    let username = player.username
+    const event = await getCurrentEvent(Date.now())    
+    if(event){
+      switch (event.type){
+        case "Bear_Week":
+          const bearname = await getBearName(event.id, player.id)
+          if(bearname){
+            username = bearname
+          }
+
+          break;
+      }
+    }
     const oldRoom = await getRoomById(player.roomId)
     
     await getDoorByName(player.roomId, doorName);
@@ -69,15 +83,14 @@ const handler: NetworkEventHandler = async (socket, doorName: string, player) =>
       sendEvent<Music>(socket, MUSIC_UPDATE_EVENT, oldMusic)
     }
     
-    let leaveMessage = `${player.username} has left ${oldRoom.name} through the ${doorName}`
-    let enterMessage = `${player.username} has joined ${room.name}`
-    const event = await getCurrentEvent(Date.now())
+    let leaveMessage = `${username} has left ${oldRoom.name} through the ${doorName}`
+    let enterMessage = `${username} has joined ${room.name}`
     if(event){
       if(event.type === "Zombie_Invasion"){
         const tag = await getEventTag(player.id, "player", event.id)
         if(tag){
-          leaveMessage = `${player.username} shuffles out of ${oldRoom.name} through the ${doorName}`
-          enterMessage = `${player.username} shuffled into ${room.name}`
+          leaveMessage = `${username} shuffles out of ${oldRoom.name} through the ${doorName}`
+          enterMessage = `${username} shuffled into ${room.name}`
           broadcastToRoom<string>(NOTIFICATION_EVENT, "zombie", oldRoom.id);
           broadcastToRoom<string>(NOTIFICATION_EVENT, "zombie", room.id)
         }

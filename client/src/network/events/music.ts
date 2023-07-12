@@ -41,7 +41,7 @@ const BluesMinor = {
   16: 130.81,
 }
 
-//evil move down an octave
+//evil
 const Locrian = {
   0: 622.25,
   1: 554.37,
@@ -266,7 +266,7 @@ const handler: NetworkEventHandler = (context: AudioContext) => {
             scale = Cmajor
             break
           case "Bear_Week":
-            scale = Lydian
+            scale = Cmajor
             break
         }
       }

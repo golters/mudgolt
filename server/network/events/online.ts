@@ -14,15 +14,25 @@ import {
 import {
   getRecentlyOnline,
 } from "../../services/player"
+import { getBearName, getCurrentEvent } from "../../services/event"
 
 const handler: NetworkEventHandler = async (socket, roomID: string, player) => {
   try {
 
     let message = "Online ("+ online.length + "):\n"
+    const event = await getCurrentEvent(Date.now())
+    const onlineusers = online.map(x => x.player.id)
 
-    online.forEach(({ player }) => {
-      message = `${message} ${player.username}\n`
-    })
+    if(event && event.type === "Bear_Week"){      
+      for(let i = 0; i < onlineusers.length; i++){
+        const bear = await getBearName(event.id, onlineusers[i])
+        message = `${message} ${bear}\n`
+      }
+    }else{
+      online.forEach(({ player }) => {
+        message = `${message} ${player.username}\n`
+      })
+    }
 
     const onlinenames = online.map(x => x.player.username)
     const recent = await getRecentlyOnline()

@@ -2,7 +2,7 @@
 import { error } from "console"
 import {
   Door,
-  Event, EventTag, Room, Player,
+  Event, EventTag, Room, Player, Chat, ChatHistory,
 } from "../../@types"
 import {
   db,
@@ -21,6 +21,7 @@ import {
 import { getPlayerById, getPlayerByRoom, getPlayerByUsername, getRecentlyOnline } from "./player"
 import { createItem,setItemBio } from "./item"
 import { getDoorsIntoRoom } from "./door"
+import { start } from "repl"
 
 export const events = [
   "Zombie_Invasion",
@@ -38,6 +39,138 @@ export const events = [
 //add bear week event that only triggers august 11th for 7 days
 //add events for every major holiday
 //add quest events e.g. draw banners, describe rooms etc
+
+export interface bearface {
+  leftear: string
+  lefteye: string
+  nose: string
+  righteye: string
+  rightear: string
+}
+
+const bearbits: bearface[] = [
+  {
+    leftear: "ʕ",
+    lefteye: "•",
+    nose: "ᴥ",
+    righteye: "•",
+    rightear: "ʔ",
+  },{
+    leftear: "ᶘ",
+    lefteye: "ᵒ",
+    nose: "㉨",
+    righteye: "ᵒ",
+    rightear: "ᶅ",
+  },{
+    leftear: "ʕ",
+    lefteye: "ಠ",
+    nose: "(ｴ)",
+    righteye: "ಠ",
+    rightear: "ʔ",
+  },{
+    leftear: "⸮",
+    lefteye: " ͡°",
+    nose: "Ꮂ",
+    righteye: " ͡°",
+    rightear: "?",
+  },{
+    leftear: "ʕ",
+    lefteye: "👁",
+    nose: "ﻌ",
+    righteye: "👁",
+    rightear: "ʔ",
+  },{
+    leftear: "ᕦʕ",
+    lefteye: "ꆤ",
+    nose: "⟟",
+    righteye: "ꆤ",
+    rightear: "ʔᕤ",
+  },{
+    leftear: "ʕ",
+    lefteye: "ꈍ",
+    nose: "⧪",
+    righteye: "ꈍ",
+    rightear: "ʔ",
+  },{
+    leftear: "ʕ;",
+    lefteye: "￫",
+    nose: "ꮂ",
+    righteye: "￩",
+    rightear: "ʔ",
+  },{
+    leftear: "૮",
+    lefteye: "✪",
+    nose: "ω",
+    righteye: "✪",
+    rightear: "ა",
+  },{
+    leftear: "ʕ",
+    lefteye: "ಥ",
+    nose: "ꈊ",
+    righteye: "ಥ",
+    rightear: "ʔ",
+  },{
+    leftear: "ʕ",
+    lefteye: "ㆆ",
+    nose: "ჲ",
+    righteye: "ㆆ",
+    rightear: "ʔ",
+  },{
+    leftear: "ʕ",
+    lefteye: "✧",
+    nose: "ᴥ",
+    righteye: "✧",
+    rightear: "ʔ",
+  },{
+    leftear: "ʕ",
+    lefteye: "☆",
+    nose: "ᴥ",
+    righteye: "☆",
+    rightear: "ʔ",
+  },{
+    leftear: "ʕ",
+    lefteye: "◕",
+    nose: "ᴥ",
+    righteye: "◕",
+    rightear: "ʔ",
+  },{
+    leftear: "ʕ╯",
+    lefteye: "❛",
+    nose: "ᴥ",
+    righteye: "❛",
+    rightear: "ʔ╯ ┻━━┻",
+  },{
+    leftear: "ʕ",
+    lefteye: "❤",
+    nose: "з",
+    righteye: "❤",
+    rightear: "ʔ",
+  },{
+    leftear: "ʕ",
+    lefteye: "눈",
+    nose: "ᆺ",
+    righteye: "눈",
+    rightear: "ʔ",
+  },{
+    leftear: "⊂(",
+    lefteye: "⇀",
+    nose: "❥",
+    righteye: "↼",
+    rightear: ")⊃",
+  },{
+    leftear: "ᘳ",
+    lefteye: "×",
+    nose: "ᴥ",
+    righteye: "×",
+    rightear: "ᘰ",
+  },{
+    leftear: "∠ʕ",
+    lefteye: "⌐■",
+    nose: "ᴥ",
+    righteye: "■",
+    rightear: "」∠)_",
+  },
+]
 
 export const createEvent = async (type: string, start: number, end: number): Promise<void> => {
   const overlapStart = await db.get<Event>(/*sql*/`
@@ -119,7 +252,7 @@ export const getEventByType = async (type: string): Promise<Event> => {
   return event
 }
 
-export const getCurrentEvent = async (time: number): Promise<Event|undefined> => {
+export const getCurrentEvent = async (time: number): Promise<Event | undefined> => {
   const event = await db.get<Event>(/*sql*/`
     SELECT * FROM events WHERE "start" <= $1 AND "end" >= $1;
   `, [time])
@@ -138,12 +271,13 @@ export const getEventTag = async (id:number, type: string, event:number): Promis
 export const getUpcomingEvents = async (time: number): Promise<Event[]> => {
   const events = await db.all<Event[]>(/*sql*/`
     SELECT * FROM events 
-    WHERE "start" > $1 
+    WHERE "start" > $1 AND "start" < $1 + 8.64e+7 * 7
   `, [time])
 
   return events
 }
 
+//spamming offline/afk users with backloged event ending messages
 export const clearOldEvents = async (time: number): Promise<void> => {
   const oldEvents = await db.all<Event[]>(/*sql*/`
     SELECT * FROM events 
@@ -161,8 +295,6 @@ export const clearOldEvents = async (time: number): Promise<void> => {
     AND type = ('player')
   `, [oldEvents[i].id])	
 
-    //is spamming because events backlog and only clear when a user is active
-    //also triggers on draw on banner???
     switch (oldEvents[i].type){
       case "Fishing_Tournament":
 
@@ -201,6 +333,20 @@ export const clearOldEvents = async (time: number): Promise<void> => {
         DELETE FROM events 
         WHERE "id" = $1; 
       `, [eventId])	
+        break
+      case "Bear_Week":
+        broadcast<string>(LOG_EVENT, "You transform back from being a bear")
+
+        await db.run(/*sql*/`
+          DELETE FROM eventTags 
+          WHERE "eventId" = $1;
+        `, [eventId])	
+    
+        await db.run(/*sql*/`
+        DELETE FROM events 
+        WHERE "id" = $1; 
+      `, [eventId])	
+        
         break
       default:
         await db.run(/*sql*/`
@@ -438,15 +584,117 @@ export const bitePlayer = async(event: number, player:string, zombie:number): Pr
   return
 }
 
+export const getBearName = async(event: number, player:number): Promise<string | undefined> => {
+  const bearTag = await db.get<EventTag>(/*sql*/`
+    SELECT * FROM eventTags WHERE type = "player"
+    AND eventId = $1 AND id = $2;  
+  `,[event, player])
+  
+  let bear = "ʕ •ᴥ•ʔ"
+  if(!bearTag){
+    bear = await createBearName(event, player)
+  }else{
+    bear = bearTag.info
+  }
+
+  return bear
+}
+export const getAllBearNames = async(event: number): Promise<string[]> => {
+  const bearTags = await db.all<EventTag[]>(/*sql*/`
+    SELECT * FROM eventTags WHERE type = "player"
+    AND eventId = $1; 
+  `,[event])
+  const bearname = bearTags.map(x => x.info)
+
+  return bearname
+}
+
+export const getAllBears = async(event: number): Promise<EventTag[]> => {
+  const bearTags = await db.all<EventTag[]>(/*sql*/`
+    SELECT * FROM eventTags WHERE type = "player"
+    AND eventId = $1; 
+  `,[event])
+
+  return bearTags
+}
+
+export const createBearName = async(event: number, player:number): Promise<string> => {
+
+  let bearear = bearbits[Math.round(Math.random()*bearbits.length)]
+  let bearnose = bearbits[Math.round(Math.random()*bearbits.length)]
+  let beareyes = bearbits[Math.round(Math.random()*bearbits.length)]
+  //lazy solution, bear bits was sometimes undefined
+  if(bearear === undefined){
+    bearear = bearbits[0]
+  }
+  if(bearnose === undefined){
+    bearnose = bearbits[0]
+  }
+  if(beareyes === undefined){
+    beareyes = bearbits[0]
+  }
+  const newbearname = bearear.leftear + beareyes.lefteye + bearnose.nose + beareyes.righteye + bearear.rightear
+
+  const newBear = await db.run(/*sql*/`
+  INSERT INTO eventTags("id", "type", "info", "eventId")
+    VALUES ($1, $2, $3, $4);
+`, [    
+    player,
+    "player",
+    newbearname,
+    event,
+  ])
+  let bear = await getBearName(event, player)
+
+  if(!bear){
+    bear = "ʕ •ᴥ•ʔ"
+  }
+
+  return bear
+}
+
+export const endEvent = async (): Promise<void> => {  
+  await db.run(/*sql*/`
+  DELETE FROM events;
+`, [])	
+
+  return
+}
+
 export const createRandomEvent = async (time: number): Promise<void> => {
+  checkSeasonalEvents()
   const upcomingEvents = getUpcomingEvents(time)
   if ((await upcomingEvents).length < 1){
-    const start = 1 * 6000
-    const length = 3 * 60000
+    const targetDate = new Date()
+    targetDate.setDate(targetDate.getDate() + Math.round(Math.random() * 6) + 1)
+    targetDate.setHours(0)
+    targetDate.setMinutes(0)
+    targetDate.setSeconds(0)
+    const start = targetDate.getTime() - new Date().getTime()
+    const length = 8.64e+7
     const type = Math.random() * 1
     createEvent(events[Math.round(type)],time + start, time + start + length)
-    //createEvent(events[0],time + start, time + start + length)
   }
+
+  return
+}
+
+export const checkSeasonalEvents = async (): Promise<void> => {
+  const targetDate = new Date()
+  targetDate.setFullYear(new Date().getFullYear(),7,11)
+  targetDate.setHours(0)
+  targetDate.setMinutes(0)
+  targetDate.setSeconds(0)
+  const start = targetDate.getTime()
+  const end = start + 8.64e+7 * 7
+  const bearWeek = await db.get<Event>(/*sql*/`
+    SELECT * FROM events WHERE "start" = $1 AND "end" = $2 AND type = $3;
+  `, [start,end,"Bear_Week"])
+
+  if(!bearWeek){
+    createEvent("Bear_Week",start,end)
+  }
+
 
   return
 }

@@ -281,39 +281,45 @@ function getCount(){
   var countdown = eventStart - now;
   var countup = eventEnd - now;
   let cd = document.getElementById('countDown')
+  let event = document.getElementById('eventName')
   if(countdown > 0){
+      const days = Math.floor(countdown / 86400000)  
+    let milliseconds = Math.floor((countdown % 1000) / 100),
+      seconds = Math.floor((countdown / 1000) % 60),
+      minutes = Math.floor((countdown / (1000 * 60)) % 60),
+      hours = Math.floor((countdown / (1000 * 60 * 60)) % 24);  
 
-  const days = Math.floor(countdown / 86400000)
-  const hours = Math.floor((countdown - (days * 1.15741e-8)) / 3.6e+6)
-  const minutes = Math.round((countdown - (days * 1.15741e-8) - (hours * 3.6e+6)) / 60000)
-  const seconds = Math.round((countdown - (days * 1.15741e-8) - (hours * 3.6e+6) - (minutes * 60000)) / 1000 + 30)
-
-  let timestamp = countdown > 86400000
-  ? `${days} days ${hours} hours ${minutes} minutes`
-  : countdown < 3.6e+6 ? `${minutes} minutes ${seconds} seconds` : `${hours} hours ${minutes} minutes ${seconds} seconds`
+  let timestamp = countdown > 86400000 ? `${days} days`: hours + ":" + minutes + ":" + seconds
   if(cd){
-    cd.innerHTML = eventName + " " + timestamp;
+    cd.innerHTML = eventName + " " + timestamp + " to start";
   }
     return timestamp
   }else 
   if(countup > 0){
     if(localStorage.eventStart !== localStorage.event){
     localStorage.eventStart = localStorage.event
-    if(eventName === "Fishing_Tournament"){
-    pushToLog(/* html */`The floor has flooded with water! use <code>/fish</code> to try catch something`)
+    switch (eventName){
+      case "Fishing_Tournament":
+        pushToLog(/* html */`The floor has flooded with water! use <code>/fish</code> to try catch something`)
+
+        break
+      case "Zombie_Invasion":
+        pushToLog(/* html */`A green mist crawls across the floor. Tonight the dead will rise!`)
+
+        break
+      case "Bear_Week":
+        pushToLog(/* html */`A Strange transformation has taken over you as you become a bear`)
+
+        break
     }
-    if(eventName === "Zombie_Invasion"){
-    pushToLog(/* html */`A green mist crawls across the floor. Tonight the dead will rise!`)
     }
-    }
-  const days = Math.floor(countup / 86400000)
-  const hours = Math.floor((countup - (days * 1.15741e-8)) / 3.6e+6)
-  const minutes = Math.round((countup - (days * 1.15741e-8) - (hours * 3.6e+6)) / 60000)
-  const seconds = Math.round((countup - (days * 1.15741e-8) - (hours * 3.6e+6) - (minutes * 60000)) / 1000 + 30)
-  
-  let timestamp = countdown > 86400000
-  ? `${days} days ${hours} hours ${minutes} minutes`
-  : countdown < 3.6e+6 ? `${minutes} minutes ${seconds} seconds` : `${hours} hours ${minutes} minutes ${seconds} seconds`
+    const days = Math.floor(countup / 86400000)  
+  let milliseconds = Math.floor((countup % 1000) / 100),
+    seconds = Math.floor((countup / 1000) % 60),
+    minutes = Math.floor((countup / (1000 * 60)) % 60),
+    hours = Math.floor((countup / (1000 * 60 * 60)) % 24);  
+
+let timestamp = countup > 86400000 ? `${days} days`: hours + ":" + minutes + ":" + seconds
   
   if(cd){
   cd.innerHTML = eventName + " " + timestamp + " to end";

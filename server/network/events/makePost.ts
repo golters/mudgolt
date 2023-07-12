@@ -16,6 +16,10 @@ import { ITEM_COST, GOLT, ITEM_MAX_NAME } from "../../../constants"
 import {
   takePlayerGolts,
 } from "../../services/player"
+import {
+  getCurrentEvent,
+  getBearName,
+} from "../../services/event"
 
 const handler: NetworkEventHandler = async (socket, args: string, player) => {
   try {    
@@ -36,10 +40,23 @@ const handler: NetworkEventHandler = async (socket, args: string, player) => {
 
       return
     }
+    let username = player.username
+    const event = await getCurrentEvent(Date.now())    
+    if(event){
+      switch (event.type){
+        case "Bear_Week":
+          const bearname = await getBearName(event.id, player.id)
+          if(bearname){
+            username = bearname
+          }
+
+          break;
+      }
+    }
     await createPost(player.id, args) 
     await takePlayerGolts(player.id, cost)
     sendEvent<string>(socket, SERVER_LOG_EVENT, `-${GOLT}${cost}`)
-    sendEvent<string>(socket, SERVER_LOG_EVENT, `${player.username} Created a post`)
+    sendEvent<string>(socket, SERVER_LOG_EVENT, `${username} Created a post`)
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)

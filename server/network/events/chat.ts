@@ -18,6 +18,7 @@ import {
   insertRoomChat,
 } from "../../services/chat"
 import {
+  getBearName,
   getCurrentEvent, getEventTag,
 } from "../../services/event"
 
@@ -39,26 +40,35 @@ const handler: NetworkEventHandler = async (socket, message: string, player) => 
 
     let filteredMessage = message
     const event = await getCurrentEvent(Date.now())
+    let {
+      username,
+    } = player
     if(event){
-      if(event.type === "Zombie_Invasion"){
-        const tag = await getEventTag(player.id, "player", event.id)
-        if(tag){
-          filteredMessage = ""
-          const brokenMessage = message.split(" ")
-          brokenMessage.forEach(word => {
-            let slur = " "
-            if(Math.random() > 0.2){
-              slur = zombieSlurs[Math.round(Math.random() * (zombieSlurs.length - 1))]
-            }
-            filteredMessage = filteredMessage + word + slur         
-          });
-        }
+      switch (event.type){
+        case "Zombie_Invasion":
+          const tag = await getEventTag(player.id, "player", event.id)
+          if(tag){
+            filteredMessage = ""
+            const brokenMessage = message.split(" ")
+            brokenMessage.forEach(word => {
+              let slur = " "
+              if(Math.random() > 0.2){
+                slur = zombieSlurs[Math.round(Math.random() * (zombieSlurs.length - 1))]
+              }
+              filteredMessage = filteredMessage + word + slur         
+            });
+          }
+          break;
+        case "Bear_Week":
+          const bearname = await getBearName(event.id, player.id)
+          if(bearname){
+            username = bearname
+          }
+
+          break;
       }
     }
   
-    const {
-      username,
-    } = player
   
     const chat: Chat = {
       player: {
