@@ -120,6 +120,8 @@ export const Toolbar: React.FC = () => {
   }
 
   localStorage.volume = volume/10
+  localStorage.event = ""
+
 
   function post() {
     sendEvent(MAKE_POST_EVENT, input.current?.innerText)
