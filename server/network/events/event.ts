@@ -122,7 +122,7 @@ const handler: NetworkEventHandler = async (
       case "/fish":
         if(event && event.type === "Fishing_Tournament"){
           const fishSucess = Math.random() * 100
-          if(fishSucess > 90-((Number(String(player.roomId).slice(-1))/2)*10)){
+          if(fishSucess > 99-((Number(String(player.roomId).slice(-1))/2)*10)){
             const room = await (await getRoomById(player.roomId)).name
             const roomarray = room.split(/(?:-|_| )+/)
             for(let i = 0; i < roomarray.length; i++){
@@ -137,9 +137,9 @@ const handler: NetworkEventHandler = async (
                 delete roomarray[i]
               }
             }
-            const areaNameNum = Math.round(Math.random() * (roomarray.length -1))
+            const areaNameNum = Math.round(Math.random() * (roomarray.length-1))+1
             const areaName = roomarray[areaNameNum]
-            const fishtype = fishTypes[Math.round(Math.random() * (fishTypes.length - 1))]
+            const fishtype = fishTypes[Math.round(Math.random() * (fishTypes.length-1))+1]
             const fishName = areaName + "_" + fishtype
   
             broadcastToUser<string>(SERVER_LOG_EVENT, "you caught a " + fishName, player.username); 

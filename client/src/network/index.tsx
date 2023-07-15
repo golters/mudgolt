@@ -126,15 +126,20 @@ export const networkTask = () => new Promise<void>((resolve) => {
   })
 
 })
-
-setInterval(() => {
-  sendEvent(PING_EVENT, client)  
-  //networkEmitter.emit(NOTIFICATION_EVENT, "pay")
-  sendEvent(PAY_EVENT, store.player?.id)
-}, 15 * 1000)
-
 setInterval(() => {
   if(!localStorage.getItem("muted")){
   networkEmitter.emit(MUSIC_EVENT, context)
   }
 }, 15 * 10)
+let ping = setInterval(()=>{})
+window.addEventListener("focus", (event) => {
+  if(!ping){
+  const ping = setInterval(() => {
+    sendEvent(PING_EVENT, client)  
+    //networkEmitter.emit(NOTIFICATION_EVENT, "pay")
+    sendEvent(PAY_EVENT, store.player?.id)
+  }, 15 * 1000)
+}  })
+window.addEventListener("blur", (event) => {
+  clearInterval(ping)
+})
