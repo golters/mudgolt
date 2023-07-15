@@ -24,7 +24,7 @@ import "./commands"
 import React from "react"
 import ReactDOM from "react-dom"
 import { EVENT_EVENT } from "../../events"
-
+navigator.storage.persist().catch(console.error)
 ReactDOM.render(
   <>
     <Welcome />
