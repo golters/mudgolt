@@ -115,6 +115,9 @@ import {
 import {
   Event
 }from "./event"
+import {
+  Smelt
+}from "./smelt"
 
 
 export const commandModules = [
@@ -154,6 +157,7 @@ export const commandModules = [
   Click,
   Link,
   Event,
+  Smelt,
 ]
 
 const findCommand = (nameOrAlias: string) => {

@@ -58,6 +58,7 @@ export const MAKE_POST_EVENT = "MAKE_POST"
 export const LINK_EVENT = "LINK"
 export const EVENT_EVENT = "EVENT"
 export const EVENT_UPDATE_EVENT = "EVENT_UPDATE"
+export const SMELT_ITEM_EVENT = "SMELT_ITEM"
 
 // command events
 export const LOG_EVENT = "LOG"
