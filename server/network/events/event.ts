@@ -4,6 +4,7 @@ import {
 import {
   broadcastToUser,
   broadcastToRoom,
+  broadcast,
   sendEvent,
   online,
 } from ".."
@@ -138,6 +139,7 @@ const handler: NetworkEventHandler = async (
               }
             }
             const areaNameNum = Math.round(Math.random() * (roomarray.length-1))+1
+
             const areaName = roomarray[areaNameNum]
             const fishtype = fishTypes[Math.round(Math.random() * (fishTypes.length-1))+1]
             const fishName = areaName + "_" + fishtype
@@ -170,7 +172,25 @@ const handler: NetworkEventHandler = async (
             }
           }
         }
+        break;
+      case "/campaign":
+        if(event && event.type === "Election_Day"){
+          broadcast<string>(CHAT_EVENT, args.join())
 
+        }
+
+        break;
+      case "/vote":
+        if(event && event.type === "Election_Day"){
+
+        }
+  
+        break;
+      case "/poll":
+        if(event && event.type === "Election_Day"){
+
+        }
+    
         break;
     }    
   } catch (error) {

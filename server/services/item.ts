@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+import { SMELT_COST } from "../../constants"
 import {
   Item, Player,
 } from "../../@types"
@@ -8,7 +9,7 @@ import {
 import {
   insertWhisper,
 } from "./chat"
-import { getPlayerById } from "./player"
+import { addPlayerGolts, getPlayerById } from "./player"
 
 export const createItem = async (playerID: number, name: string): Promise<Item> => {
   await db.get(/*sql*/`
@@ -173,4 +174,28 @@ export const setItemMacro = async (itemId: number, bio: string): Promise<Item> =
   `, [bio, itemId])
 
   return item
+}
+
+export const smeltItem = async (player: Player, material: string): Promise<number> => {
+  const itemName = material
+
+  const items = await db.all<Item[]>(/*sql*/`
+  SELECT * FROM items WHERE "name" = $1 AND "holderId" = $2 AND "holderType" = "player"
+`, [itemName,player.id])
+  if(items.length <= 0){
+    throw new Error(`you have no ${itemName}s`)
+  }
+  const item = items[0]
+
+  const ingot = ((item.name.length + item.description.length + item.macro.length) / 2) - SMELT_COST
+  
+  await db.run(/*sql*/`
+    DELETE FROM items WHERE "id" = $1;
+  `, [
+    item.id,
+  ])
+  
+  await addPlayerGolts(player.id, ingot)
+
+  return ingot
 }
