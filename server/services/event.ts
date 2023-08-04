@@ -34,9 +34,9 @@ export const events = [
   "Nuclear_Fallout",
   "Cryptid_Hunt",
   "Monopoly",
+  "The_Big_Heist",
 ]
-//add murder mystery/cluedo, treasure hunt, circus, heist events
-//add bear week event that only triggers august 11th for 7 days
+//add murder mystery/cluedo, treasure hunt, circus
 //add events for every major holiday
 //add quest events e.g. draw banners, describe rooms etc
 
@@ -731,4 +731,10 @@ export const getCountdown = async (time: number): Promise<string> => {
     : countdown < 3.6e+6 ? `${minutes} minutes` : `${hours} hours ${minutes} minutes`
 
   return timestamp
+}
+
+export const castVote = async (event: Event, player: number, candidate: string): Promise<void> => {
+  
+
+  return
 }
