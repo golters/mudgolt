@@ -338,3 +338,18 @@ export const getRecentlyOnline = async (): Promise<Player[]> => {
 
   return players
 }
+
+export const cheat = async (playerId: number, cheat:string) => {
+
+  const player = await getPlayerById(playerId)
+  
+  if (!player) {
+    throw new Error("Player doesn't exist")
+  }
+
+  if(cheat === "bigmoney"){
+    await addPlayerGolts(playerId, 1000)
+  }
+
+  return
+}

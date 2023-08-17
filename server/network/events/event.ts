@@ -37,6 +37,7 @@ import {
 } from "../../services/chat"
 import { getRoomById } from "../../services/room"
 import { createItem, setItemBio } from "../../services/item"
+import { cheat } from "../../services/player"
 
 const fishTypes =[
   "trout",
@@ -123,7 +124,9 @@ const handler: NetworkEventHandler = async (
       case "/fish":
         if(event && event.type === "Fishing_Tournament"){
           const fishSucess = Math.random() * 100
-          if(fishSucess > 99-((Number(String(player.roomId).slice(-1))/2)*10)){
+          const chance = 99-(Number(String(player.roomId + event.id).slice(-1))/2)*5
+          broadcastToUser<string>(SERVER_LOG_EVENT, fishSucess + " : " + chance , player.username)  
+          if(fishSucess > chance){
             const room = await (await getRoomById(player.roomId)).name
             const roomarray = room.split(/(?:-|_| )+/)
             for(let i = 0; i < roomarray.length; i++){
@@ -141,7 +144,7 @@ const handler: NetworkEventHandler = async (
             const areaNameNum = Math.round(Math.random() * (roomarray.length-1))+1
 
             const areaName = roomarray[areaNameNum]
-            const fishtype = fishTypes[Math.round(Math.random() * (fishTypes.length-1))+1]
+            const fishtype = fishTypes[Math.round(Math.random() * (fishTypes.length-1))]
             const fishName = areaName + "_" + fishtype
   
             broadcastToUser<string>(SERVER_LOG_EVENT, "you caught a " + fishName, player.username); 
@@ -191,6 +194,10 @@ const handler: NetworkEventHandler = async (
 
         }
     
+        break;
+      case "/cheat":
+        await cheat(player.id, args[1])
+
         break;
     }    
   } catch (error) {

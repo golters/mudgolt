@@ -86,6 +86,8 @@ const handler: NetworkEventHandler = async (socket, roomNameInput: string, playe
     }
     const event = await getCurrentEvent(Date.now())
     let username = player.username
+    let tpinmessage = `${username} has teleported in to ${room.name}`
+    let tpoutmessage = `${username} has teleported from ${oldRoom.name}`
     if(event){
       switch (event.type){
         case "Zombie_Invasion":
@@ -93,6 +95,8 @@ const handler: NetworkEventHandler = async (socket, roomNameInput: string, playe
           if(tag){
             broadcastToRoom<string>(NOTIFICATION_EVENT, "zombie", oldRoom.id);
             broadcastToRoom<string>(NOTIFICATION_EVENT, "zombie", room.id)
+            tpinmessage = `${username} has teleported in to ${room.name} like a zombie`
+            tpoutmessage = `${username} has teleported from ${oldRoom.name} like a zombie`
           }
   
           break;
@@ -101,17 +105,19 @@ const handler: NetworkEventHandler = async (socket, roomNameInput: string, playe
           if(bearname){
             username = bearname
           }
+          tpinmessage = `${username} has teleported in to ${room.name}`
+          tpoutmessage = `${username} has teleported from ${oldRoom.name}`
   
           break;
       }
     }
 
     broadcastToRoom<Room>(ROOM_UPDATE_EVENT, oldRoom, oldRoom.id)
-    broadcastToRoom<string>(SERVER_LOG_EVENT, `${username} has teleported from ${oldRoom.name} like a zombie`, oldRoom.id)
+    broadcastToRoom<string>(SERVER_LOG_EVENT, tpinmessage, oldRoom.id)
     broadcastToRoom<string>(NOTIFICATION_EVENT, "teleportExit", oldRoom.id);
     //await insertRoomCommand(oldRoom.id, player.id, `has teleported from ${oldRoom.name}`, Date.now(), "tp")
     broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
-    broadcastToRoom<string>(SERVER_LOG_EVENT, `${username} has teleported into ${room.name} like a zombie`, room.id)
+    broadcastToRoom<string>(SERVER_LOG_EVENT, tpoutmessage, room.id)
     broadcastToRoom<string>(NOTIFICATION_EVENT, "teleportEnter", room.id);
     //await insertRoomCommand(room.id, player.id, `has teleported into ${room.name}`, Date.now(), "tp")
     sendEvent<string>(socket, LOG_EVENT, message)    

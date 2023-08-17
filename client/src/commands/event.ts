@@ -15,7 +15,7 @@ export const Event: CommandModule = {
   command: "event",
   syntax: "",
   bio: "event specific commands",
-  aliases: ["fish","bite","campaign","vote","poll"],
+  aliases: ["fish","bite","campaign","vote","poll","cheat"],
 
   //check correct amount of args
   callback({ args , input }) {
