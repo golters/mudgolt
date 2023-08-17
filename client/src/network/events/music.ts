@@ -289,7 +289,7 @@ const handler: NetworkEventHandler = (context: AudioContext) => {
       o.type = type
       o.detune.value = detune
       o.frequency.value = frequency
-      g.gain.exponentialRampToValueAtTime(localStorage.volume, context.currentTime)
+      g.gain.exponentialRampToValueAtTime(localStorage.volume/500, context.currentTime)
       g.gain.exponentialRampToValueAtTime(0.000001, context.currentTime + time)
       o.connect(g)
       g.connect(context.destination)

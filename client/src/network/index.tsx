@@ -114,7 +114,7 @@ export const networkTask = () => new Promise<void>((resolve) => {
   })
 
   client.addEventListener("close", () => {
-    pushErrorToLog(`Disconnected from server. Reconnecting...`)
+    //pushErrorToLog(`Disconnected from server. Reconnecting...`)
 
     if (reconnectAttempts === 0) {
       networkTask().catch(console.error)
