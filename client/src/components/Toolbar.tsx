@@ -425,7 +425,7 @@ let timestamp = countup > 86400000 ? `${days} days`: hours + ":" + minutes + ":"
           <span className ="tooltiptext">Settings</span>
           <div className="dropdown-content">
             Music Volume
-  <input type="range" min="0" max="10" value={volume} className="slider" id="myRange" onChange={event => {
+  <input type="range" min="0" max="1000" value={volume} className="slider" id="myRange" onChange={event => {
             setVolume(event.target.valueAsNumber)
           }}></input>
           <span>
