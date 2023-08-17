@@ -114,7 +114,7 @@ export const networkTask = () => new Promise<void>((resolve) => {
   })
 
   client.addEventListener("close", () => {
-    //pushErrorToLog(`Disconnected from server. Reconnecting...`)
+    pushErrorToLog(`Disconnected from server. Reconnecting...`)
 
     if (reconnectAttempts === 0) {
       networkTask().catch(console.error)
@@ -131,15 +131,18 @@ setInterval(() => {
   networkEmitter.emit(MUSIC_EVENT, context)
   }
 }, 15 * 10)
-let ping = setInterval(()=>{})
-window.addEventListener("focus", (event) => {
-  if(!ping){
-  const ping = setInterval(() => {
-    sendEvent(PING_EVENT, client)  
-    //networkEmitter.emit(NOTIFICATION_EVENT, "pay")
-    sendEvent(PAY_EVENT, store.player?.id)
-  }, 15 * 1000)
-}  })
+
+let ping = setInterval(() => {
+  if(localStorage.getItem("focus") === "open"){
+  sendEvent(PING_EVENT, client)  
+  sendEvent(PAY_EVENT, store.player?.id)
+  }
+}, 15 * 1000)
+
+window.addEventListener("focus", (event) => { 
+  localStorage.setItem("focus","open")
+})
+
 window.addEventListener("blur", (event) => {
-  clearInterval(ping)
+  localStorage.setItem("focus","close")
 })
