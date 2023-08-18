@@ -31,6 +31,8 @@ import {
   getEventTag,
   bitePlayer,
   endEvent,
+  castVote,
+  campaign,
 } from "../../services/event"
 import {
   insertRoomChat,
@@ -149,7 +151,7 @@ const handler: NetworkEventHandler = async (
   
             broadcastToUser<string>(SERVER_LOG_EVENT, "you caught a " + fishName, player.username); 
             const fish = await createItem(player.id,fishName) 
-            const fishSize = Math.random() * 10
+            const fishSize = Math.random() * 480
             await setItemBio(fish.id, "A " + Math.round(fishSize).toString() + " inch " + fishtype + " caught in " + room)
             await givePoints(player.id, Math.round(fishSize).toString(), event.id)
           }else{
@@ -177,14 +179,23 @@ const handler: NetworkEventHandler = async (
         }
         break;
       case "/campaign":
-        if(event && event.type === "Election_Day"){
-          broadcast<string>(CHAT_EVENT, args.join())
+        if(event 
+        //&& event.type === "Election_Day"
+        ){
+          if(args[1]){
+            await campaign(Date.now(),player.id, args[1])
+          }
 
         }
 
         break;
       case "/vote":
-        if(event && event.type === "Election_Day"){
+        if(event 
+        //&& event.type === "Election_Day"
+        ){
+          if(args[1]){
+            await castVote(event, player.id, args[1])
+          }
 
         }
   

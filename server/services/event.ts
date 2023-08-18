@@ -469,7 +469,7 @@ AND eventId = $2;
     if(!rooms){
       return
     }
-    const roomid = 1
+    const roomid = Math.random() * rooms.length
     const timer = Date.now() + (Math.random() * 1 * 60000)
     await createEventTag(roomid, "room", timer.toString(), event)
     broadcastToRoom<string>(SERVER_LOG_EVENT, "a hoard of zombies burst into the room. leave quickly!", roomid); 
@@ -731,6 +731,13 @@ export const getCountdown = async (time: number): Promise<string> => {
     : countdown < 3.6e+6 ? `${minutes} minutes` : `${hours} hours ${minutes} minutes`
 
   return timestamp
+}
+
+export const campaign = async (time:number, player:number, message: string) => {
+  //limit message spam by tracking last campaign message
+  //message all
+
+  return
 }
 
 export const castVote = async (event: Event, player: number, candidate: string): Promise<void> => {
