@@ -32,6 +32,29 @@ export const createItem = async (playerID: number, name: string): Promise<Item> 
   return item
 }
 
+export const createFloorItem = async (roomID: number, name: string): Promise<Item> => {
+  await db.get(/*sql*/`
+  INSERT INTO items ("name", "description", "macro", "holderId", "holderType")
+    VALUES ($1, $2, $3, $4, $5);
+`, [    
+    name,
+    `a ${name}`,
+    "",
+    roomID,
+    "room",
+  ])
+
+  //get newest item
+  const inventory = await getItemByRoom(roomID)
+  const max = inventory.reduce(function(prev, current) {
+    return (prev.id > current.id) ? prev : current
+  })
+  const item = await getItemById(max.id) as Item
+
+
+  return item
+}
+
 export const createPost = async (playerID: number, bio: string): Promise<Item> => {
   const user = await getPlayerById(playerID)
   await db.get(/*sql*/`

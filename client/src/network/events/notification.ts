@@ -25,6 +25,7 @@ import pop from "../../assets/sfx/pop.mp3"
 import fish from "../../assets/sfx/fish.mp3"
 import zombie from "../../assets/sfx/zombie.mp3"
 import smelt from "../../assets/sfx/smelt.mp3"
+import horn from "../../assets/sfx/horn.mp3"
 import {
   pushToLog,
 } from "../../components/Terminal"
@@ -45,6 +46,7 @@ const sfx = {
   fish: new Audio(fish),
   zombie: new Audio(zombie),
   smelt: new Audio(smelt),
+  horn: new Audio(horn),
 }
 
 const handler: NetworkEventHandler = (sound: keyof typeof sfx) => {

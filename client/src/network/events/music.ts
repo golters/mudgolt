@@ -269,6 +269,9 @@ const handler: NetworkEventHandler = (context: AudioContext) => {
           case "Bear_Week":
             scale = Cmajor
             break
+          case "Election_Day":
+            scale = Mixolydian
+            break
         }
       }
       const frequency = scale[i as keyof typeof scale]

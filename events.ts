@@ -59,6 +59,7 @@ export const LINK_EVENT = "LINK"
 export const EVENT_EVENT = "EVENT"
 export const EVENT_UPDATE_EVENT = "EVENT_UPDATE"
 export const SMELT_ITEM_EVENT = "SMELT_ITEM"
+export const CAMPAIGN_LOG_EVENT = "CAMPAIGN_LOG"
 
 // command events
 export const LOG_EVENT = "LOG"
