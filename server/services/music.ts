@@ -21,7 +21,7 @@ import {
 
 export const generateMusic = () => {
   return new Array(BANNER_WIDTH * BANNER_HEIGHT)
-    .fill(BANNER_FILL)
+    .fill("-")
     .join("")
 }
 
@@ -75,6 +75,11 @@ export const editMusic = async (x: number, y: number, character: string, room: R
   }
   
   const banner = Array.from(music.banner);
+  for(let i = 0; i < banner.length; i++){
+    if(banner[i] === BANNER_FILL){
+      banner[i] = "-"
+    }
+  }
 
   banner[pos] = character
 

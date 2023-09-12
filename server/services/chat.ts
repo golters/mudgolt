@@ -20,6 +20,14 @@ export const insertWhisper = async (toPlayerId: number, fromPlayerId: number, me
   `, [toPlayerId, fromPlayerId, message, date, "whisper"])
 }
 
+export const insertCampaign = async (eventId: number, fromPlayerId: number, message: string, date: number) => {
+  await db.run(/*sql*/`
+    INSERT INTO chats ("roomId", "fromPlayerId", "message", "date", "type")
+      VALUES ($1, $2, $3, $4, $5)
+  `, [eventId, fromPlayerId, message, date, "campaign"])
+
+}
+
 export const insertRoomCommand = async (roomId: number, fromPlayerId: number, message: string, date: number, type: string) => {
   await db.run(/*sql*/`
     INSERT INTO chats ("roomId", "fromPlayerId",  "message", "date", "type")

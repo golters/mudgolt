@@ -108,6 +108,14 @@ export const getRoomById = async (id: number): Promise<Room> => {
   return room
 }
 
+export const getAllRooms = async (): Promise<Room[]> => {
+  const rooms = await db.all<Room[]>(/*sql*/`
+    SELECT * FROM rooms;
+  `,[])
+
+  return rooms
+}
+
 export const getRoomByName = async (name: string): Promise<Room> => {
   const room = await db.get<Room>(/*sql*/`
     SELECT * FROM rooms WHERE "name" = $1;

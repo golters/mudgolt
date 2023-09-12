@@ -250,7 +250,8 @@ const handler: NetworkEventHandler = (context: AudioContext) => {
     localStorage.Mstep = 0
   }
   for (let i = 0; i < 16; i++) {
-    if(music.banner.charAt(Number(localStorage.Mstep) + (i * BANNER_WIDTH)) !== BANNER_FILL){
+    if(music.banner.charAt(Number(localStorage.Mstep) + (i * BANNER_WIDTH)) !== BANNER_FILL &&
+    music.banner.charAt(Number(localStorage.Mstep) + (i * BANNER_WIDTH)) !== "-"){
       const o = context.createOscillator()
       const  g = context.createGain()
       let scale = Bminor
@@ -267,6 +268,9 @@ const handler: NetworkEventHandler = (context: AudioContext) => {
             break
           case "Bear_Week":
             scale = Cmajor
+            break
+          case "Election_Day":
+            scale = Mixolydian
             break
         }
       }

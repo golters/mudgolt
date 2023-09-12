@@ -31,13 +31,19 @@ import {
   getEventTag,
   bitePlayer,
   endEvent,
+  castVote,
+  campaign,
+  pollResults,
 } from "../../services/event"
 import {
   insertRoomChat,
 } from "../../services/chat"
 import { getRoomById } from "../../services/room"
 import { createItem, setItemBio } from "../../services/item"
-import { cheat } from "../../services/player"
+import { cheat, takePlayerGolts } from "../../services/player"
+import {
+  GOLT,
+} from "../../../constants"
 
 const fishTypes =[
   "trout",
@@ -56,10 +62,19 @@ const fishTypes =[
   "lobster",
   "shrimp",
   "squid",
+  "octopus",
   "mermaid",
   "kraken",
-  "seagul",
+  "seagull",
   "ray",
+  "clam",
+  "urchin",
+  "trilobite",
+  "turtle",
+  "piranha",
+  "frog",
+  "tin_can",
+  "penguin",
 ]
 
 const handler: NetworkEventHandler = async (
@@ -122,26 +137,30 @@ const handler: NetworkEventHandler = async (
 
         return;
       case "/fish":
-        if(event && event.type === "Fishing_Tournament"){
+        if(event && event.type === "Fishing_Tournament"
+        ){
           const fishSucess = Math.random() * 100
           const chance = 99-(Number(String(player.roomId + event.id).slice(-1))/2)*5
-          broadcastToUser<string>(SERVER_LOG_EVENT, fishSucess + " : " + chance , player.username)  
+          let areaNameNum = 0
           if(fishSucess > chance){
             const room = await (await getRoomById(player.roomId)).name
             const roomarray = room.split(/(?:-|_| )+/)
-            for(let i = 0; i < roomarray.length; i++){
-              if(Number.isNaN(roomarray[i])){
-                delete roomarray[i]
+            if(roomarray.length > 1){
+              for(let i = 0; i < roomarray.length; i++){
+                if(Number.isNaN(roomarray[i])){
+                  delete roomarray[i]
+                }
+                if(roomarray[i].length === 1){
+                  delete roomarray[i]
+                }
+                if(roomarray[i] === "left" || roomarray[i] === "right"
+                || roomarray[i] === "north"|| roomarray[i] === "east"|| roomarray[i] === "south"|| roomarray[i] === "west"){
+                  delete roomarray[i]
+                }
               }
-              if(roomarray[i].length === 1){
-                delete roomarray[i]
-              }
-              if(roomarray[i] === "left" || roomarray[i] === "right"
-              || roomarray[i] === "north"|| roomarray[i] === "east"|| roomarray[i] === "south"|| roomarray[i] === "west"){
-                delete roomarray[i]
-              }
+              
+              areaNameNum = Math.round(Math.random() * (roomarray.length-1))
             }
-            const areaNameNum = Math.round(Math.random() * (roomarray.length-1))+1
 
             const areaName = roomarray[areaNameNum]
             const fishtype = fishTypes[Math.round(Math.random() * (fishTypes.length-1))]
@@ -149,7 +168,8 @@ const handler: NetworkEventHandler = async (
   
             broadcastToUser<string>(SERVER_LOG_EVENT, "you caught a " + fishName, player.username); 
             const fish = await createItem(player.id,fishName) 
-            const fishSize = Math.random() * 10
+            //const fishSize = Math.random() * 480
+            const fishSize = Math.pow(Math.floor(Math.random()*400), 1/3);
             await setItemBio(fish.id, "A " + Math.round(fishSize).toString() + " inch " + fishtype + " caught in " + room)
             await givePoints(player.id, Math.round(fishSize).toString(), event.id)
           }else{
@@ -174,24 +194,58 @@ const handler: NetworkEventHandler = async (
               broadcastToUser<string>(ERROR_EVENT,"bite who?", player.username); 
             }
           }
+        }else{
+          broadcastToRoom<Chat>(CHAT_EVENT, chat, player.roomId)  
+          await insertRoomChat(player.roomId, player.id, input, chat.date)
+          broadcastToRoom<string>(NOTIFICATION_EVENT, "chat", player.roomId);
         }
         break;
       case "/campaign":
         if(event && event.type === "Election_Day"){
-          broadcast<string>(CHAT_EVENT, args.join())
+          if(args.join(" ").length > 100){
+            broadcastToUser<string>(ERROR_EVENT, "campaign message too long", player.username)
 
+          }else
+          if(args.length >= 1){
+            await campaign(event, Date.now(),player.id, args)
+          }else{
+            broadcastToUser<string>(ERROR_EVENT, "you didn't say anything", player.username)
+          }
+
+        }else{
+          broadcastToRoom<Chat>(CHAT_EVENT, chat, player.roomId)  
+          await insertRoomChat(player.roomId, player.id, input, chat.date)
+          broadcastToRoom<string>(NOTIFICATION_EVENT, "chat", player.roomId);
         }
 
         break;
       case "/vote":
         if(event && event.type === "Election_Day"){
+          if(args.length >= 2){
+            if(args[1]){
+              await castVote(event, player.id, args[1])
+            }
+          }else{
+            broadcastToUser<string>(ERROR_EVENT, "you didn't vote for anyone", player.username)
+          }
+          
 
+        }else{
+          broadcastToRoom<Chat>(CHAT_EVENT, chat, player.roomId)  
+          await insertRoomChat(player.roomId, player.id, input, chat.date)
+          broadcastToRoom<string>(NOTIFICATION_EVENT, "chat", player.roomId);
         }
   
         break;
       case "/poll":
         if(event && event.type === "Election_Day"){
+          const message = await pollResults(event)
+          broadcastToUser<string>(SERVER_LOG_EVENT, message, player.username)
 
+        }else{
+          broadcastToRoom<Chat>(CHAT_EVENT, chat, player.roomId)  
+          await insertRoomChat(player.roomId, player.id, input, chat.date)
+          broadcastToRoom<string>(NOTIFICATION_EVENT, "chat", player.roomId);
         }
     
         break;

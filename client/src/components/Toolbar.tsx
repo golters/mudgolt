@@ -57,7 +57,7 @@ const symbols = [
   {id: "water", chars:["⛆","﹏","〰","﹌","𐩘","෴","𓆛","𓆜","𓆝","𓆞","𓆟"]},
   {id: "sky", chars:["☁","☀","★","☆","⛈","✦","✧","𓅛"]},
   {id: "bear", chars:["ﻌ","Ҁ","ҁ","⟟","⧪","ᴥ","ʔ","ʕ","ꮂ","㉨","ｴ","•","ᶘ","ᶅ"]},
-  {id: "music", chars:["👁","✈","✉","✐","∙"]},
+  {id: "music", chars:["👁","✈","✉","✐","-"]},
 ]
 
 const commands = [
@@ -311,6 +311,10 @@ function getCount(){
         break
       case "Bear_Week":
         pushToLog(/* html */`A Strange transformation has taken over you as you become a bear`)
+
+        break
+      case "Election_Day":
+        pushToLog(/* html */`Use <code>/campaign [message]</code> to broadcast messages to all users. <code>/vote [user]</code> to pick your favourite candidate. <code>/poll</code> to check on who's winning`)
 
         break
     }

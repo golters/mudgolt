@@ -14,14 +14,21 @@ import {
   online,
 } from "../network"
 import {
+  CAMPAIGN_LOG_EVENT,
+  ERROR_EVENT,
   LOG_EVENT,
   NOTIFICATION_EVENT,
   SERVER_LOG_EVENT,
 } from "../../events"
-import { getPlayerById, getPlayerByRoom, getPlayerByUsername, getRecentlyOnline } from "./player"
-import { createItem,setItemBio } from "./item"
+import { getPlayerById, getPlayerByRoom, getPlayerByUsername, getRecentlyOnline, takePlayerGolts } from "./player"
+import { createItem,setItemBio,createFloorItem } from "./item"
 import { getDoorsIntoRoom } from "./door"
 import { start } from "repl"
+import { insertCampaign, insertRoomCommand } from "./chat"
+import { getAllRooms } from "./room"
+import {
+  GOLT,
+} from "../../constants"
 
 export const events = [
   "Zombie_Invasion",
@@ -35,6 +42,7 @@ export const events = [
   "Cryptid_Hunt",
   "Monopoly",
   "The_Big_Heist",
+  "Freak_Storm",
 ]
 //add murder mystery/cluedo, treasure hunt, circus
 //add events for every major holiday
@@ -47,6 +55,21 @@ export interface bearface {
   righteye: string
   rightear: string
 }
+
+export const newspapers = [
+  "gazette",
+  "bugle",
+  "post",
+  "mail",
+  "times",
+  "chronicle",
+  "telegraph",
+  "globe",
+  "herald",
+  "journal",
+  "tribune",
+  "paper",
+]
 
 const bearbits: bearface[] = [
   {
@@ -271,7 +294,7 @@ export const getEventTag = async (id:number, type: string, event:number): Promis
 export const getUpcomingEvents = async (time: number): Promise<Event[]> => {
   const events = await db.all<Event[]>(/*sql*/`
     SELECT * FROM events 
-    WHERE "start" > $1 AND "start" < $1 + 8.64e+7 * 7
+    WHERE "start" > $1 AND "start" < $1 + 8.64e+7 * 5
   `, [time])
 
   return events
@@ -283,7 +306,6 @@ export const clearOldEvents = async (time: number): Promise<void> => {
     SELECT * FROM events 
     WHERE "end" < $1 
   `, [time])	
-  
 
   for(let i = 0; i < oldEvents.length; i++){
     const eventId = oldEvents[i].id
@@ -347,6 +369,20 @@ export const clearOldEvents = async (time: number): Promise<void> => {
         WHERE "id" = $1; 
       `, [eventId])	
         
+        break
+      case "Election_Day":
+        await electionWinner(eventId)
+
+        await db.run(/*sql*/`
+          DELETE FROM eventTags 
+          WHERE "eventId" = $1;
+        `, [eventId])	
+    
+        await db.run(/*sql*/`
+        DELETE FROM events 
+        WHERE "id" = $1; 
+      `, [eventId])	
+
         break
       default:
         await db.run(/*sql*/`
@@ -469,7 +505,7 @@ AND eventId = $2;
     if(!rooms){
       return
     }
-    const roomid = 1
+    const roomid = Math.random() * rooms.length
     const timer = Date.now() + (Math.random() * 1 * 60000)
     await createEventTag(roomid, "room", timer.toString(), event)
     broadcastToRoom<string>(SERVER_LOG_EVENT, "a hoard of zombies burst into the room. leave quickly!", roomid); 
@@ -574,7 +610,8 @@ export const bitePlayer = async(event: number, player:string, zombie:number): Pr
     if(!infectedPlayerMap.includes(bitee.id)){
       await createEventTag(bitee.id, "player", "infected", event)
       broadcastToUser<string>(SERVER_LOG_EVENT, "you have been bitten by a zombie. use /Bite [user] to spread the infection", bitee.username)
-      broadcastToUser<string>(NOTIFICATION_EVENT, "zombie", bitee.username)
+      broadcastToUser<string>(NOTIFICATION_EVENT, "zombie", bitee.username)      
+      await insertRoomCommand(biter.roomId, biter.id, " has bitten " + bitee.username, Date.now(), "me")
     }
     broadcastToRoom<string>(SERVER_LOG_EVENT, biter.username + " has bitten " + bitee.username, bitee.roomId)
   }else{    
@@ -667,12 +704,12 @@ export const createRandomEvent = async (time: number): Promise<void> => {
   if ((await upcomingEvents).length < 1){
     const targetDate = new Date()
     targetDate.setDate(targetDate.getDate() + Math.round(Math.random() * 6) + 1)
-    targetDate.setHours(0)
+    targetDate.setHours(12)
     targetDate.setMinutes(0)
     targetDate.setSeconds(0)
     const start = targetDate.getTime() - new Date().getTime()
-    const length = 8.64e+7
-    const type = Math.random() * 1
+    const length = 4.32e+10
+    const type = Math.random() * 3
     createEvent(events[Math.round(type)],time + start, time + start + length)
   }
 
@@ -680,19 +717,22 @@ export const createRandomEvent = async (time: number): Promise<void> => {
 }
 
 export const checkSeasonalEvents = async (): Promise<void> => {
-  const targetDate = new Date()
-  targetDate.setFullYear(new Date().getFullYear(),7,11)
-  targetDate.setHours(0)
-  targetDate.setMinutes(0)
-  targetDate.setSeconds(0)
-  const start = targetDate.getTime()
-  const end = start + 8.64e+7 * 7
-  const bearWeek = await db.get<Event>(/*sql*/`
-    SELECT * FROM events WHERE "start" = $1 AND "end" = $2 AND type = $3;
-  `, [start,end,"Bear_Week"])
-
-  if(!bearWeek){
-    createEvent("Bear_Week",start,end)
+  if(Number(new Date().getMonth) < 7 || (Number(new Date().getMonth) === 7 && Number(new Date().getDate) < 11)){
+    const targetDate = new Date()
+    targetDate.setFullYear(new Date().getFullYear(),7,11)
+    targetDate.setHours(0)
+    targetDate.setMinutes(0)
+    targetDate.setSeconds(0)
+    const start = targetDate.getTime()
+    const end = start + 8.64e+7 * 7
+    const bearWeek = await db.get<Event>(/*sql*/`
+      SELECT * FROM events WHERE "start" = $1 AND "end" = $2 AND type = $3;
+    `, [start,end,"Bear_Week"])
+  
+    if(!bearWeek){
+      createEvent("Bear_Week",start,end)
+    }
+  
   }
 
 
@@ -733,8 +773,277 @@ export const getCountdown = async (time: number): Promise<string> => {
   return timestamp
 }
 
-export const castVote = async (event: Event, player: number, candidate: string): Promise<void> => {
-  
+export const campaign = async (event: Event, time:number, player:number, message: string[]) => {
+  const cost = message.join(" ").length * 2
+  const lastMessageid = await db.get<EventTag>(/*sql*/`
+  SELECT * FROM eventTags WHERE type = $1 AND eventId = $3;
+`, ["campaign", event.id])
+
+  const lastmessage = await db.get<ChatHistory>(/*sql*/`
+  SELECT * FROM chats WHERE type = $1 AND fromPlayerId = $2
+      ORDER BY date DESC
+      LIMIT 1;
+`, ["campaign", lastMessageid?.id])
+
+  const fullplayer = await getPlayerById(player)
+  if(!fullplayer){
+    
+    return
+  }
+  if(fullplayer.golts <= cost){
+    broadcastToUser<string>(SERVER_LOG_EVENT, `you need ${GOLT}${cost}`, fullplayer?.username)
+
+    return
+  }
+  const playername = await getPlayerById(player)
+  delete message[0]
+  const newmessage = "["+playername?.username+"]" + message.join(" ")
+  if(!lastmessage){
+    broadcast<string>(CAMPAIGN_LOG_EVENT, newmessage)
+    broadcast<string>(NOTIFICATION_EVENT, "horn")
+    await createEventTag(player, "campaign", newmessage, event.id)
+    await insertCampaign(event.id, player, newmessage, Date.now())
+
+  }else
+  if(lastmessage?.date < Date.now() - 30000){
+    if(lastmessage.fromPlayerId === player){
+      if(lastmessage.date < Date.now() - 60000){
+        broadcast<string>(CAMPAIGN_LOG_EVENT, newmessage)
+        broadcast<string>(NOTIFICATION_EVENT, "horn")
+        await createEventTag(player, "campaign", newmessage, event.id)
+        await insertCampaign(event.id, player, newmessage, Date.now())
+
+      }else{        
+        broadcastToUser<string>(SERVER_LOG_EVENT, "you can't campaign again yet", fullplayer?.username)
+
+        return
+      }
+    }else{
+      broadcast<string>(CAMPAIGN_LOG_EVENT, newmessage)
+      broadcast<string>(NOTIFICATION_EVENT, "horn")
+      await createEventTag(player, "campaign", newmessage, event.id)
+      await insertCampaign(event.id, player, newmessage, Date.now())
+
+    }
+  }else{
+    broadcastToUser<string>(SERVER_LOG_EVENT, "you can't campaign yet", fullplayer?.username)
+
+    return
+  }
+  await takePlayerGolts(player, cost)
+  broadcastToUser<string>(SERVER_LOG_EVENT, `-${GOLT}${cost}`, fullplayer?.username)
+
 
   return
+}
+
+export const castVote = async (event: Event, player: number, candidate: string): Promise<void> => {
+  const votetag = await db.get<EventTag>(/*sql*/`
+  SELECT * FROM eventTags 
+  WHERE type = ('vote')
+  AND eventId = $1 
+  AND id = $2;  
+`,[event.id, player])  
+
+  const fullplayer = await getPlayerById(player)
+  if(!fullplayer){
+  
+    return
+  }
+  const candidateId = await getPlayerByUsername(candidate)
+  if(!candidateId){
+    broadcastToUser<string>(ERROR_EVENT, "candidate does not exist", fullplayer?.username)
+    
+    return
+  }
+  console.log(votetag)
+
+  if(votetag){
+    broadcastToUser<string>(SERVER_LOG_EVENT, "you changed your vote to " + candidate, fullplayer?.username)
+    await db.run(/*sql*/`
+    UPDATE eventTags
+      SET info = $1
+      WHERE id = $2 
+      AND type = ('vote')
+      AND eventId = $3;
+  `, [candidateId.id, player, event.id])
+
+  }else{
+    if(candidateId.id === player){
+      broadcastToUser<string>(SERVER_LOG_EVENT, "wow, you voted for yourself", fullplayer?.username)
+    }else{
+      broadcastToUser<string>(SERVER_LOG_EVENT, "you voted for " + candidate, fullplayer?.username)
+    }
+    await createEventTag(player, "vote", candidateId.id.toString(), event.id)
+
+  }
+
+  return
+}
+
+export const pollResults = async (Event: Event): Promise<string> => {
+  let poll = "No one has voted. Democracy is dead"
+
+  const votes = await db.all<EventTag[]>(/*sql*/`
+  SELECT * FROM eventTags 
+  WHERE type = ('vote')
+  AND eventId = $1; 
+`,[Event.id]) 
+  //make a list of all unique entries
+  const candidates = []
+  for(let i = 0; i < votes.length; i++){
+    if(candidates.length < 1){
+      candidates.push(Number(votes[i].info))
+    }
+    if(!candidates.includes(Number(votes[i].info))){
+      candidates.push(Number(votes[i].info))
+    }
+  }
+
+  //make array of arrays of numbers
+  const count: number[][] = []
+
+  for(let c = 0; c < candidates.length; c++){
+    let candidatevotes = 0
+    for(let v = 0; v < votes.length; v++){
+      if(Number(votes[v].info) === candidates[c]){
+        candidatevotes = candidatevotes + 1
+      }
+    }
+    count.push([candidates[c],candidatevotes])
+  }
+
+  let message = ""
+
+  for(let i = 0; i < count.length; i++){
+    if(i != 0){
+      message = message + ","
+    }
+    const name = await getPlayerById(count[i][0])
+    const percent = (count[i][1] / votes.length) * 100
+    message = message + name?.username + ":"
+    message = message + percent + "%"
+  }
+
+  if(message !== ""){
+    poll = message
+  }
+
+  return poll
+}
+
+export const electionWinner = async (event: number): Promise<void> => {
+
+  const votes = await db.all<EventTag[]>(/*sql*/`
+  SELECT * FROM eventTags 
+  WHERE type = ('vote')
+  AND eventId = $1; 
+`,[event]) 
+
+  //make a list of all unique entries
+  const candidates = []
+  for(let i = 0; i < votes.length; i++){
+    if(candidates.length < 1){
+      candidates.push(Number(votes[i].info))
+    }
+    if(!candidates.includes(Number(votes[i].info))){
+      candidates.push(Number(votes[i].info))
+    }
+  }
+
+  //make array of arrays of numbers
+  const count: number[][] = []
+
+  for(let c = 0; c < candidates.length; c++){
+    let candidatevotes = 0
+    for(let v = 0; v < votes.length; v++){
+      if(Number(votes[v].info) === candidates[c]){
+        candidatevotes = candidatevotes + 1
+      }
+    }
+    count.push([candidates[c],candidatevotes])
+  }
+  
+
+  const scoreBoard = count.sort((a,b) => a[1] - b[1])
+  const [formattedDate] = new Date(Date.now())
+    .toLocaleString()
+    .split(",")
+    .slice(0, 1)
+  const timestamp = `${formattedDate}`
+
+  let message = ""
+  if(scoreBoard.length < 1){
+    message = "Nobody has been elected. Anarchy wins"
+    for(let o = 0; o < online.length; o++){
+      const sash = await createItem(online[o].player.id, "Anarchy_Sash")
+      await setItemBio(sash.id, "A sash awarded to everyone who didn't vote during an election day where nobody won on " + timestamp)
+      broadcastToUser<string>(SERVER_LOG_EVENT, "you got an Anarchy_Sash", online[o].player.username)
+      broadcastToUser<string>(NOTIFICATION_EVENT, "gotmail", online[o].player.username); 
+    }
+  }else if (scoreBoard.length === 1){
+    const winner = await getPlayerById(scoreBoard[0][0])
+    if(!winner){
+
+      return
+    }
+    message = winner?.username + " has won the election!"
+    const sash = await createItem(scoreBoard[0][0], "Election_Sash")
+    await setItemBio(sash.id, "A sash awarded to " + winner?.username + " for winning the " + timestamp + " election")
+    broadcastToUser<string>(SERVER_LOG_EVENT, "you got an Election_Sash", winner?.username)
+    broadcastToUser<string>(NOTIFICATION_EVENT, "gotmail", winner?.username)
+  }else
+  if(scoreBoard[0][1] === scoreBoard[1][1]){
+    message = "A coalition has been elected of "
+    for(let c = 0; c < scoreBoard.length; c++){
+      if(scoreBoard[0][1] === scoreBoard[c][1]){
+        if(c > 0){
+          message = message + " and "
+        }
+        const winner = await getPlayerById(scoreBoard[c][0])
+        if(!winner){
+    
+          return
+        }
+        message = message + winner?.username
+        const sash = await createItem(scoreBoard[c][0], "Coalition_Sash")
+        await setItemBio(sash.id, "A sash awarded to " + winner?.username + " for joint winning the " + timestamp + " election")
+        broadcastToUser<string>(SERVER_LOG_EVENT, "you got a Coalition_Sash", winner?.username)
+        broadcastToUser<string>(NOTIFICATION_EVENT, "gotmail", winner?.username); 
+      }  
+    }
+  }
+  const rooms = await getAllRooms()
+  for (let r = 0; r < rooms.length; r++){
+    if(Math.random() > 0.8){
+      let areaNameNum = 0
+      const roomarray = rooms[r].name.split(/(?:-|_| )+/)
+      if(roomarray.length > 1){
+        for(let i = 0; i < roomarray.length; i++){
+          if(Number.isNaN(roomarray[i])){
+            delete roomarray[i]
+          }
+          if(roomarray[i].length === 1){
+            delete roomarray[i]
+          }
+          if(roomarray[i] === "left" || roomarray[i] === "right"
+          || roomarray[i] === "north"|| roomarray[i] === "east"|| roomarray[i] === "south"|| roomarray[i] === "west"){
+            delete roomarray[i]
+          }
+        }
+        
+        areaNameNum = Math.round(Math.random() * (roomarray.length-1))
+      }
+      const areaName = roomarray[areaNameNum]
+      const papertype = newspapers[Math.round(Math.random() * (newspapers.length-1))]
+      const newspaper = "the_" + areaName + "_" + papertype
+      const paper = await createFloorItem(rooms[r].id, newspaper)
+      await setItemBio(paper.id, message + " " + timestamp)
+        
+    }
+  }
+  
+  broadcast(SERVER_LOG_EVENT, message)
+  
+  return 
 }
