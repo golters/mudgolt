@@ -60,6 +60,10 @@ export const EVENT_EVENT = "EVENT"
 export const EVENT_UPDATE_EVENT = "EVENT_UPDATE"
 export const SMELT_ITEM_EVENT = "SMELT_ITEM"
 export const CAMPAIGN_LOG_EVENT = "CAMPAIGN_LOG"
+export const UFO_EVENT = "UFO"
+export const INVENTORY_UPDATE_EVENT = "INVENTORY_UPDATE"
+export const DRAW_ICON_EVENT = "DRAW_ICON"
+export const INSIGHT_EVENT = "INSIGHT"
 
 // command events
 export const LOG_EVENT = "LOG"

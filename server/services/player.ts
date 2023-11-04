@@ -8,7 +8,7 @@ import {
   db, 
 } from "../store"
 import crypto from "crypto"
-import { getRoomByName } from "./room"
+import { getAllRooms, getRoomByName, weedCheck } from "./room"
 import { broadcastToUser, online } from "../network"
 import { DAILY_PAY, PAY_RATE, PAY_TIME } from "../../constants"
 import { SERVER_LOG_EVENT } from "../../events"
@@ -89,6 +89,7 @@ export const setPlayerRoomByName = async (playerId: number, roomName: string): P
   if (!room) {
     throw new Error("Room doesn't exist")
   }
+  await weedCheck(room)
 
   const player = await getPlayerById(playerId)
   
@@ -105,12 +106,6 @@ export const setPlayerRoomByName = async (playerId: number, roomName: string): P
   const newPlayer = await getPlayerById(playerId) as Player
 
   updateOnlinePlayerById(playerId, newPlayer)
-
-  
-  const event = await getCurrentEvent(Date.now())
-  if(event && event.type === "Zombie_Invasion") {
-    //infect player
-  }
 
   return room
 }
@@ -352,4 +347,14 @@ export const cheat = async (playerId: number, cheat:string) => {
   }
 
   return
+}
+
+export const abduction = async (playerID: number): Promise<Room> => {
+  const rooms = await getAllRooms()
+  const roomnames = rooms.map(r => r.name)
+  const randomroom = roomnames[Math.floor(Math.random()*roomnames.length)]
+  await setPlayerRoomByName(playerID,randomroom)
+  const newRoom = await getRoomByName(randomroom)
+  
+  return newRoom
 }

@@ -15,6 +15,7 @@ import {
   MUSIC_EVENT,
   TP_EVENT,
   LOG_EVENT,
+  UFO_EVENT,
 } from "../../../events"
 import {
   store, 
@@ -136,6 +137,8 @@ let ping = setInterval(() => {
   if(localStorage.getItem("focus") === "open"){
   sendEvent(PING_EVENT, client)  
   sendEvent(PAY_EVENT, store.player?.id)
+  }else{
+    sendEvent(UFO_EVENT, store.player?.id)
   }
 }, 15 * 1000)
 

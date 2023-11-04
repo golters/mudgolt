@@ -159,19 +159,19 @@ const handler: NetworkEventHandler = async (
                 }
               }
               
-              areaNameNum = Math.round(Math.random() * (roomarray.length-1))
+              areaNameNum = Math.floor(Math.random() * (roomarray.length-1))
             }
 
             const areaName = roomarray[areaNameNum]
-            const fishtype = fishTypes[Math.round(Math.random() * (fishTypes.length-1))]
+            const fishtype = fishTypes[Math.floor(Math.random() * (fishTypes.length-1))]
             const fishName = areaName + "_" + fishtype
   
             broadcastToUser<string>(SERVER_LOG_EVENT, "you caught a " + fishName, player.username); 
             const fish = await createItem(player.id,fishName) 
             //const fishSize = Math.random() * 480
             const fishSize = Math.pow(Math.floor(Math.random()*400), 1/3);
-            await setItemBio(fish.id, "A " + Math.round(fishSize).toString() + " inch " + fishtype + " caught in " + room)
-            await givePoints(player.id, Math.round(fishSize).toString(), event.id)
+            await setItemBio(fish.id, "A " + Math.floor(fishSize).toString() + " inch " + fishtype + " caught in " + room)
+            await givePoints(player.id, Math.floor(fishSize).toString(), event.id)
           }else{
             broadcastToUser<string>(SERVER_LOG_EVENT, "you caught nothing, try again", player.username); 
           }

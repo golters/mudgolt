@@ -657,9 +657,9 @@ export const getAllBears = async(event: number): Promise<EventTag[]> => {
 
 export const createBearName = async(event: number, player:number): Promise<string> => {
 
-  let bearear = bearbits[Math.round(Math.random()*bearbits.length)]
-  let bearnose = bearbits[Math.round(Math.random()*bearbits.length)]
-  let beareyes = bearbits[Math.round(Math.random()*bearbits.length)]
+  let bearear = bearbits[Math.floor(Math.random()*bearbits.length)]
+  let bearnose = bearbits[Math.floor(Math.random()*bearbits.length)]
+  let beareyes = bearbits[Math.floor(Math.random()*bearbits.length)]
   //lazy solution, bear bits was sometimes undefined
   if(bearear === undefined){
     bearear = bearbits[0]
@@ -703,14 +703,14 @@ export const createRandomEvent = async (time: number): Promise<void> => {
   const upcomingEvents = getUpcomingEvents(time)
   if ((await upcomingEvents).length < 1){
     const targetDate = new Date()
-    targetDate.setDate(targetDate.getDate() + Math.round(Math.random() * 6) + 1)
+    targetDate.setDate(targetDate.getDate() + Math.floor(Math.random() * 6) + 1)
     targetDate.setHours(12)
     targetDate.setMinutes(0)
     targetDate.setSeconds(0)
     const start = targetDate.getTime() - new Date().getTime()
     const length = 4.32e+10
     const type = Math.random() * 3
-    createEvent(events[Math.round(type)],time + start, time + start + length)
+    createEvent(events[Math.floor(type)],time + start, time + start + length)
   }
 
   return
@@ -764,7 +764,7 @@ export const getCountdown = async (time: number): Promise<string> => {
   const countdown = time - Date.now()
   const days = Math.floor(countdown / 86400000)
   const hours = Math.floor((countdown - (days * 1.15741e-8)) / 3.6e+6)
-  const minutes = Math.round((countdown - (days * 1.15741e-8) - (hours * 3.6e+6)) / 60000)
+  const minutes = Math.floor((countdown - (days * 1.15741e-8) - (hours * 3.6e+6)) / 60000)
     
   const timestamp = countdown > 86400000
     ? `${days} days ${hours} hours ${minutes} minutes`
@@ -1032,10 +1032,10 @@ export const electionWinner = async (event: number): Promise<void> => {
           }
         }
         
-        areaNameNum = Math.round(Math.random() * (roomarray.length-1))
+        areaNameNum = Math.floor(Math.random() * (roomarray.length-1))
       }
       const areaName = roomarray[areaNameNum]
-      const papertype = newspapers[Math.round(Math.random() * (newspapers.length-1))]
+      const papertype = newspapers[Math.floor(Math.random() * (newspapers.length-1))]
       const newspaper = "the_" + areaName + "_" + papertype
       const paper = await createFloorItem(rooms[r].id, newspaper)
       await setItemBio(paper.id, message + " " + timestamp)

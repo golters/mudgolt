@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { SMELT_COST } from "../../constants"
+import { SMELT_COST, ICON_WIDTH, ICON_HEIGHT, BANNER_FILL } from "../../constants"
 import {
   Item, Player,
 } from "../../@types"
@@ -9,18 +9,24 @@ import {
 import {
   insertWhisper,
 } from "./chat"
-import { addPlayerGolts, getPlayerById } from "./player"
+import { addPlayerGolts, getInvByPlayer, getPlayerById } from "./player"
+import { broadcastToUser } from "../../server/network"
+import { INVENTORY_UPDATE_EVENT } from "../../events"
 
 export const createItem = async (playerID: number, name: string): Promise<Item> => {
+  const icon = await generateIcon()
   await db.get(/*sql*/`
-  INSERT INTO items ("name", "description", "macro", "holderId", "holderType")
-    VALUES ($1, $2, $3, $4, $5);
+  INSERT INTO items ("name", "description", "macro", "holderId", "holderType","icon","creator","date")
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8);
 `, [    
     name,
     `a ${name}`,
     "",
     playerID,
     "player",
+    icon,
+    playerID,
+    Date.now(),
   ])
 
   const inventory = await getItemByPlayer(playerID)
@@ -33,15 +39,19 @@ export const createItem = async (playerID: number, name: string): Promise<Item> 
 }
 
 export const createFloorItem = async (roomID: number, name: string): Promise<Item> => {
+  const icon = await generateIcon()
+  const time = Date.now
   await db.get(/*sql*/`
-  INSERT INTO items ("name", "description", "macro", "holderId", "holderType")
-    VALUES ($1, $2, $3, $4, $5);
+  INSERT INTO items ("name", "description", "macro", "holderId", "holderType", "icon", "date")
+    VALUES ($1, $2, $3, $4, $5, $6, $7);
 `, [    
     name,
     `a ${name}`,
     "",
     roomID,
     "room",
+    icon,
+    time,
   ])
 
   //get newest item
@@ -61,7 +71,7 @@ export const createPost = async (playerID: number, bio: string): Promise<Item> =
   INSERT INTO items ("name", "description", "macro", "holderId", "holderType")
     VALUES ($1, $2, $3, $4, $5);
 `, [    
-    `${user?.username}_post${Math.round(Math.random()*(999-100+1)+100)}`,
+    `${user?.username}_post${Math.floor(Math.random()*(999-100+1)+100)}`,
     `${bio} -${user?.username} ${new Date()}`,
     "",
     user?.roomId,
@@ -221,4 +231,36 @@ export const smeltItem = async (player: Player, material: string): Promise<numbe
   await addPlayerGolts(player.id, ingot)
 
   return ingot
+}
+export const generateIcon = () => {
+  return new Array(ICON_WIDTH * ICON_HEIGHT)
+    .fill(BANNER_FILL)
+    .join("")
+}
+
+export const editIcon = async (x: number, y: number, character: string, item: Item): Promise<Item> => {
+  const pos = x + (y * ICON_WIDTH)
+
+  if(!item.icon){
+    item.icon = await generateIcon()
+  }
+  const banner = Array.from(item.icon);
+
+  banner[pos] = character
+
+  item.icon = banner.join("")
+
+  await db.run(/*sql*/`
+    UPDATE items
+      SET icon = $1
+      WHERE id = $2;
+  `, [item.icon, item.id])
+
+  const player = await getPlayerById(item.holderId)
+  if(player){
+    const inv = await getInvByPlayer(player.id)
+    broadcastToUser(INVENTORY_UPDATE_EVENT, inv, player?.username)
+  }
+
+  return item
 }

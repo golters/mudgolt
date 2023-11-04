@@ -1,3 +1,15 @@
+@font-face {
+  font-family: DOS16;
+  src: url(../assets/ModernDOS8x16.ttf);
+  font-size: 16px;
+}
+
+@font-face {
+  font-family: DOS14;
+  src: url(../assets/ModernDOS8x14.ttf);
+  font-size: 14px;
+}
+
 #terminal {
   /* pointer-events: none; */
   line-height: 1.5;
@@ -5,10 +17,12 @@
   padding: 1em;
   overflow-x: hidden;
   background-color: var(--color-terminal-back);
+  transition: 0.5s;
 }
-@supports (-moz-appearance:none) {
+@media only screen and (min-width: 600px) {
   #terminal {
-    height:50%;
+    margin-left:150px;
+    margin-right:200px;
   }
 }
 
@@ -51,6 +65,10 @@
 
 #terminal-input-container .char-limit.invalid {
   color: var(--color-charlimit-over);
+}
+
+a {
+  color: var(--color-text-link);
 }
 
 .chat-message {

@@ -2,6 +2,9 @@ export const BANNER_WIDTH = 96
 export const BANNER_HEIGHT = 16
 export const BANNER_FILL = "∙"
 
+export const ICON_WIDTH = 6
+export const ICON_HEIGHT = 3
+
 export const MESSAGE_MAX_LENGTH = 5000
 export const USERNAME_MAX_LENGTH = 64
 

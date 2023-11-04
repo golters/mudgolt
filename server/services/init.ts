@@ -31,8 +31,17 @@ export const initStore = async () => {
 	    "description"	TEXT NOT NULL,
 	    "macro"	TEXT NOT NULL,
 	    "holderId"	INTEGER NOT NULL,
-	    "holderType"	TEXT NOT NULL
+	    "holderType"	TEXT NOT NULL,
+      "rarity" TEXT,
+      "type" TEXT,
+      "tags" TEXT,
+      "date" INTEGER,
+      "creator" INTEGER,
+      "password" TEXT,
+      "stats" TEXT,
+      "icon" TEXT
     );
+    
 
     CREATE TABLE IF NOT EXISTS inventories (
       "itemId" INTEGER NOT NULL,
@@ -123,6 +132,14 @@ export const initStore = async () => {
       "start" INTEGER NOT NULL,
       "end" INTEGER NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS NPCS (
+      /*name
+      icon
+      health
+      phrases
+      job */
+    )
 
   `)
 
