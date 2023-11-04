@@ -81,6 +81,7 @@ function insightItem(item: Item){
 //equipitem
 //describeitem
 //enchantitem
+//test
 
 const symbols = [
   {id: "blocks", chars:["█","▓","▒","░"]},
