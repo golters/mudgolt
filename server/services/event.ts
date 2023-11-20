@@ -1037,7 +1037,7 @@ export const electionWinner = async (event: number): Promise<void> => {
       const areaName = roomarray[areaNameNum]
       const papertype = newspapers[Math.floor(Math.random() * (newspapers.length-1))]
       const newspaper = "the_" + areaName + "_" + papertype
-      const paper = await createFloorItem(rooms[r].id, newspaper)
+      const paper = await createFloorItem(rooms[r].id, newspaper, null, "","newspaper")
       await setItemBio(paper.id, message + " " + timestamp)
         
     }

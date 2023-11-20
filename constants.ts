@@ -13,6 +13,7 @@ export const RECONNECT_DELAY = 5000
 export const ROOM_MAX_BIO = 280
 export const PLAYER_MAX_BIO = 280
 export const ITEM_MAX_BIO = 280
+export const ITEM_MAX_TAGS = 280
 
 export const DOOR_MAX_NAME = 32
 export const ROOM_MAX_NAME = 32
@@ -35,3 +36,43 @@ export const DELIVERY_COST = 2
 export const SMELT_COST = 1
 
 export const ENCHANT_MAX = 5000
+
+export const AVATAR_WIDTH = 10
+export const AVATAR_HEIGHT = 5
+export const NPC_HEALTH = 1000
+
+export interface itemRarityInterface {
+  num: number
+  col: string
+  back: string
+}
+//drop shadow, font
+//rarity names (uncommon, rare, legendary, mythical etc)
+
+export const itemRarity: itemRarityInterface[] = [
+  {
+    num:0,
+    col:"white",
+    back:"black",
+  },
+  {
+    num:1,
+    col:"yellow",
+    back:"black",
+  },
+  {
+    num:2,
+    col:"blue",
+    back:"black",
+  },
+  {
+    num:3,
+    col:"red",
+    back:"black",
+  },
+  {
+    num:4,
+    col:"green",
+    back:"black",
+  },
+]

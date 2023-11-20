@@ -61,8 +61,11 @@
   border: var(--color-toolbar-dropdown-edge);
   outline-offset: -3px;
   transition: 1s;
-  margin-left: 10px;
+  margin-left: 20px;
   margin-right: 10px;
+  max-height: 300px;
+  max-width: 100px;
+  overflow: scroll;
 }
 
 .dropdown:hover .dropdown-content {
@@ -301,6 +304,13 @@
   font-family: DOS16;
   letter-spacing: 0;
 }
+#inventory {
+  display:grid;
+}
+.item{
+  width: 10px;
+  text-wrap:wrap;
+}
 .icon {
   line-height: 1;
   height:fit-content;
@@ -343,8 +353,9 @@
   background-color: #f1f1f1;
   text-align: center;
   border: 1px solid #d3d3d3;
-  width: 150px;
-  height: 100px;
+  transition: 1s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+  width:310px;
+  height:150px;
 }
 
 #windowheader {  
@@ -357,12 +368,17 @@
   cursor: grabbing;
 }
 
-#windowheader #x {
+#close {
   float: right;
   cursor:pointer;
-  pointer-events: auto;
+  pointer-events:auto;
 }
-#windowheader #x:hover {
+#close:hover {
   background-color: red;
   color: white;
+}
+
+#menu {
+  width: 150px;
+  float:left;
 }

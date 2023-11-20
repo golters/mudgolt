@@ -69,6 +69,7 @@ const handler: NetworkEventHandler = async (socket, args: string, player) => {
     await takePlayerGolts(player.id, cost)
     sendEvent<string>(socket, SERVER_LOG_EVENT, `-${GOLT}${cost}`)
     broadcastToRoom<string>(SERVER_LOG_EVENT, `${username} Created door ${name} to ${target}`, player.roomId)
+    //update toolbar
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)

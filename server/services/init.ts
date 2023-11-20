@@ -134,12 +134,16 @@ export const initStore = async () => {
     );
 
     CREATE TABLE IF NOT EXISTS NPCS (
-      /*name
-      icon
-      health
-      phrases
-      job */
-    )
+      "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+      "name" TEXT,
+      "icon" TEXT,
+      "health" INTEGER,
+      "job" TEXT,
+      "personality" TEXT,
+      "phrases" TEXT,
+      "birth" INTEGER,
+      "death" INTEGER
+    );
 
   `)
 

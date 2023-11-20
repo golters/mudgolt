@@ -64,6 +64,10 @@ export const UFO_EVENT = "UFO"
 export const INVENTORY_UPDATE_EVENT = "INVENTORY_UPDATE"
 export const DRAW_ICON_EVENT = "DRAW_ICON"
 export const INSIGHT_EVENT = "INSIGHT"
+export const MAKE_EVENT = "MAKE"
+export const NPC_UPDATE_EVENT = "NPC_UPDATE"
+export const DRAW_AVATAR_EVENT = "DRAW_AVATAR"
+export const TAG_ITEM_EVENT = "TAG_ITEM"
 
 // command events
 export const LOG_EVENT = "LOG"

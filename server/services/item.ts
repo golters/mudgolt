@@ -38,20 +38,51 @@ export const createItem = async (playerID: number, name: string): Promise<Item> 
   return item
 }
 
-export const createFloorItem = async (roomID: number, name: string): Promise<Item> => {
+export const makeFullItem = async (playerID: number, name: string, description: string, macro: string): Promise<Item> => {
   const icon = await generateIcon()
-  const time = Date.now
+  const time = Date.now()
   await db.get(/*sql*/`
-  INSERT INTO items ("name", "description", "macro", "holderId", "holderType", "icon", "date")
-    VALUES ($1, $2, $3, $4, $5, $6, $7);
+  INSERT INTO items ("name", "description", "macro", "holderId", "holderType", "icon","creator","date")
+    VALUES ($1, $2, $3, $4, $5, $6, $7,$8);
+`, [    
+    name,
+    description,
+    macro,
+    playerID,
+    "player",
+    icon,
+    playerID,
+    Date.now(),
+  ])
+
+  const inventory = await getItemByPlayer(playerID)
+  const max = inventory.reduce(function(prev, current) {
+    return (prev.id > current.id) ? prev : current
+  })
+  const item = await getItemById(max.id) as Item
+
+  return item
+}
+
+export const createFloorItem = async (roomID: number, name: string, icon: string | null, rarity: string, tags: string): Promise<Item> => {
+  let newicon = icon
+  if(!icon){
+    newicon = await generateIcon()
+  }
+  const time = Date.now()
+  await db.get(/*sql*/`
+  INSERT INTO items ("name", "description", "macro", "holderId", "holderType", "icon", "date", "rarity", "type")
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);
 `, [    
     name,
     `a ${name}`,
     "",
     roomID,
     "room",
-    icon,
+    newicon,
     time,
+    rarity,
+    tags,
   ])
 
   //get newest item
@@ -103,6 +134,13 @@ export const getItemByPlayer = async (playerId: number): Promise<Item[]> => {
   const items = await db.all<Item[]>(/*sql*/`
     SELECT * FROM items WHERE holderId = $1 AND holderType = "player";
   `, [playerId])
+
+  return items
+}
+export const getAllItems = async (): Promise<Item[]> => {
+  const items = await db.all<Item[]>(/*sql*/`
+    SELECT * FROM items;
+  `)
 
   return items
 }
@@ -190,6 +228,24 @@ export const setItemBio = async (itemId: number, bio: string): Promise<Item> => 
   `, [bio, itemId])
 
   return item
+}
+
+export const setItemTags = async (itemId: number, tags: string): Promise<Item> => {
+
+  const item = await getItemById(itemId)
+  
+  if (!item) {
+    throw new Error("Item doesn't exist")
+  }
+
+  await db.run(/*sql*/`
+    UPDATE items
+      SET tags = $1
+      WHERE id = $2;
+  `, [tags, itemId])
+
+  return item
+
 }
 
 export const setItemMacro = async (itemId: number, bio: string): Promise<Item> => {
