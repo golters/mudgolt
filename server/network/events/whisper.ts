@@ -12,15 +12,22 @@ import {
   ERROR_EVENT,
   LOG_EVENT,
   NOTIFICATION_EVENT,
+  INBOX_UPDATE_EVENT,
+  CORRESPONDENTS_UPDATE_EVENT,
+  TOOLBAR_UPDATE_EVENT,
+  WHISPER_POPUP_EVENT,
 } from "../../../events"
 import {
   Player,
+  Chat,
 } from "../../../@types"
 import {
   getPlayerByUsername,
 } from "../../services/player"
 import {
   insertWhisper,
+  fetchCorrespondent,
+  fetchInbox,
 } from "../../services/chat"
 
 const handler: NetworkEventHandler = async (
@@ -66,6 +73,17 @@ const handler: NetworkEventHandler = async (
     }
 
     await insertWhisper(user.id, player.id, message, Date.now())
+    //send inbox update
+    const inbox = await fetchInbox(player.id, 20, null)
+    broadcastToUser<Chat[]>(INBOX_UPDATE_EVENT, inbox, player.username)
+    const correspondents = await fetchCorrespondent(player.id)
+    broadcastToUser<string[]>(CORRESPONDENTS_UPDATE_EVENT, correspondents, player.username)
+    //receiever inbox update
+    const inbox2 = await fetchInbox(player.id, 20, null)
+    broadcastToUser<Chat[]>(INBOX_UPDATE_EVENT, inbox2, name)
+    const correspondents2 = await fetchCorrespondent(player.id)
+    broadcastToUser<string[]>(CORRESPONDENTS_UPDATE_EVENT, correspondents2, name)
+    broadcastToUser<string[]>(WHISPER_POPUP_EVENT, [player.username, message], name)
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)

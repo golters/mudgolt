@@ -6,10 +6,11 @@ import {
   broadcastToRoom,
 } from ".."
 import {
-  ROOM_DESCRIBE_EVENT, ERROR_EVENT, SERVER_LOG_EVENT,
+  ROOM_DESCRIBE_EVENT, ERROR_EVENT, SERVER_LOG_EVENT, INVENTORY_UPDATE_EVENT,
 } from "../../../events"
 import {
   Player,
+  Item,
 } from "../../../@types"
 import {
   GOLT,
@@ -99,7 +100,8 @@ const handler: NetworkEventHandler = async (
       await editBio(bio, room)
       broadcastToRoom<string>(SERVER_LOG_EVENT, `${name} edited room description`,player.roomId)
     }else{      
-      let inventory = await getItemByPlayer(player.id);      
+      const fullinventory = await getItemByPlayer(player.id);   
+      let inventory = fullinventory     
       inventory = inventory.filter(i => i.name === args[0])
       if(inventory.length > 0){
         if (bio.length > ITEM_MAX_BIO) {
@@ -117,7 +119,7 @@ const handler: NetworkEventHandler = async (
         await setItemBio(inventory[0].id, bio)
         sendEvent<string>(socket, SERVER_LOG_EVENT, `you edited ${args[0]}`)
       }else{
-        sendEvent<string>(socket, ERROR_EVENT, `you don't have a ${args[0]}. please write: describe me/room/or the name of an item in your inventory`)        
+        sendEvent<string>(socket, ERROR_EVENT, `you don't have a ${args[0]}. please write: describe me/room/or the name of an item in your inventory`)
       }
     }
   } catch (error) {

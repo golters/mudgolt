@@ -6,6 +6,7 @@ import {
   SMELT_ITEM_EVENT,
   SERVER_LOG_EVENT,
   NOTIFICATION_EVENT,
+  INVENTORY_UPDATE_EVENT,
 } from "../../../events"
 import {
   sendEvent,
@@ -14,6 +15,12 @@ import {
   smeltItem, createItem,
 } from "../../services/item"
 import { SMELT_COST, GOLT } from "../../../constants"
+import {
+  getInvByPlayer,
+} from "../../services/player"
+import {
+  Item,
+} from "../../../@types"
 
 const handler: NetworkEventHandler = async (socket, args: string, player) => {
   try {    
@@ -27,6 +34,7 @@ const handler: NetworkEventHandler = async (socket, args: string, player) => {
       return
     }
     const rand = Math.random() * 50
+    //small chance per char multiplied by item age
     if(rand + ingot > 75){
       await createItem(player.id, "golt_crystal")
       sendEvent<string>(socket, SERVER_LOG_EVENT, "you found a golt_crystal")  
@@ -34,6 +42,8 @@ const handler: NetworkEventHandler = async (socket, args: string, player) => {
     } 
     sendEvent<string>(socket, SERVER_LOG_EVENT, `you recovered ${GOLT}${ingot}`)    
     sendEvent<string>(socket, NOTIFICATION_EVENT, "smelt")
+    const inv = await getInvByPlayer(player.id)
+    sendEvent<Item[]>(socket, INVENTORY_UPDATE_EVENT, inv)
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)

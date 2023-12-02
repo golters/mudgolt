@@ -20,9 +20,6 @@ import {
 import {
   getCurrentEvent,
   clearOldEvents,
-  getUpcomingEvents,
-  getCountdown,
-  getDateString,
   moveZombies,
 } from "../../services/event"
 import { GOLT } from "../../../constants"

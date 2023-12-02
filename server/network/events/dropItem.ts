@@ -5,6 +5,7 @@ import {
   ERROR_EVENT,
   DROP_ITEM_EVENT,
   SERVER_LOG_EVENT,
+  INVENTORY_UPDATE_EVENT,
 } from "../../../events"
 import {
   sendEvent,
@@ -20,6 +21,12 @@ import {
   getCurrentEvent,
   getBearName,
 } from "../../services/event"
+import {
+  getInvByPlayer,
+} from "../../services/player"
+import {
+  Item,
+} from "../../../@types"
 
 const handler: NetworkEventHandler = async (socket, item: string, player) => {
   try {    
@@ -40,6 +47,8 @@ const handler: NetworkEventHandler = async (socket, item: string, player) => {
 
     broadcastToRoom<string>(SERVER_LOG_EVENT, `${username} dropped ${item}`,player.roomId)
     await insertRoomCommand(player.roomId, player.id, `dropped ${item}`, Date.now(), "drop")
+    const inv = await getInvByPlayer(player.id)
+    sendEvent<Item[]>(socket, INVENTORY_UPDATE_EVENT, inv)
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)

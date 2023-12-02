@@ -18,6 +18,10 @@ export const createDoor = async (roomID: number, targetID: number | undefined, n
     throw new Error("Door already exists")
   }
 
+  if(roomID === targetID){
+    throw new Error("The door collapses in on itself")
+  }
+
   await db.get(/*sql*/`
     INSERT INTO doors ("room_id", "target_room_id", "name")
       VALUES ($1, $2, $3);

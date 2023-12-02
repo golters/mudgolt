@@ -53,7 +53,7 @@ const handler: NetworkEventHandler = async (socket, message: string, player) => 
             brokenMessage.forEach(word => {
               let slur = " "
               if(Math.random() > 0.2){
-                slur = zombieSlurs[Math.round(Math.random() * (zombieSlurs.length - 1))]
+                slur = zombieSlurs[Math.floor(Math.random() * (zombieSlurs.length - 1))]
               }
               filteredMessage = filteredMessage + word + slur         
             });

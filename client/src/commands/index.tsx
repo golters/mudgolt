@@ -118,6 +118,15 @@ import {
 import {
   Smelt
 }from "./smelt"
+import {
+  Insight
+}from "./insight"
+import {
+  Make
+}from "./make"
+import {
+  Tag
+}from "./tag"
 
 
 export const commandModules = [
@@ -158,6 +167,9 @@ export const commandModules = [
   Link,
   Event,
   Smelt,
+  Insight,
+  Make,
+  Tag,
 ]
 
 const findCommand = (nameOrAlias: string) => {

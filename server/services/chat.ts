@@ -4,7 +4,7 @@ import {
   db, 
 } from "../store"
 import { getBearName, getCurrentEvent } from "./event"
-import { getPlayerByUsername } from "./player"
+import { getPlayerById, getPlayerByUsername } from "./player"
 
 export const insertRoomChat = async (roomId: number, fromPlayerId: number, message: string, date: number) => {
   await db.run(/*sql*/`
@@ -90,9 +90,41 @@ export const fetchRoomChats = async (roomId: number, limit = 500): Promise<Chat[
   
   return chats
 }
+export const fetchCorrespondent = async (playerId: number): Promise<string[]> => {
+  const matchplayers = await db.all<Player[]>(/*sql*/`
+      SELECT * FROM players
+      WHERE id IN (SELECT toPlayerId FROM chats
+      WHERE toPlayerId IS NOT NULL
+      AND fromPlayerId = $1 )
+  `, [playerId])
+  const matchrecipiants = await db.all<Player[]>(/*sql*/`
+      SELECT * FROM players
+      WHERE id IN (SELECT fromPlayerId FROM chats
+      WHERE toPlayerId IS NOT NULL
+      AND toPlayerId = $1 )
+  `, [playerId])
 
-export const fetchInbox = async (playerId: number, limit = 500): Promise<Chat[]> => {
-  const chatHistories = await db.all<ChatHistory[]>(/*sql*/`
+  const matchnames = [...new Set([...matchplayers.map((c) => c.username),...matchrecipiants.map((c) => c.username)])]
+
+  return matchnames
+}
+
+export const fetchInbox = async (playerId: number, limit: number, Player2name: string | null): Promise<Chat[]> => {
+  let chatHistories: ChatHistory[] = []
+  if(Player2name){
+    const player2 = await getPlayerByUsername(Player2name)
+    chatHistories = await db.all<ChatHistory[]>(/*sql*/`
+    SELECT * FROM (
+      SELECT * FROM chats
+      WHERE toPlayerId IS NOT NULL
+      AND ((fromPlayerId = $1 AND toPlayerId = $2)
+      OR (toPlayerId = $1 AND fromPlayerId = $2))
+      ORDER BY date DESC
+      LIMIT ${limit}
+    ) ORDER BY date ASC
+  `, [playerId, player2?.id])
+  }else{
+    chatHistories = await db.all<ChatHistory[]>(/*sql*/`
     SELECT * FROM (
       SELECT * FROM chats
       WHERE toPlayerId IS NOT NULL
@@ -103,7 +135,9 @@ export const fetchInbox = async (playerId: number, limit = 500): Promise<Chat[]>
     ) ORDER BY date ASC
   `, [playerId])
 
+  }
   const playerIds: number[] = []
+
 
   chatHistories.forEach(chatHistory => {
     if (playerIds.indexOf(chatHistory.fromPlayerId) === -1) {

@@ -14,8 +14,17 @@
   border-bottom: var(--color-banner-line);
   display: flex;
   justify-content: flex-start;
+  transition: 0.5s;
 }
-
+@media only screen and (min-width: 600px) {
+  #header {
+    margin-left:150px;
+    margin-right:200px;
+  }
+  #minibutton {
+    margin-right:200px;
+  }
+}
 #header-wrapper {
   display: grid;
   align-items: flex-start;
@@ -24,6 +33,7 @@
   padding-top: 0.2em;
   padding-left: 0.5em;
   width: auto;
+  transition: 0.5s;
 }
 
 #header-wrapper * {
@@ -38,7 +48,7 @@
 }
 
 #mini_button {
-  font-family: DOS16;
+  font-family: DOS14;
   font-size: 24px;
   cursor: pointer;
   color: var(--color-banner-mini);
@@ -55,7 +65,7 @@
 
 #banner-type {
   font-size: 16px;
-  font-family: DOS16;
+  font-family: DOS14;
   letter-spacing: 0;
   margin-right: 1em;
   user-select: none;
@@ -77,6 +87,7 @@
   color: var(--color-banner-color);
   background-color: var(--color-banner-back);
   border: var(--color-banner-border);
+  transition: 0.5s;
 }
 
 #banner, #banner * {
@@ -96,11 +107,13 @@
   display: inline-block;
   width: 8px;
   cursor: none;
+  transition: background-color 1s cubic-bezier(0.075, 0.9, 0.1, 0.075);
 }
 
 #banner span:hover {
   color: var(--color-banner-cursor);
   background-color: var(--color-banner-cursor-back);
+  transition: background-color 0.25s;
 }
 
 #room-name {

@@ -1,5 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Anonymous+Pro:wght@400;700&display=swap');
+@font-face {
+  font-family: DOS16;
+  src: url(./assets/ModernDOS8x16.ttf);
+  font-size: 16px;
+}
 
+@font-face {
+  font-family: DOS14;
+  src: url(./assets/ModernDOS8x14.ttf);
+  font-size: 14px;
+}
 :root {
   --color-toolbar-back: white;
   --color-toolbar-edge: none;
@@ -93,13 +102,14 @@
   background-color: var(--color-background-primary);
   color: var(--color-text-primary);
   font-size: 0.95em;
+  overscroll-behavior: none;
 }
 
 *, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Anonymous Pro', monospace;
+  font-family: DOS16, monospace;
   font-weight: 400;
   scrollbar-width: thin;
   scrollbar-color: var(--color-scrollbar) var(--color-background-primary);
@@ -118,15 +128,11 @@
   width: 7px;
 }
 
-a {
-  color: var(--color-text-link);
-}
-
 body {
   display: grid;
   grid-template-rows: auto 1fr;
   max-height: 100vh;
-  text-shadow: 0.4389924193300864px 0 1px rgba(0, 30, 255, 0.2), -0.4389924193300864px 0 1px rgba(255,0,80,0.1), 0 0 3px;
+  text-shadow: 0.4389924193300864px 0.4389924193300864px 1px rgba(0, 30, 255, 0.2), -0.4389924193300864px -0.4389924193300864px 1px rgba(255,0,80,0.1), 0 0 3px;
 }
 
 body::after {
@@ -138,7 +144,7 @@ body::after {
   bottom: 0;
   right: 0;
   background: rgba(18, 16, 16, 0.1);
-  z-index: 4;
+  z-index: 100;
   pointer-events: none;
   opacity: 0.27861;
 }
@@ -151,7 +157,7 @@ body::before {
   bottom: 0;
   right: 0;
   background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-  z-index: 4;
+  z-index: 100;
   background-size: 100% 2px, 3px 100%;
   pointer-events: none;
 }

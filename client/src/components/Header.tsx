@@ -146,7 +146,8 @@ export const Header: React.FC = () => {
     }
   }
   
-    for (let i = 0; i < room.banner.length / BANNER_WIDTH; i++) {      
+  
+    for (let i = 0; i < room.banner.length / BANNER_WIDTH; i++) {    
       switch(bannerT){
         case "art":
           const artFrom = Array.from(room.banner);
@@ -165,7 +166,9 @@ export const Header: React.FC = () => {
           break;
       }
     }
-  
+
+
+
     const parts = bannerParts.map((part, y) => {
       const usingArrayFrom = Array.from(part);
       
@@ -173,7 +176,6 @@ export const Header: React.FC = () => {
         usingArrayFrom
           .map((character, x) => {
             const [currentCharacter, setCurrentCharacter] = useState(character)
-
             return <span
               onMouseOver={() => setCurrentCharacter(brush)}
               onMouseLeave={() => setCurrentCharacter(character)}
@@ -197,7 +199,7 @@ export const Header: React.FC = () => {
                   setCurrentCharacter(brush)
                 }
               }}
-            >{currentCharacter}</span>
+            >{minimized? null : currentCharacter}</span>
           })
       }<br /></> 
     })
@@ -207,7 +209,7 @@ export const Header: React.FC = () => {
 
   return (
     <header id="header">
-      <div id="header-wrapper">
+      <div id="header-wrapper" style={minimized? {maxHeight:30} : {maxHeight:400}}>
         <div className="banner">
     <h3 id="room-name">{room?.name}</h3>
     <span>{minimized ? "" : <span>
@@ -223,7 +225,7 @@ export const Header: React.FC = () => {
             className="minimize" 
             onClick={toggleBanner}
           >{minimized ? "+" : "-"}</span>
-        </div>
+        </div>        
         {(!minimized && room) && <Banner room={room} />}
       </div>
     </header>
