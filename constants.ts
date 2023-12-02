@@ -53,7 +53,7 @@ export const itemRarity: itemRarityInterface[] = [
   {
     num:0,
     col:"white",
-    back:"black",
+    back:"",
   },
   {
     num:1,
@@ -62,17 +62,32 @@ export const itemRarity: itemRarityInterface[] = [
   },
   {
     num:2,
-    col:"blue",
-    back:"black",
+    col:"white",
+    back:"blue",
   },
   {
     num:3,
-    col:"red",
-    back:"black",
+    col:"yellow",
+    back:"orange",
   },
   {
     num:4,
     col:"green",
-    back:"black",
+    back:"lightgreen",
+  },
+  {
+    num:5,
+    col:"purple",
+    back:"pink",
+  },
+  {
+    num:6,
+    col:"cyan",
+    back:"magenta",
+  },
+  {
+    num:7,
+    col:"yellow",
+    back:"white",
   },
 ]

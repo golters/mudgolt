@@ -506,12 +506,12 @@ export const weedCheck = async (room: Room) => {
     if(Math.random() > 0.5){
       const bugtype = Math.floor(Math.random() * (bugs.length))
       const roomname = await roomName(room.name)
-      const bug = await createFloorItem(room.id, roomname + "_" + bugs[bugtype].name, bugs[bugtype].icon, bugs[bugtype].rarity,"bug"+","+roomname)
+      const bug = await createFloorItem(room.id, roomname + "_" + bugs[bugtype].name, bugs[bugtype].icon, bugs[bugtype].rarity,"bug"+","+roomname+","+room.name, "bug")
       await setItemBio(bug.id, bugs[bugtype].bio)
     }else{
       const weedtype = Math.floor(Math.random() * (weeds.length))
       const roomname = await roomName(room.name)
-      const weed = await createFloorItem(room.id, roomname + "_" + weeds[weedtype].name, weeds[weedtype].icon, weeds[weedtype].rarity,"plant"+","+roomname)
+      const weed = await createFloorItem(room.id, roomname + "_" + weeds[weedtype].name, weeds[weedtype].icon, weeds[weedtype].rarity,"plant"+","+roomname+","+room.name, "plant")
       await setItemBio(weed.id, weeds[weedtype].bio)
     }
   }

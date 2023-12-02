@@ -21,6 +21,14 @@ import {
   MAKE_EVENT,
   NPC_UPDATE_EVENT,
   DRAW_AVATAR_EVENT,
+  SEND_EVENT,
+  TAG_ITEM_EVENT,
+  INBOX_UPDATE_EVENT,
+  REPLY_EVENT,
+  WHISPER_EVENT,
+  CORRESPONDENTS_UPDATE_EVENT,
+  MORE_INBOX_EVENT,
+  WHISPER_POPUP_EVENT,
 } from "../../../events"
 import {
   store,
@@ -29,7 +37,7 @@ import {
   Markdown, 
 } from "./Markdown"
 import {
-  Door, Item, Npc, 
+  Door, Item, Npc, Chat,
 } from "../../../@types"
 import {
   networkEmitter, 
@@ -48,6 +56,8 @@ import {
 import { pushToLog } from "./Terminal"
 import { type } from "os"
 import { Make } from "src/commands/make"
+import { newCraftWindow, newMesageWindow, newReplyWindow, redrawAvatars } from "./windows"
+import { news } from "./news"
 
 const rooms: (string)[] = []
 let brushSymbols: (string)[] = ["█","▓","▒","░"]
@@ -71,9 +81,6 @@ function drawIcon(item: Item, x: number, y: number, brush: string){
   sendEvent(DRAW_ICON_EVENT, [x,y,brush, item])
 }
 
-function drawAvatar(npc: Npc, x: number, y: number, brush: string){
-  sendEvent(DRAW_AVATAR_EVENT, [x,y,brush, npc])
-}
 
 function useItem(item: Item) {
   sendEvent(USE_ITEM_EVENT, item.name)
@@ -90,50 +97,21 @@ function smeltItem(item: Item){
 function insightItem(item: Item){
   sendEvent(INSIGHT_EVENT, item.name)
 }
-function describeItem(item: Item, description: String, window: HTMLElement){
-  sendEvent(ROOM_DESCRIBE_EVENT, [item.name, description])
-  window.innerHTML = ""
-  window.style.transition = "0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)"
-  window.style.opacity = "0.1"
-  window.style.width = "0.1px"
-  window.style.height = "0.1px"
-}
-function enchantItem(item: Item, macro: String, window: HTMLElement){
-  sendEvent(ENCHANT_ITEM_EVENT, [item.name, macro])
-  window.innerHTML = ""
-  window.style.transition = "0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)"
-  window.style.opacity = "0.1"
-  window.style.width = "0.1px"
-  window.style.height = "0.1px"
-}
-function makeItem(name: string, description: string, macro: string, window: HTMLElement){
-  sendEvent(MAKE_EVENT, ["item",name,description,macro])
-  window.innerHTML = ""
-  window.style.transition = "0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)"
-  window.style.opacity = "0.1"
-  window.style.width = "0.1px"
-  window.style.height = "0.1px"
-}
-function makeRoom(name: string, description: string, window: HTMLElement){
-  sendEvent(MAKE_EVENT, ["room",name,description])
-  window.innerHTML = ""
-  window.style.transition = "0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)"
-  window.style.opacity = "0.1"
-  window.style.width = "0.1px"
-  window.style.height = "0.1px"
-}
-function makeDoor(name: string, room: string, window: HTMLElement){
-  sendEvent(MAKE_EVENT, ["door",name,room])
-  window.innerHTML = ""
-  window.style.transition = "0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)"
-  window.style.opacity = "0.1"
-  window.style.width = "0.1px"
-  window.style.height = "0.1px"
+
+function getmoreinbox(page: number, contact:string | null){
+  sendEvent(MORE_INBOX_EVENT, [page, contact])
 }
 
-//tagitem
-//senditem
+function changeContact(contact: string){
+  if(contact === ""){
+  getmoreinbox(0, null)
+  }else{
+  getmoreinbox(0, contact)
+  }
+}
+
 //equipitem
+
 
 const symbols = [
   {id: "blocks", chars:["█","▓","▒","░"]},
@@ -169,7 +147,8 @@ export const Toolbar: React.FC = () => {
   const [volume, setVolume] = useState(localStorage.volume*10)
   const [doors, setDoors] = useState<Door[] | null>(null)
   const [inventory, setInv] = useState<Item[] | null>(null)
-  const [npcs, setNpcs] = useState<Npc[] | null>(null)
+  const [inbox, setInbox] = useState<Chat[] | null>(null)
+  const [correspondents, setCorrespondents] = useState<string[] | null>(null)
   let [roomMap, setRoomMap] = useState<(string)[]>(rooms)
   let [event, setEvent] = useState<(string)>()
   const [muted, setMuted] = useState(!!localStorage.getItem("muted") || false)
@@ -192,6 +171,18 @@ export const Toolbar: React.FC = () => {
   const [icons, setIcons] = useState(!!localStorage.getItem("icons") || false)
   const [itemTags, setItemTags] = useState(!!localStorage.getItem("itemtag") || "none")
   const [invpage, setinvpage] = useState(0)
+  const [inboxpage, setinboxpage] = useState(0)
+  const [contact, setcontact] = useState("")
+  const [northdoor, setnorthdoor] = useState(false)
+  const [southdoor, setsouthdoor] = useState(false)
+  const [eastdoor, seteastdoor] = useState(false)
+  const [westdoor, setwestdoor] = useState(false)
+  const [npcs, setNpcs] = useState<Npc[] | null>(null)
+  
+  networkEmitter.on(NPC_UPDATE_EVENT, (npcs: Npc[]) => {
+    setNpcs(npcs)
+    redrawAvatars(npcs)
+  })
   
   if (Math.random() * 100000 < 1) {
     setEye(true)
@@ -231,17 +222,46 @@ export const Toolbar: React.FC = () => {
   roomMap = []  
   useEffect(() => {
   networkEmitter.on(DOOR_UPDATE_EVENT, (doors: Door[]) => {
+    setnorthdoor(false)
+    setsouthdoor(false)
+    seteastdoor(false)
+    setwestdoor(false)
+    for(let d = 0; d < doors.length; d++){
+      switch (doors[d].name){
+        case "north":
+          setnorthdoor(true)
+          doors.splice(d,1)
+        break;
+        case "south":
+          setsouthdoor(true)
+          doors.splice(d,1)
+        break;
+        case "east":
+          seteastdoor(true)
+         doors.splice(d,1)
+        break;
+        case "west":
+          setwestdoor(true)
+          doors.splice(d,1)        
+        break;
+      }
+    }
+    doors = doors.sort((a,b) => a.name.localeCompare(b.name))
     setDoors(doors)
   })
   networkEmitter.on(INVENTORY_UPDATE_EVENT, (inventory: Item[]) => {
     setInv(inventory)
-    drawicons()
   })
-  networkEmitter.on(NPC_UPDATE_EVENT, (npcs: Npc[]) => {
-    console.log("got npc update")
-    setNpcs(npcs)
-    redrawAvatars(npcs)
+  networkEmitter.on(INBOX_UPDATE_EVENT, (inbox: Chat[]) => {
+    setInbox(inbox)
   })
+  networkEmitter.on(CORRESPONDENTS_UPDATE_EVENT, (users: string[]) => {
+    setCorrespondents(users)
+  })
+  networkEmitter.on(WHISPER_POPUP_EVENT, (args: string[]) => {
+    newMesageWindow(args[1],args[0],npcs)
+  })
+
   
   
 
@@ -302,14 +322,12 @@ setRightBar()
 
 const toggleIcons = useCallback(() => {
 setIcons(!icons)
-drawicons()
 
 if (icons) {
   localStorage.removeItem("icons")
 } else {
   localStorage.setItem("icons", '1')
 }
-
 }, [icons])
 
 
@@ -325,7 +343,6 @@ const toggleMini = useCallback(() => {
 
   const toggleRightMini = useCallback(() => {
     setRightMini(!rightmini)
-    drawicons()
     
     if (rightmini) {
       localStorage.removeItem("rightmini")
@@ -429,13 +446,24 @@ function changerightTab(tab: string){
   setMini(true)
   localStorage.setItem("sidemini", '1')
   localStorage.setItem("righttab",tab)
-  drawicons()
 }
 
 function changeTag(tag: string){
   setItemTags(tag)
   localStorage.setItem("itemtag",tag)
-  drawicons()
+}
+function moreinboxcontact(contact: string){
+  setcontact(contact)
+  changeContact(contact)
+  setinboxpage(0)
+}
+function moreinbox(){
+  if(contact === ""){
+  getmoreinbox(inboxpage + 1, null)
+  }else{    
+  getmoreinbox(inboxpage + 1, contact)
+  }
+  setinboxpage(inboxpage + 1)
 }
 
 if(doors){
@@ -444,45 +472,23 @@ if(doors){
   });
 }
 
-if(inventory){
-  drawicons()
+if(righttab === "inv" && inventory){
+  drawicons(inventory)
 }
 
-function redrawAvatars(boys: Npc[]){
-  let windows = document.getElementById('windows')
-  if(windows){
-    const menus = windows.children
-    for(let m = 0; m < menus.length;m++){
-      const guy = menus[m].childNodes[2].childNodes[1] as HTMLElement
-      const npc = menus[m].childNodes[2] as HTMLElement
-      const face = boys?.find((n) => {
-        if(npc)
-        return  npc.innerHTML.toString().includes(n.name + " the " + n.job)
-      })
-      if(face){
-      guy.innerHTML = ""
-      const avatar = document.createElement('div')
-      const iconbits = face?.icon.split("")
-      if(iconbits)
-      for(let y = 0; y < AVATAR_HEIGHT; y++){
-        const iconrow = document.createElement('span')
-        for(let x = 0; x < AVATAR_WIDTH; x++){
-            const char = document.createElement('span')
-            char.innerHTML = `${iconbits[x+(AVATAR_WIDTH*y)]}`
-            iconrow.appendChild(char)
-            char.onmouseleave = function () {char.innerHTML = `${iconbits[x+(AVATAR_WIDTH*y)]}`}
-            char.onmouseover = function () {char.innerHTML = `${localStorage.brush}`}
-            char.onclick = function () {drawAvatar(face,x,y,localStorage.brush)}
-            char.oncontextmenu = function () {setBrush(iconbits[x+(AVATAR_WIDTH*y)])}
-        }
-          guy.appendChild(iconrow)
-          iconrow.appendChild(document.createElement('br'))
-      }
-    }
-    }
-  }
-
+if(righttab === "inbox" && inbox){
+  drawInbox()
 }
+if(righttab === "make"){
+  drawMake()
+}
+if(righttab === "event"){
+  drawEvent()
+}
+if(righttab === "news"){
+  drawNews()
+}
+
 function setRightBar(){
   let bar = document.getElementById('rightbar')
   if(bar)
@@ -497,7 +503,7 @@ function dragRightBar(bar: HTMLElement){
   }
 
   function dragMouseDown(e: MouseEvent) {
-    if(rightmini){
+    if(rightmini && e.target === bar){
     e = e || window.event;
     e.preventDefault();
     bar.style.cursor = "grabbing"
@@ -520,11 +526,9 @@ function dragRightBar(bar: HTMLElement){
     // set the element's new position:
     if(bar.offsetWidth + pos1 > 150)
     bar.style.width = (bar.offsetWidth + pos1) + "px";
-    const inv = document.getElementById("inventory")
-    const columns = "auto ".repeat(bar.offsetWidth/150)
-    if(inv)
-    inv.style.gridTemplateColumns = columns
-    drawicons()
+    if(inventory){
+      drawicons(inventory)
+    }
   }
 
   function closeDragElement() {
@@ -538,251 +542,10 @@ function dragRightBar(bar: HTMLElement){
     bar.style.width = right + "px"
     bar.style.cursor = "auto"
     bar.style.transition = "1s"
-    drawicons()
   }
 
 }
 
-function newWindow(Type: string | null, Item: Item | null){
-  let windows = document.getElementById('windows')
-  windows?.childNodes.forEach(element => {
-    if((element as HTMLElement).style.width === "0.1px"){
-    element.remove()
-    }
-  });
-  if(windows){
-    const head = document.createElement('div')
-    head.appendChild(document.createTextNode('Drag Me...'))
-    const window = document.createElement('div')
-    head.setAttribute('id','windowheader')
-    window.setAttribute('id','window')
-    const x = document.createElement('div')
-    x.appendChild(document.createTextNode('X'))
-    x.setAttribute('id','close')
-    windows.appendChild(window)
-    window.appendChild(head)
-    dragElement(window);
-    //doesn't work when append to head???
-    head.appendChild(x)
-    x.onclick = function () {closeWindow(window)}    
-    window.style.top = (windows?.childNodes.length * 10) + "px";
-    window.style.left = (windows?.childNodes.length * 10) + "px";
-    //get npc   
-    let npc: Npc[] = []
-    let job = "hobo"
-
-    const menu = document.createElement('div')
-    menu.setAttribute('id','menu')
-    switch(Type) {
-      case "Describe":
-        if(Item === null){
-           
-          return
-        }        
-        menu.appendChild(document.createTextNode('describe'))
-        const description = document.createElement('input')
-        description.setAttribute('id','input')
-        description.setAttribute('value',`${Item.description}`)
-        menu.appendChild(description)
-        const button1 = document.createElement('input')
-        button1.setAttribute('type','submit')
-        button1.onclick = function () {describeItem(Item,description.value.toString(),window)}
-        menu.appendChild(button1)
-        job = "scribe"
-
-        break;
-      case "Enchant":
-        if(Item === null){
-           
-          return
-        }
-        menu.appendChild(document.createTextNode('Enchant'))
-        const enchantment = document.createElement('input')
-        enchantment.setAttribute('id','input')
-        enchantment.setAttribute('value',`${Item.macro}`)
-        menu.appendChild(enchantment)
-        const button2 = document.createElement('input')
-        button2.setAttribute('type','submit')
-        button2.onclick = function () {enchantItem(Item,enchantment.value.toString(),window)}
-        menu.appendChild(button2)
-        job = "enchanter"
-
-        break;
-      case "makeItem":
-        const itemName = document.createElement('input')
-        itemName.setAttribute('id','input')
-        itemName.setAttribute('value',"sword")
-        menu.appendChild(document.createTextNode("name"))
-        menu.appendChild(itemName)
-        const itemDescription = document.createElement('input')
-        itemDescription.setAttribute('id','input')
-        itemDescription.setAttribute('value','a simple sword')
-        menu.appendChild(document.createTextNode("Description"))
-        menu.appendChild(itemDescription)
-        const itemMacro = document.createElement('input')
-        itemMacro.setAttribute('id','input')
-        itemMacro.setAttribute('value','swings sword')
-        menu.appendChild(document.createTextNode("Enchantment"))
-        menu.appendChild(itemMacro)
-        const button3 = document.createElement('input')
-        button3.setAttribute('type','submit')
-        button3.onclick = function () {makeItem(itemName.value.toString(),itemDescription.value.toString(),itemMacro.value.toString(),window)}
-        menu.appendChild(button3)
-        job = "blacksmith"
-
-        break;
-      case "makeRoom":
-        const roomName = document.createElement('input')
-        roomName.setAttribute('id','input')
-        roomName.setAttribute('value',"room...")
-        menu.appendChild(document.createTextNode("name"))
-        menu.appendChild(roomName)
-        const roomDescription = document.createElement('input')
-        roomDescription.setAttribute('id','input')
-        roomDescription.setAttribute('value','a room...')
-        menu.appendChild(document.createTextNode("Description"))
-        menu.appendChild(roomDescription)
-        const button4 = document.createElement('input')
-        button4.setAttribute('type','submit')
-        button4.onclick = function () {makeRoom(roomName.value.toString(),roomDescription.value.toString(),window)}
-        menu.appendChild(button4)
-        job = "builder"
-
-        break;
-      case "makeDoor":
-        const doorName = document.createElement('input')
-        doorName.setAttribute('id','input')
-        doorName.setAttribute('value',"door...")
-        menu.appendChild(document.createTextNode("name"))
-        menu.appendChild(doorName)
-        const destination = document.createElement('input')
-        destination.setAttribute('id','input')
-        destination.setAttribute('value',"destination...")
-        menu.appendChild(document.createTextNode("destination"))
-        menu.appendChild(destination)
-        const button5 = document.createElement('input')
-        button5.setAttribute('type','submit')
-        button5.onclick = function () {makeDoor(doorName.value.toString(),destination.value.toString(),window)}
-        menu.appendChild(button5)
-        job = "carpenter"
-
-        break;
-      case "Tag":
-
-        job = "librarian"
-        break;
-      case "Send":  
-  
-        job = "courier"
-        break;
-      default:
-        menu.appendChild(document.createTextNode('nothing'))
-        //put something funny here
-
-        break;
-    }
-    window.appendChild(menu)
-    if(npcs){   
-       npc = npcs.filter(npc => {
-        return npc.job === job
-      })      
-    }
-    const guy = document.createElement('div')
-    guy.setAttribute('id','menu')
-    guy.appendChild(document.createTextNode(npc[0].name + " the " + npc[0].job))
-    window.appendChild(guy)
-    const avatar = document.createElement('div')
-    guy.appendChild(avatar)
-    const iconbits = npc[0].icon.split("")
-    for(let y = 0; y < AVATAR_HEIGHT; y++){
-      const iconrow = document.createElement('span')
-      for(let x = 0; x < AVATAR_WIDTH; x++){
-          const char = document.createElement('span')
-          //char.appendChild(document.createTextNode(iconbits[x+(ICON_WIDTH*y)]))
-          char.innerHTML = `${iconbits[x+(AVATAR_WIDTH*y)]}`
-          iconrow.appendChild(char)
-          char.onmouseleave = function () {char.innerHTML = `${iconbits[x+(AVATAR_WIDTH*y)]}`}
-          char.onmouseover = function () {char.innerHTML = `${localStorage.brush}`}
-          char.onclick = function () {drawAvatar(npc[0],x,y,localStorage.brush)}
-          char.oncontextmenu = function () {setBrush(iconbits[x+(AVATAR_WIDTH*y)])}
-      }
-        avatar.appendChild(iconrow)
-        iconrow.appendChild(document.createElement('br'))
-    }
-    const phrase = document.createElement('div')
-    phrase.appendChild(document.createTextNode("["+npc[0].name+"] "+npc[0].phrases[Math.floor(Math.random() * (npc[0].phrases.length))]))
-    guy.appendChild(phrase)
-    window.appendChild(guy)
-    avatar.classList.add('icon')
-  }
-}
-function closeWindow(window: HTMLElement) {
-  window.innerHTML = ""
-  window.style.transition = "0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)"
-  window.style.opacity = "0.1"
-  window.style.width = "0.1px"
-  window.style.height = "0.1px"
-}
-function dragElement(elmnt: HTMLElement) {
-  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-  //const header = document.getElementById(elmnt.id + "header")
-  const header = elmnt.firstElementChild as HTMLElement
-  const windows = elmnt.parentElement
-  if (header) {
-    /* if present, the header is where you move the DIV from:*/
-    header.onmousedown = dragMouseDown;
-  } else {
-    /* otherwise, move the DIV from anywhere inside the DIV:*/
-    elmnt.onmousedown = dragMouseDown;
-  }
-
-  function dragMouseDown(e: MouseEvent) {
-    e = e || window.event;
-    e.preventDefault();
-    windows?.appendChild(elmnt)
-    elmnt.style.cursor = "grabbing"
-    // get the mouse cursor position at startup:
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = closeDragElement;
-    // call a function whenever the cursor moves:
-    document.onmousemove = elementDrag;
-    elmnt.style.transition = "0s"
-    
-  }
-
-  function elementDrag(e: MouseEvent) {
-    if(Math.random() * 1000 < 1){
-      header.innerText = "put me down!!!"
-    }
-    e = e || window.event;
-    e.preventDefault();
-    elmnt.style.cursor = "grabbing"
-    // calculate the new cursor position:
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    // set the element's new position:
-    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-  }
-
-  function closeDragElement() {
-    /* stop moving when mouse button is released:*/
-    if(header.innerText === "put me down!!!"){
-      header.innerText = "thank you..."
-    }
-    document.onmouseup = null;
-    document.onmousemove = null;
-    const top = Math.ceil((elmnt.offsetTop - pos2 - 5) / 10) * 10
-    const left = Math.ceil((elmnt.offsetLeft - pos1 - 5) / 10) * 10
-    elmnt.style.top = top + "px"
-    elmnt.style.left = left + "px"
-    elmnt.style.cursor = "auto"
-    elmnt.style.transition = "1s"
-  }
-}
 function getItemPages(inv: number){
   let p = document.getElementById('pages')
   if(p){
@@ -813,13 +576,13 @@ function getItemPages(inv: number){
     const curpage = document.createElement('span')
     curpage.appendChild(document.createTextNode("("+invpage.toString()+")"))
     p.appendChild(curpage)
-    if(inv > invpagelimit * invpage + 2){
+    if(invpage + 1 < inv / invpagelimit){
       const nextpage = document.createElement('span')
       nextpage.appendChild(document.createTextNode(" 1>"))
       nextpage.onclick = function () {setinvpage(invpage + 1)}
       p.appendChild(nextpage)
     }
-    if(inv > invpagelimit * invpage * 10){
+    if(inv / invpagelimit < 10){
       const nextpage = document.createElement('span')
       nextpage.appendChild(document.createTextNode(" 10>>"))
       nextpage.onclick = function () {setinvpage(invpage + 10)}
@@ -839,15 +602,12 @@ function getTags(){
   
   //find unique tags/types
   if(!inventory || inventory?.length < 1){
-
     return
   }
   const tags = inventory.filter(i => i.tags)
-  const types = inventory.filter(i => i.type)
-  const alltageditems = tags.concat(types)
-  const alltags = [...new Set(alltageditems.map(a => a.tags).toString().split(","))]
+  const alltags = [...new Set(tags.map(a => a.tags).toString().split(","))]
 
-  if(alltageditems.length < 1 && itemTags === "none"){
+  if(alltags.length < 1 && itemTags === "none"){
     t.innerHTML = ""
 
     return
@@ -876,23 +636,44 @@ function getTags(){
   }
 }
 }
-function drawicons(){
-  getTags()
-  let inv = document.getElementById('inventory')
-  if(inv){
-    inv.innerHTML = ""
-  }else{
+function drawicons(items: Item[]){
+  if(righttab != "inv")
+  return
+  let rightbar = document.getElementById('rightbarstuff')
+  if(!rightbar){
     return
   }
-  if(!inventory || inventory?.length < 1){
+  rightbar.innerHTML = ""
+  const toggleicon = document.createElement('div')
+  if(icons){
+  toggleicon.appendChild(document.createTextNode("Icons"))
+  }else{
+    toggleicon.appendChild(document.createTextNode("Names"))
+  }
+  toggleicon.onclick = function () {toggleIcons()}
+  const inv = document.createElement('div')
+  inv.setAttribute('id',"inventory")
+  const pagediv = document.createElement('div')
+  pagediv.setAttribute('id',"pages")
+  const tag = document.createElement('div')
+  tag.setAttribute('id',"tags")
+  rightbar.appendChild(inv)
+  const controls = document.createElement('div')
+  controls.appendChild(toggleicon)
+  controls.appendChild(pagediv)
+  controls.appendChild(tag)
+  controls.appendChild(document.createTextNode("you have:"))
+  inv.appendChild(controls)
+  getTags()
+  if(!items){
     inv.appendChild(document.createTextNode("nothing"))
     return
   }
   const tagName = localStorage.getItem("itemtag")?.toString()
   //filter tags
-  let Finventory = inventory
+  let Finventory = items
   if(tagName && tagName != "none"){
-    Finventory = inventory.filter(i => {
+    Finventory = items.filter(i => {
       if(i.tags != null)
       return i.tags.includes(tagName) 
       if(i.type != null)
@@ -910,11 +691,15 @@ function drawicons(){
   if(!icons){
     invpagelimit = maxinvpagename
   }
-  let page = (invpage * invpagelimit)
-  if(invpage * invpagelimit > Finventory.length){
-    page = 0
+  let page = Math.floor(invpage * invpagelimit)
+  if(page > Finventory.length){
+    Math.floor(page = 0)
   }
     for(let i = page; i < Finventory?.length && i < page + invpagelimit; i++){  
+      if(!Finventory[i]){
+        inv?.appendChild(document.createTextNode("ERROR"))
+        return
+      }
       if(!Finventory[i].icon){
         makeIcon(Finventory[i])
       }  
@@ -947,7 +732,21 @@ function drawicons(){
     inv?.appendChild(itemblock)
     const item = document.createElement('div')
 
-    if(icons){ 
+    let texcol = ""
+    let baccol = ""
+    if(Finventory[i].rarity){
+      const rarity = itemRarity.find((r) => {
+        return r.num.toString() === Finventory[i].rarity
+      })
+      if(rarity){
+    itemblock.style.color = rarity.col
+    texcol = rarity.col
+    baccol = rarity.back
+    itemblock.style.backgroundColor = rarity.back
+    itemblock.style.textShadow = "2px 1px 1px rgba(0, 30, 255, 0.5), -2px 1px 1px rgba(255,0,80,0.5), 0 0 3px"
+      }
+    }
+    if(icons && Finventory[i].icon){ 
     const iconbits = Finventory[i].icon.split("")
     for(let y = 0; y < ICON_HEIGHT; y++){
       const iconrow = document.createElement('span')
@@ -960,8 +759,11 @@ function drawicons(){
         char.onmouseover = function () {char.innerHTML = `${localStorage.brush}`}
         char.onclick = function () {drawIcon(Finventory[i],x,y,localStorage.brush)}
         char.oncontextmenu = function () {setBrush(iconbits[x+(ICON_WIDTH*y)])}
+        char.style.color = texcol
+        char.style.backgroundColor = ""
       }
       item.appendChild(iconrow)
+      item.style.backgroundColor = baccol
       iconrow.appendChild(document.createElement('br'))
     }
     itemblock.appendChild(item)
@@ -970,15 +772,6 @@ function drawicons(){
 
     itemblock.appendChild(dropdown)
     dropdown.innerHTML = Finventory[i].name
-    if(Finventory[i].rarity){
-      const rarity = itemRarity.find((r) => {
-        return r.num.toString() === Finventory[i].rarity
-      })
-      if(rarity){
-    dropdown.style.color = rarity.col
-    dropdown.style.backgroundColor = rarity.back
-      }
-    }
     dropdown.appendChild(dropcontent)
     dropcontent.appendChild(use)
     use.onclick = function () {useItem(Finventory[i])}
@@ -991,14 +784,152 @@ function drawicons(){
     dropcontent.appendChild(insight)
     insight.onclick = function () {insightItem(Finventory[i])}
     dropcontent.appendChild(describe)
-    describe.onclick = function () {newWindow("Describe",Finventory[i])}
+    describe.onclick = function () {newCraftWindow("Describe",Finventory[i],npcs)}
     dropcontent.appendChild(enchant)
-    enchant.onclick = function () {newWindow("Enchant",Finventory[i])}
+    enchant.onclick = function () {newCraftWindow("Enchant",Finventory[i],npcs)}
     dropcontent.appendChild(tag)
-    tag.onclick = function () {newWindow("Tag",Finventory[i])}
+    tag.onclick = function () {newCraftWindow("Tag",Finventory[i],npcs)}
     dropcontent.appendChild(send)
-    send.onclick = function () {newWindow("Send",Finventory[i])}
+    send.onclick = function () {newCraftWindow("Send",Finventory[i],npcs)}
   }
+  
+  const columns = "auto ".repeat(inv.offsetWidth/150)
+  if(inv)
+  inv.style.gridTemplateColumns = columns
+}
+function drawEvent(){
+  if(righttab != "event")
+  return
+  let rightbar = document.getElementById('rightbarstuff')
+  if(!rightbar){
+    return
+  }
+  rightbar.innerHTML = ""
+
+}
+function drawMake(){
+  if(righttab != "make")
+  return
+  let rightbar = document.getElementById('rightbarstuff')
+  if(!rightbar){
+    return
+  }
+  rightbar.innerHTML = ""
+
+}
+function drawNews(){
+  if(righttab != "news")
+  return
+  let rightbar = document.getElementById('rightbarstuff')
+  if(!rightbar){
+    return
+  }
+  rightbar.innerHTML = ""
+  for (let n = 0; n < news.length; n++){
+    const article = document.createElement('div')
+    const headline = document.createElement('span')
+    headline.appendChild(document.createTextNode(news[n].name))
+    article.appendChild(headline)
+    const date = document.createElement('span')
+    date.appendChild(document.createTextNode(news[n].date))
+    article.appendChild(date)
+    const body = document.createElement('span')
+    body.appendChild(document.createTextNode(news[n].text))
+    article.appendChild(body)
+    rightbar.appendChild(article)
+  }
+
+}
+function drawInbox(){
+  if(righttab != "inbox")
+  return
+  let rightbar = document.getElementById('rightbarstuff')
+  if(!rightbar){
+    return
+  }
+  rightbar.innerHTML = ""
+  const inb = document.createElement('div')
+  inb.setAttribute('id','inbox')
+  rightbar.appendChild(inb)
+  if(correspondents && correspondents.length > 0){
+    //make dropdown
+    const dropdown = document.createElement('div')
+    dropdown.classList.add('dropdown')
+    dropdown.appendChild(document.createTextNode("contacts"))
+    const dropcontent = document.createElement('div')
+    dropcontent.classList.add('dropdown-content')
+    const all = document.createElement('div')
+    all.appendChild(document.createTextNode("all"))
+    dropcontent.appendChild(all)
+    all.onclick = function () {moreinboxcontact("")}
+    for(let c = 0; c < correspondents.length; c++){
+      const cor = document.createElement('div')
+      cor.appendChild(document.createTextNode(correspondents[c]))
+      dropcontent.appendChild(cor)
+      cor.onclick = function () {moreinboxcontact(correspondents[c])}
+    }
+    dropdown.appendChild(dropcontent)
+    inb.appendChild(dropdown)
+  }
+  if(!inbox || inbox.length < 1){
+    inb.appendChild(document.createTextNode("you have no messages"))
+    return
+  }
+  const Finbox = inbox.sort((a,b) => b.date - a.date)
+  for(let i = 0; i < Finbox.length; i++){  
+  const formattedTimeParts = new Date(Finbox[i].date)
+    .toLocaleString()
+    .split(' ')
+    .slice(1, 3)
+
+  const [formattedDate] = new Date(Finbox[i].date)
+    .toLocaleString()
+    .split(',')
+    .slice(0, 1)
+
+    formattedTimeParts[0] = formattedTimeParts[0].split(':').slice(0, 2).join(":")
+    
+  const timestamp = Date.now() - Finbox[i].date < 86400000
+    ? formattedTimeParts.join(" ")
+    : `${formattedDate} ${formattedTimeParts.join(" ")}`
+
+    
+    const messageBox = document.createElement('span')
+    messageBox.classList.add("message-box")
+    const message = document.createElement('span')
+    message.classList.add("chat-message")
+    const date = document.createElement('span')
+    date.classList.add("date")
+    date.appendChild(document.createTextNode(timestamp))
+    const usernames = document.createElement('span')
+    usernames.classList.add("username")
+    usernames.appendChild(document.createTextNode(" ["+Finbox[i].player.username+"] "))
+    inb.appendChild(messageBox)
+    messageBox.appendChild(message)
+    message.appendChild(date)
+    message.appendChild(usernames)
+    const messageText = document.createElement('span')
+    messageText.appendChild(document.createTextNode(Finbox[i].message))
+    message.appendChild(messageText)
+
+    if(!(Finbox[i].player.username === store.player?.username)){
+    const reply = document.createElement('div')
+    reply.appendChild(document.createTextNode("[reply]"))
+    reply.onclick = function () {newReplyWindow(Finbox[i],npcs)}
+    messageBox.appendChild(reply)
+    }else{      
+    messageBox.className = "sent-message"
+    //message.classList.add("sent-message")
+    }
+    inb.appendChild(document.createElement('br'))
+  }
+  if(Finbox.length >= 20){
+    const loadmore = document.createElement('div')
+    loadmore.appendChild(document.createTextNode("[load more]"))
+    inb.appendChild(loadmore)
+    loadmore.onclick = function () {moreinbox()}
+  }
+
 }
 
 sendEvent(EVENT_EVENT,"/event check")
@@ -1087,15 +1018,6 @@ function getCount(){
           <span className ="tooltiptext">Go</span>
           </div>
         </div>
-
-          <div className="pop-up">
-          <div className="tooltip">
-          <span id="button"
-            onClick={toggleForm}
-          >{letter ? "🗑" : "✉"}</span>
-          <span className ="tooltiptext">Post</span>
-        </div>
-        </div>
         
         <div className="popup">
           <div className="tooltip">
@@ -1123,6 +1045,33 @@ function getCount(){
           <span className ="tooltiptext">Make</span>
         </div>
         </div>        
+
+          <div className="pop-up">
+          <div className="tooltip">
+          <span id="button"
+            onClick={() => changerightTab("inbox")}
+          >{letter ? "🗑" : "✉"}</span>
+          <span className ="tooltiptext">Inbox</span>
+        </div>
+        </div>
+
+          <div className="pop-up">
+          <div className="tooltip">
+          <span id="button"
+            onClick={() => changerightTab("event")}
+          >{"E"}</span>
+          <span className ="tooltiptext">Event</span>
+        </div>
+        </div>
+        
+        <div className="pop-up">
+          <div className="tooltip">
+          <span id="button"
+            onClick={() => changerightTab("news")}
+          >{"N"}</span>
+          <span className ="tooltiptext">News</span>
+        </div>
+        </div>
         
           <div className="tooltip">
           <span id="button"
@@ -1160,7 +1109,11 @@ function getCount(){
           >{mini? "=" : "+"}</span>
           <br></br>
       {mini && lefttab === "doors"? 
-      <span>{"The exits are:"}</span>
+      <span>{"The exits are:"}
+      <div>{westdoor?<span className="sub-button" onClick={() => go ("west")}>{"west "}</span>:"_____"}↖↗
+      {northdoor?<span className="sub-button" onClick={() => go ("north")}>{"north"}</span>:"_____"}</div>
+      <div>{southdoor?<span className="sub-button" onClick={() => go ("south")}>{"south"}</span> :"_____"}↙↘
+      {eastdoor?<span className="sub-button" onClick={() => go ("east")}>{"east "}</span>:"_____"}</div></span>
       : null}
       <br></br>
       {mini && lefttab === "doors"? 
@@ -1239,32 +1192,31 @@ function getCount(){
             onClick={toggleRightMini}
           >{rightmini? "=" : "+"}</span>
           <br></br>
-      {rightmini?
-      righttab === "inv" && rightmini? 
+          <div id="rightbarstuff">
+
+          </div>
+          
+      {rightmini && righttab === "inv"? 
       <div>
-      <span>
-      <div id="tags">
-        {}        
-      </div>
-      <div id="pages">
-        {}        
-      </div>
-      <div onClick={() => toggleIcons()}>{icons? "icons" : "names"}</div>
-        {     
-        "you have:"
-        }</span>
-      <br></br>
-      <div id="inventory">
-        {}        
-      </div>
       {inventory?
       null : "nothing"}
       </div>
-      : <div>
-      <div onClick={() => newWindow("makeItem", null)}>make item</div>
-      <div onClick={() => newWindow("makeDoor", null)}>make door</div>
-      <div onClick={() => newWindow("makeRoom", null)}>make room</div>
-      </div> : null}
+      : null}
+      {rightmini && righttab === "make"?
+      <div>
+      <div onClick={() => newCraftWindow("makeItem", null,npcs)}>make item</div>
+      <div onClick={() => newCraftWindow("makeDoor", null,npcs)}>make door</div>
+      <div onClick={() => newCraftWindow("makeRoom", null,npcs)}>make room</div>
+      </div>         
+    : null}
+      {rightmini && righttab === "event"?
+      <div>
+    <div id="eventName">
+    </div>      
+    <div id="countDown">
+    </div>   
+    </div>      
+      : null}
       </div>
     </main>
   )

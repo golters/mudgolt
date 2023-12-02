@@ -118,8 +118,6 @@ const handler: NetworkEventHandler = async (
         sendEvent<string>(socket, SERVER_LOG_EVENT, `-${GOLT}${cost}`)
         await setItemBio(inventory[0].id, bio)
         sendEvent<string>(socket, SERVER_LOG_EVENT, `you edited ${args[0]}`)
-        //inventory update
-        sendEvent<Item[]>(socket, INVENTORY_UPDATE_EVENT, fullinventory)
       }else{
         sendEvent<string>(socket, ERROR_EVENT, `you don't have a ${args[0]}. please write: describe me/room/or the name of an item in your inventory`)
       }

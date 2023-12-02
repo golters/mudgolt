@@ -16,7 +16,7 @@ import { Chat } from "../../../@types"
 
 const handler: NetworkEventHandler = async (socket, args: string[], player) => {
   try {
-    let chats = await fetchInbox(player.id)
+    let chats = await fetchInbox(player.id, 200,null)
     if (args.length == 1){
       if(args[0] === player.username){        
         sendEvent<string>(socket, ERROR_EVENT, "that's you, put someone elses name")

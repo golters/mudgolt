@@ -28,9 +28,6 @@ const handler: NetworkEventHandler = async (
     const bioTemp = [...args];
     bioTemp.shift();
     const bio = bioTemp.join(" ");
-    if(bio.length == 0){
-      throw new Error("Please add tags")      
-    } 
     const fullinventory = await getItemByPlayer(player.id);   
     let inventory = fullinventory   
     inventory = inventory.filter(i => i.name === args[0])
@@ -41,8 +38,6 @@ const handler: NetworkEventHandler = async (
 
       await setItemTags(inventory[0].id, bio)
       sendEvent<string>(socket, SERVER_LOG_EVENT, `you tagged ${args[0]}`)
-      //inventory update
-      sendEvent<Item[]>(socket, INVENTORY_UPDATE_EVENT, fullinventory)
     }
     
   } catch (error) {

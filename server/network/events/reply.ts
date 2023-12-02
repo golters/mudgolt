@@ -30,7 +30,7 @@ const handler: NetworkEventHandler = async (
   player: Player,
 ) => {
   try {  
-    const inbox = await fetchInbox(player.id)
+    const inbox = await fetchInbox(player.id, 200, null)
     let lastmessage = inbox[0]
     inbox.forEach(chat => {
       if(chat.recipiant?.username === player.username){

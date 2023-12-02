@@ -132,7 +132,7 @@ body {
   display: grid;
   grid-template-rows: auto 1fr;
   max-height: 100vh;
-  text-shadow: 0.4389924193300864px 0 1px rgba(0, 30, 255, 0.2), -0.4389924193300864px 0 1px rgba(255,0,80,0.1), 0 0 3px;
+  text-shadow: 0.4389924193300864px 0.4389924193300864px 1px rgba(0, 30, 255, 0.2), -0.4389924193300864px -0.4389924193300864px 1px rgba(255,0,80,0.1), 0 0 3px;
 }
 
 body::after {

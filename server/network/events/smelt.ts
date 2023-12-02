@@ -34,6 +34,7 @@ const handler: NetworkEventHandler = async (socket, args: string, player) => {
       return
     }
     const rand = Math.random() * 50
+    //small chance per char multiplied by item age
     if(rand + ingot > 75){
       await createItem(player.id, "golt_crystal")
       sendEvent<string>(socket, SERVER_LOG_EVENT, "you found a golt_crystal")  

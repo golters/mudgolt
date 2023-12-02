@@ -35,13 +35,22 @@ ReactDOM.render(
   document.body
 )
 
+const startMessages: string[] = [
+  "Leave your shoes at the door.",
+  "Mudgolt stands for Multi User Dungeon... The other four letters represent a secret blend of herbs and spices for legal reasons I am unable to share.",
+  "Mudgolt was invented in 1972 in an attempt to communicate with multi dimensional beings. But it turned out to be the ultimate tool for humans to communicate too!",
+  "This version of Mudgolt was discovered on a floppy disk in a yard sale in 1986. It was later uploaded to the internet in the 2020s.",
+  "Somebody loves you."
+]
+
 const init = async () => {
   await cryptoTask()
   await networkTask()
   
   console.log("Client started")
 
-  pushToLog(/* html */`Welcome to MUDGOLT! <small>Leave your shoes at the door.</small>`)
+  const randomMessage = startMessages[Math.floor(Math.random() * startMessages.length)]
+  pushToLog(/* html */`Welcome to MUDGOLT! <small>${randomMessage}</small>`)
   // pushToLog(/* html */`Want to contribute? https://github.com/golters/mudgolt`)
   pushToLog(/* html */`Type <code>/help</code> for a list of commands.`)
   sendEvent(EVENT_EVENT,"/event check")

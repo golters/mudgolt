@@ -68,6 +68,10 @@ export const MAKE_EVENT = "MAKE"
 export const NPC_UPDATE_EVENT = "NPC_UPDATE"
 export const DRAW_AVATAR_EVENT = "DRAW_AVATAR"
 export const TAG_ITEM_EVENT = "TAG_ITEM"
+export const INBOX_UPDATE_EVENT = "INBOX_UPDATE"
+export const CORRESPONDENTS_UPDATE_EVENT = "CORRESPONDENTS_UPDATE"
+export const MORE_INBOX_EVENT ="MORE_INBOX"
+export const WHISPER_POPUP_EVENT = "WHISPER_POPUP"
 
 // command events
 export const LOG_EVENT = "LOG"

@@ -20,6 +20,8 @@ const nameBits = [
   "fa",
   "fu",
   "glob",
+  "blob",
+  "schme",
   "goo",
   "mi",
   "er",
@@ -125,9 +127,16 @@ const phrases: phrase[] = [
   {
     tags:"blacksmith",
     phrases:["What can I forge for you today?","Welcome to the forge","*Bangs anvil*"],
-    npcphrases:["If you see [builder] tell them I've finished making those nails", "[grumpy] is so grumpy"],
+    npcphrases:["If you see [builder] tell them I've finished making those nails"],
     roomphrases:["Oops, I left my hammer in [room]"],
     itemphrases:["Have you seen my [item] anywhere?"],
+    userphrases:[],
+  },{
+    tags:"jolly",
+    phrases:["Leave me alone","Don't even talk to me until i've had my potion","I'm not grumpy, you're grumpy"],
+    npcphrases:["[grumpy] needs cheering up"],
+    roomphrases:[],
+    itemphrases:[],
     userphrases:["Have you spoken to [user] recently?"],
   },{
     tags:"grumpy",
@@ -194,7 +203,7 @@ export const generatePhrases = async(job: string, personality: string):Promise<s
         if(personalities.includes(ege)){
           const person = npcs.find(n => n.personality === ege)
           if(person)
-            lines[l] = lines[l].replace(regex[r], person?.personality)
+            lines[l] = lines[l].replace(regex[r], person?.name)
           else{ lines[l] = "Hello" }
         }
         switch(regex[r].toString()){

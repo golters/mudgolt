@@ -17,12 +17,15 @@ const handler: NetworkEventHandler = (message: string) => {
   })
   const colorPic = Math.random()
   let color = ""
+  let shadow = ""
   if(colorPic > 0.5){
     color = "red"
+    shadow = "2px 2px blue"
   }else{
     color = "blue"
+    shadow = "2px 2px red"
   }
-  pushToLog(<span style={{ fontStyle: "bold", opacity: "1", fontSize: "200%", background: color, fontFamily: "impact", color: "white"}}>{message}{embeds}</span>
+  pushToLog(<span style={{ fontStyle: "bold", opacity: "1", fontSize: "200%", background: color, fontFamily: "impact", color: "white", textShadow: shadow}}>{message}{embeds}</span>
   )
 }
 

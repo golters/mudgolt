@@ -21,6 +21,8 @@ import {
 } from "../../services/player"
 import {
   GOLT,
+  BANNER_FILL,
+  BANNER_WIDTH,
 } from "../../../constants"
 
 const handler: NetworkEventHandler = async (socket, payload: [number, number, string], player) => {
@@ -49,10 +51,11 @@ const handler: NetworkEventHandler = async (socket, payload: [number, number, st
 
       return
     }
-    
-    const cost = 1
-    
-    if(player.golts <= 0){
+    let cost = 1    
+    const replaceSymbol = room.banner.split("")[x + (BANNER_WIDTH*y)]
+    if(replaceSymbol === BANNER_FILL || replaceSymbol === char)
+      cost = 0
+    if(player.golts < cost){
       sendEvent<string>(socket, ERROR_EVENT, `you need ${GOLT}${cost}`)
 
       return

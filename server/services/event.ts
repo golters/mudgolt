@@ -21,7 +21,7 @@ import {
   SERVER_LOG_EVENT,
 } from "../../events"
 import { getPlayerById, getPlayerByRoom, getPlayerByUsername, getRecentlyOnline, takePlayerGolts } from "./player"
-import { createItem,setItemBio,createFloorItem } from "./item"
+import { createItem,setItemBio,createFloorItem, createPocketItem } from "./item"
 import { getDoorsIntoRoom } from "./door"
 import { start } from "repl"
 import { insertCampaign, insertRoomCommand } from "./chat"
@@ -294,7 +294,7 @@ export const getEventTag = async (id:number, type: string, event:number): Promis
 export const getUpcomingEvents = async (time: number): Promise<Event[]> => {
   const events = await db.all<Event[]>(/*sql*/`
     SELECT * FROM events 
-    WHERE "start" > $1 AND "start" < $1 + 8.64e+7 * 5
+    WHERE "start" > $1
   `, [time])
 
   return events
@@ -409,6 +409,14 @@ export const clearOldEvents = async (time: number): Promise<void> => {
   return
 }
 
+export const clearAllEvents = async() => {
+  await db.all(/*sql*/`
+      DELETE FROM events
+    `)	
+
+  return
+}
+
 
 export const fishWinner = async (score: EventTag[]): Promise<void> => {
   const scoreBoard = score.sort((a, b) => Number(b.info.split(",").reduce(function(prev, current){
@@ -437,7 +445,7 @@ export const fishWinner = async (score: EventTag[]): Promise<void> => {
       const timestamp = `${formattedDate}`
       switch(i){
         case 0:
-          const goldtrophy = await createItem(user.id, "Gold_Fishing_Trophy")
+          const goldtrophy = await createPocketItem(user.id, "gold_fishing_trophy", null, "2", "trophy,golt","trophy")
           await setItemBio(goldtrophy.id, "A 1st place fishing tournament trophy won by " + user.username + " on " + timestamp)
           broadcast<string>(LOG_EVENT, user.username + " won the fishing tournament! with " + points + " points")
           broadcastToUser<string>(SERVER_LOG_EVENT, "you got a gold trophy", user?.username)
@@ -447,7 +455,7 @@ export const fishWinner = async (score: EventTag[]): Promise<void> => {
         case 1:
           broadcastToUser<string>(LOG_EVENT, "you came 2nd in the fishing tournament! with " + points + " points", user?.username)
           broadcastToUser<string>(SERVER_LOG_EVENT, "you got a silver trophy", user?.username)
-          const silvertrophy = await createItem(user.id, "Silver_Fishing_Trophy")
+          const silvertrophy = await createPocketItem(user.id, "silver_fishing_trophy", null, "1", "trophy,silver","trophy")
           await setItemBio(silvertrophy.id, "A 2nd place fishing tournament trophy won by " + user.username + " on " + timestamp)
           broadcastToUser<string>(NOTIFICATION_EVENT, "gotmail", user?.username); 
 
@@ -455,7 +463,7 @@ export const fishWinner = async (score: EventTag[]): Promise<void> => {
         case 2:
           broadcastToUser<string>(LOG_EVENT, "you came 3rd in the fishing tournament! with " + points + " points", user?.username)
           broadcastToUser<string>(SERVER_LOG_EVENT, "you got a bronze trophy", user?.username)
-          const bronzetrophy = await createItem(user.id, "Bronze_Fishing_Trophy")
+          const bronzetrophy = await createPocketItem(user.id, "bronze_fishing_trophy", null, "0", "trophy,bronze","trophy")
           await setItemBio(bronzetrophy.id, "A 3rd place fishing tournament trophy won by " + user.username + " on " + timestamp)
           broadcastToUser<string>(NOTIFICATION_EVENT, "gotmail", user?.username); 
 
@@ -708,7 +716,7 @@ export const createRandomEvent = async (time: number): Promise<void> => {
     targetDate.setMinutes(0)
     targetDate.setSeconds(0)
     const start = targetDate.getTime() - new Date().getTime()
-    const length = 4.32e+10
+    const length = 4.32e+7
     const type = Math.random() * 3
     createEvent(events[Math.floor(type)],time + start, time + start + length)
   }
@@ -976,7 +984,7 @@ export const electionWinner = async (event: number): Promise<void> => {
   if(scoreBoard.length < 1){
     message = "Nobody has been elected. Anarchy wins"
     for(let o = 0; o < online.length; o++){
-      const sash = await createItem(online[o].player.id, "Anarchy_Sash")
+      const sash = await createPocketItem(online[o].player.id, "anarchy_sash", null, "1","", "sash")
       await setItemBio(sash.id, "A sash awarded to everyone who didn't vote during an election day where nobody won on " + timestamp)
       broadcastToUser<string>(SERVER_LOG_EVENT, "you got an Anarchy_Sash", online[o].player.username)
       broadcastToUser<string>(NOTIFICATION_EVENT, "gotmail", online[o].player.username); 
@@ -988,7 +996,7 @@ export const electionWinner = async (event: number): Promise<void> => {
       return
     }
     message = winner?.username + " has won the election!"
-    const sash = await createItem(scoreBoard[0][0], "Election_Sash")
+    const sash = await createPocketItem(scoreBoard[0][0], "election_sash", null, "1","", "sash")
     await setItemBio(sash.id, "A sash awarded to " + winner?.username + " for winning the " + timestamp + " election")
     broadcastToUser<string>(SERVER_LOG_EVENT, "you got an Election_Sash", winner?.username)
     broadcastToUser<string>(NOTIFICATION_EVENT, "gotmail", winner?.username)
@@ -1006,7 +1014,7 @@ export const electionWinner = async (event: number): Promise<void> => {
           return
         }
         message = message + winner?.username
-        const sash = await createItem(scoreBoard[c][0], "Coalition_Sash")
+        const sash = await createPocketItem(scoreBoard[c][0], "coalition_sash", null, "1","", "sash")
         await setItemBio(sash.id, "A sash awarded to " + winner?.username + " for joint winning the " + timestamp + " election")
         broadcastToUser<string>(SERVER_LOG_EVENT, "you got a Coalition_Sash", winner?.username)
         broadcastToUser<string>(NOTIFICATION_EVENT, "gotmail", winner?.username); 
@@ -1037,7 +1045,7 @@ export const electionWinner = async (event: number): Promise<void> => {
       const areaName = roomarray[areaNameNum]
       const papertype = newspapers[Math.floor(Math.random() * (newspapers.length-1))]
       const newspaper = "the_" + areaName + "_" + papertype
-      const paper = await createFloorItem(rooms[r].id, newspaper, null, "","newspaper")
+      const paper = await createFloorItem(rooms[r].id, newspaper, null, "","newspaper","newspaper")
       await setItemBio(paper.id, message + " " + timestamp)
         
     }

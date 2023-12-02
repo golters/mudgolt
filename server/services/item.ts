@@ -35,6 +35,8 @@ export const createItem = async (playerID: number, name: string): Promise<Item> 
   })
   const item = await getItemById(max.id) as Item
 
+  await invUpdate(playerID)
+
   return item
 }
 
@@ -61,18 +63,52 @@ export const makeFullItem = async (playerID: number, name: string, description: 
   })
   const item = await getItemById(max.id) as Item
 
+  await invUpdate(playerID)
+
   return item
 }
-
-export const createFloorItem = async (roomID: number, name: string, icon: string | null, rarity: string, tags: string): Promise<Item> => {
+export const createPocketItem = async (roomID: number, name: string, icon: string | null, rarity: string, types: string, tags:string): Promise<Item> => {
   let newicon = icon
   if(!icon){
     newicon = await generateIcon()
   }
   const time = Date.now()
   await db.get(/*sql*/`
-  INSERT INTO items ("name", "description", "macro", "holderId", "holderType", "icon", "date", "rarity", "type")
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);
+  INSERT INTO items ("name", "description", "macro", "holderId", "holderType", "icon", "date", "rarity", "type", "tags")
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9 ,$10);
+`, [    
+    name,
+    `a ${name}`,
+    "",
+    roomID,
+    "player",
+    newicon,
+    time,
+    rarity,
+    types,
+    tags,
+  ])
+
+  //get newest item
+  const inventory = await getItemByRoom(roomID)
+  const max = inventory.reduce(function(prev, current) {
+    return (prev.id > current.id) ? prev : current
+  })
+  const item = await getItemById(max.id) as Item
+
+
+  return item
+}
+
+export const createFloorItem = async (roomID: number, name: string, icon: string | null, rarity: string, types: string, tags:string): Promise<Item> => {
+  let newicon = icon
+  if(!icon){
+    newicon = await generateIcon()
+  }
+  const time = Date.now()
+  await db.get(/*sql*/`
+  INSERT INTO items ("name", "description", "macro", "holderId", "holderType", "icon", "date", "rarity", "type", "tags")
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);
 `, [    
     name,
     `a ${name}`,
@@ -82,6 +118,7 @@ export const createFloorItem = async (roomID: number, name: string, icon: string
     newicon,
     time,
     rarity,
+    types,
     tags,
   ])
 
@@ -160,6 +197,8 @@ export const dropItem = async (player: Player, itemName: string): Promise<Item[]
       holderType = "room"
       WHERE id = $2;
   `, [player.roomId, item.id])
+  
+  await invUpdate(player?.id)
 
   return items
 }
@@ -179,6 +218,8 @@ export const takeItem = async (player: Player, itemName: string): Promise<Item[]
       holderType = "player"
       WHERE id = $2;
   `, [player.id, item.id])
+
+  await invUpdate(player?.id)
 
   return items
 }
@@ -209,6 +250,8 @@ export const sendItem = async (player:Player, args: string[]) => {
       WHERE id = $2;
   `, [Recipiant.id, item.id])
   await insertWhisper(Recipiant.id, player.id, `sent ${item.name}`, Date.now())
+  
+  await invUpdate(player?.id)
 
   return item
 }
@@ -227,6 +270,10 @@ export const setItemBio = async (itemId: number, bio: string): Promise<Item> => 
       WHERE id = $2;
   `, [bio, itemId])
 
+  const player = await getPlayerById(item.holderId)
+  if(player)
+    await invUpdate(player?.id)
+
   return item
 }
 
@@ -243,6 +290,10 @@ export const setItemTags = async (itemId: number, tags: string): Promise<Item> =
       SET tags = $1
       WHERE id = $2;
   `, [tags, itemId])
+
+  const player = await getPlayerById(item.holderId)
+  if(player)
+    await invUpdate(player?.id)
 
   return item
 
@@ -261,6 +312,10 @@ export const setItemMacro = async (itemId: number, bio: string): Promise<Item> =
       SET macro = $1
       WHERE id = $2;
   `, [bio, itemId])
+  
+  const player = await getPlayerById(item.holderId)
+  if(player)
+    await invUpdate(player?.id)
 
   return item
 }
@@ -285,6 +340,8 @@ export const smeltItem = async (player: Player, material: string): Promise<numbe
   ])
   
   await addPlayerGolts(player.id, ingot)
+  
+  await invUpdate(player?.id)
 
   return ingot
 }
@@ -313,10 +370,18 @@ export const editIcon = async (x: number, y: number, character: string, item: It
   `, [item.icon, item.id])
 
   const player = await getPlayerById(item.holderId)
+  if(player)
+    await invUpdate(player?.id)
+
+  return item
+}
+
+export const invUpdate = async (user: number) =>{
+  const player = await getPlayerById(user)
   if(player){
     const inv = await getInvByPlayer(player.id)
     broadcastToUser(INVENTORY_UPDATE_EVENT, inv, player?.username)
   }
 
-  return item
+  return
 }

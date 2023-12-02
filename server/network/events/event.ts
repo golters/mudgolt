@@ -34,6 +34,7 @@ import {
   castVote,
   campaign,
   pollResults,
+  clearAllEvents,
 } from "../../services/event"
 import {
   insertRoomChat,
@@ -132,6 +133,10 @@ const handler: NetworkEventHandler = async (
               }
             }
             
+            return;
+          case "clear":
+            await clearAllEvents()
+              
             return;
         }
 

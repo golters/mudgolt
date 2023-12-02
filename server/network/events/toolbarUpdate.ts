@@ -11,6 +11,8 @@ import {
   DOOR_UPDATE_EVENT,
   INVENTORY_UPDATE_EVENT,
   NPC_UPDATE_EVENT,
+  INBOX_UPDATE_EVENT,
+  CORRESPONDENTS_UPDATE_EVENT,
 } from "../../../events"
 import {
   getRoomById,
@@ -26,11 +28,13 @@ import {
   Door,
   Item,
   Npc,
+  Chat,
 } from "../../../@types"
 import {
   broadcastToUser,
 } from "../../network"
 import { getInvByPlayer } from "../../services/player"
+import { fetchCorrespondent, fetchInbox } from "../../services/chat"
 
 const handler: NetworkEventHandler = async (socket, nothing: string, player) => {
   try {
@@ -40,6 +44,10 @@ const handler: NetworkEventHandler = async (socket, nothing: string, player) => 
     broadcastToUser<Item[]>(INVENTORY_UPDATE_EVENT, inv, player.username)
     const npcs = await getLivingNpcs()
     broadcastToUser<Npc[]>(NPC_UPDATE_EVENT, npcs, player.username)
+    const inbox = await fetchInbox(player.id, 20, null)
+    broadcastToUser<Chat[]>(INBOX_UPDATE_EVENT, inbox, player.username)
+    const correspondents = await fetchCorrespondent(player.id)
+    broadcastToUser<string[]>(CORRESPONDENTS_UPDATE_EVENT, correspondents, player.username)
 
   }catch(error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
