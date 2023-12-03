@@ -330,7 +330,7 @@ export const editAvatar = async (x: number, y: number, character: string, npc: N
 
     //create tombstone
     const rooms = await getAllRooms()
-    const grave = await createFloorItem(Math.floor(Math.random() * rooms.length),"grave","123456123456123456","","grave")
+    const grave = await createFloorItem(Math.floor(Math.random() * rooms.length),"grave","123456123456123456","","grave","grave")
     const birth = new Date(npc.birth)
     const death = new Date(Date.now())
     const byyyy = birth.getFullYear();
