@@ -84,7 +84,7 @@ const handler: NetworkEventHandler = async (socket, playerID: number) => {
     broadcastToUser<string>(SERVER_LOG_EVENT, "you have been abducted by aliens", player.username)
     broadcastToRoom<string>(NOTIFICATION_EVENT, "teleportEnter", newroom.id);
     if(Math.random() * 1000 < 1)
-      await createPocketItem(player.id, "alien_artifact", null, "2", "alien,artifact")
+      await createPocketItem(player.id, "alien_artifact", null, "2", "alien,artifact","alien,artifact")
     //await insertRoomCommand(room.id, player.id, `has teleported into ${room.name}`, Date.now(), "tp")
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
