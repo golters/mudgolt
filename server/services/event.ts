@@ -984,7 +984,7 @@ export const electionWinner = async (event: number): Promise<void> => {
   if(scoreBoard.length < 1){
     message = "Nobody has been elected. Anarchy wins"
     for(let o = 0; o < online.length; o++){
-      const sash = await createPocketItem(online[o].player.id, "anarchy_sash", null, "1","", "sash")
+      const sash = await createPocketItem(online[o].player.id, "anarchy_sash", "∙∙╱∙∙∙╱∙AN╱∙∙∙╱∙∙∙", "1","sash,anarchy", "sash")
       await setItemBio(sash.id, "A sash awarded to everyone who didn't vote during an election day where nobody won on " + timestamp)
       broadcastToUser<string>(SERVER_LOG_EVENT, "you got an Anarchy_Sash", online[o].player.username)
       broadcastToUser<string>(NOTIFICATION_EVENT, "gotmail", online[o].player.username); 
@@ -996,7 +996,7 @@ export const electionWinner = async (event: number): Promise<void> => {
       return
     }
     message = winner?.username + " has won the election!"
-    const sash = await createPocketItem(scoreBoard[0][0], "election_sash", null, "1","", "sash")
+    const sash = await createPocketItem(scoreBoard[0][0], "election_sash", "∙∙╱∙∙∙╱∙EL╱∙∙∙╱∙∙∙", "1","sash,election", "sash")
     await setItemBio(sash.id, "A sash awarded to " + winner?.username + " for winning the " + timestamp + " election")
     broadcastToUser<string>(SERVER_LOG_EVENT, "you got an Election_Sash", winner?.username)
     broadcastToUser<string>(NOTIFICATION_EVENT, "gotmail", winner?.username)
@@ -1014,7 +1014,7 @@ export const electionWinner = async (event: number): Promise<void> => {
           return
         }
         message = message + winner?.username
-        const sash = await createPocketItem(scoreBoard[c][0], "coalition_sash", null, "1","", "sash")
+        const sash = await createPocketItem(scoreBoard[c][0], "coalition_sash", "∙∙╱∙∙∙╱∙CO╱∙∙∙╱∙∙∙", "1","sash,coalition", "sash")
         await setItemBio(sash.id, "A sash awarded to " + winner?.username + " for joint winning the " + timestamp + " election")
         broadcastToUser<string>(SERVER_LOG_EVENT, "you got a Coalition_Sash", winner?.username)
         broadcastToUser<string>(NOTIFICATION_EVENT, "gotmail", winner?.username); 

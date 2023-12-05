@@ -42,7 +42,7 @@ export function newMesageWindow(Message: string, user:string, npcs: Npc[] | null
     window.style.left = (windows?.childNodes.length * 10) + "px";
 
     const menu = document.createElement('div')
-    menu.setAttribute('id','menu')
+    menu.setAttribute('id','windowMessage')
     const message = document.createElement('div')
     if(Message && user)
     message.appendChild(document.createTextNode("["+user+"] "+Message))
@@ -347,11 +347,16 @@ function addNPC(window: HTMLElement, npc: Npc[]){
 }
 
 export function closeWindow(window: HTMLElement) {
-  window.innerHTML = ""
   window.style.transition = "0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)"
-  window.style.opacity = "0.1"
-  window.style.width = "0.1px"
-  window.style.height = "0.1px"
+  window.style.minWidth = "0"
+  window.style.minHeight = "0"
+  window.style.opacity = "0"
+  //window.style.width = "0.1px"
+  //window.style.height = "0.1px"
+  window.style.boxShadow = ""
+  //window.innerHTML = ""
+  window.style.fontSize = "0"
+  window.style.pointerEvents = "none"
 }
 export function dragElement(elmnt: HTMLElement) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;

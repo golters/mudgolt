@@ -138,7 +138,9 @@ let ping = setInterval(() => {
   sendEvent(PING_EVENT, client)  
   sendEvent(PAY_EVENT, store.player?.id)
   }else{
+    if(Math.random()*1000 < 2){
     sendEvent(UFO_EVENT, store.player?.id)
+    }
   }
 }, 15 * 1000)
 

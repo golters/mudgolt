@@ -40,42 +40,28 @@ import {
   insertRoomChat,
 } from "../../services/chat"
 import { getRoomById } from "../../services/room"
-import { createItem, setItemBio } from "../../services/item"
+import { createItem, createPocketItem, setItemBio } from "../../services/item"
 import { cheat, takePlayerGolts } from "../../services/player"
 import {
   GOLT,
 } from "../../../constants"
+import { fish } from "../../services/specialItems"
 
-const fishTypes =[
-  "trout",
-  "carp",
-  "bass",
-  "cod",
-  "herring",
-  "eel",
-  "tuna",
-  "haddock",
-  "fish",
-  "shark",
-  "dolphin",
-  "whale",
-  "crab",
-  "lobster",
-  "shrimp",
-  "squid",
-  "octopus",
-  "mermaid",
-  "kraken",
-  "seagull",
-  "ray",
-  "clam",
-  "urchin",
-  "trilobite",
-  "turtle",
-  "piranha",
-  "frog",
-  "tin_can",
-  "penguin",
+const waterRooms: string[] = [
+  "water",
+  "ocean",
+  "river",
+  "pond",
+  "lake",
+  "swamp",
+  "fen",
+  "marsh",
+  "bog",
+  "sewer",
+  "sea",
+  "dock",
+  "pool",
+  "dyke",
 ]
 
 const handler: NetworkEventHandler = async (
@@ -142,43 +128,76 @@ const handler: NetworkEventHandler = async (
 
         return;
       case "/fish":
-        if(event && event.type === "Fishing_Tournament"
+        const room = await (await getRoomById(player.roomId)).name
+        const roomarray = room.split(/(?:-|_| )+/)
+        let areaNameNum = 0
+        if(roomarray.length > 1){
+          for(let i = 0; i < roomarray.length; i++){
+            if(Number.isNaN(roomarray[i])){
+              delete roomarray[i]
+            }
+            if(roomarray[i].length === 1){
+              delete roomarray[i]
+            }
+            if(roomarray[i] === "left" || roomarray[i] === "right"
+            || roomarray[i] === "north"|| roomarray[i] === "east"|| roomarray[i] === "south"|| roomarray[i] === "west"){
+              delete roomarray[i]
+            }
+          }
+          
+          areaNameNum = Math.floor(Math.random() * (roomarray.length-1))
+        }
+        
+        if((event && event.type === "Fishing_Tournament") || roomarray.some(r => waterRooms.includes(r))
         ){
           const fishSucess = Math.random() * 100
-          const chance = 99-(Number(String(player.roomId + event.id).slice(-1))/2)*5
-          let areaNameNum = 0
+          let chance = 99
+          if(event){
+            chance = 99-(Number(String(player.roomId + event.id).slice(-1))/2)*5
+          }else{
+            chance = 99-(Number(String(player.roomId).slice(-1))/2)*10
+          }
           if(fishSucess > chance){
-            const room = await (await getRoomById(player.roomId)).name
-            const roomarray = room.split(/(?:-|_| )+/)
-            if(roomarray.length > 1){
-              for(let i = 0; i < roomarray.length; i++){
-                if(Number.isNaN(roomarray[i])){
-                  delete roomarray[i]
-                }
-                if(roomarray[i].length === 1){
-                  delete roomarray[i]
-                }
-                if(roomarray[i] === "left" || roomarray[i] === "right"
-                || roomarray[i] === "north"|| roomarray[i] === "east"|| roomarray[i] === "south"|| roomarray[i] === "west"){
-                  delete roomarray[i]
-                }
-              }
-              
-              areaNameNum = Math.floor(Math.random() * (roomarray.length-1))
-            }
 
             const areaName = roomarray[areaNameNum]
-            const fishtype = fishTypes[Math.floor(Math.random() * (fishTypes.length-1))]
-            const fishName = areaName + "_" + fishtype
+            const fishtype = fish[Math.floor(Math.random() * (fish.length-1))]
+            const fishName = areaName + "_" + fishtype.name
+            let rarity = fishtype.rarity
   
             broadcastToUser<string>(SERVER_LOG_EVENT, "you caught a " + fishName, player.username); 
-            const fish = await createItem(player.id,fishName) 
             //const fishSize = Math.random() * 480
             const fishSize = Math.pow(Math.floor(Math.random()*400), 1/3);
-            await setItemBio(fish.id, "A " + Math.floor(fishSize).toString() + " inch " + fishtype + " caught in " + room)
-            await givePoints(player.id, Math.floor(fishSize).toString(), event.id)
+            //xl + xxl message for big fish. increase rarity 
+            if(fishSize > 10){
+              rarity = rarity + 1;
+              broadcastToUser<string>(SERVER_LOG_EVENT, "wow it's big!", player.username); 
+
+            }else if(fishSize > 50){
+              rarity = rarity + 2;
+              broadcastToUser<string>(SERVER_LOG_EVENT, "wow it's XL!", player.username); 
+
+            }else if(fishSize > 100){
+              rarity = rarity + 3;
+              broadcastToUser<string>(SERVER_LOG_EVENT, "wow it's XXL!", player.username); 
+              
+            }else if(fishSize > 200){
+              rarity = rarity + 4;
+              broadcastToUser<string>(SERVER_LOG_EVENT, "wow it's XXXL!", player.username); 
+              
+            }else if(fishSize > 300){
+              rarity = rarity + 5;
+              broadcastToUser<string>(SERVER_LOG_EVENT, "wow it's XXXXL!", player.username); 
+              
+            }
+            const fishitem = await createPocketItem(player.id, fishName, "123456123456123456", rarity, "fish,"+fishtype.name+","+fishSize+"inches,"+areaName+","+room, "fish")
+            await setItemBio(fishitem.id, "A " + Math.floor(fishSize).toString() + " inch " + fishtype + " caught in " + room)
+            if(event)
+              await givePoints(player.id, Math.floor(fishSize).toString(), event.id)
           }else{
             broadcastToUser<string>(SERVER_LOG_EVENT, "you caught nothing, try again", player.username); 
+            if(chance > 80){
+              broadcastToUser<string>(SERVER_LOG_EVENT, "there doesn't seem to be many fish here, try somewhere else", player.username); 
+            }
           }
           broadcastToUser<string>(NOTIFICATION_EVENT, "fish", player.username); 
           
