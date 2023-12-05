@@ -36,11 +36,7 @@ import { GOLT } from "../../../constants"
 import { Room, Music } from "@types"
 
 const handler: NetworkEventHandler = async (socket, playerID: number) => {
-  try {    
-    if(Math.random()*1000 > 2){
-
-      return
-    }
+  try {   
     const player = await getPlayerById(playerID)
     const lastpaid = player?.lastPaid
     if(!lastpaid){

@@ -298,6 +298,8 @@
   right:0;
   padding:4px;
   height: 100vh;
+  text-wrap:wrap;
+  overflow-wrap: break-word;
 
   color: var(--color-toolbar-dropdown-text);
   background-color:  darkgray;
@@ -316,11 +318,12 @@
 #rightbarstuff{
   overflow-y: scroll;
   max-height: 90vh;
+  overflow-wrap: break-word;
 
 }
 #rightbarstuff > div{
   display:grid;
-  overflow-x: hidden;
+  word-break: break-all;
 
 }
 .chat-message {
@@ -328,12 +331,6 @@
   border-radius: 2px;
 
 }
-.chat-message > span {
-  text-wrap:wrap;
-  word-wrap: break-word;
-  word-break: break-all;
-}
-
 .item{
   width: 10px;
   text-wrap:wrap;
@@ -406,14 +403,18 @@
 
 #window {
   position: absolute;
+  padding: 2px;
   z-index: 2;
   color: black;
   background-color: #f1f1f1;
   text-align: center;
   border: 1px solid #d3d3d3;
   transition: 1s cubic-bezier(0.6, -0.28, 0.735, 0.045);
-  width:310px;
-  height:150px;
+  max-width:310px;
+  min-width:100px;
+  min-height:50px;
+  height:fit-content;
+  width: fit-content;
   text-shadow: 0.4389924193300864px 0 1px rgba(0, 30, 255, 0.2), -0.4389924193300864px 0 1px rgba(255,0,80,0.1), 0 0 3px;
   box-shadow: 2px 1px 1px rgba(0, 30, 255, 0.2), -2px -1px 1px rgba(255,0,80,0.1), 0 0 3px;
 }
@@ -427,7 +428,14 @@
 #windheader:active {
   cursor: grabbing;
 }
-
+#windowMessage{
+  max-height: 200px;
+  max-width: 300px;
+  height:min-content;
+  width:max-content;
+  overflow-y: scroll;
+  overflow-wrap: break-word;
+}
 #close {
   float: right;
   cursor:pointer;

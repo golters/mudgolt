@@ -106,6 +106,7 @@ const jobs = [
 const personalities = [
   "jolly",
   "grumpy",
+  "flirty",
 ]
 //sleepy
 //quirky
@@ -131,9 +132,81 @@ const phrases: phrase[] = [
     roomphrases:["Oops, I left my hammer in [room]"],
     itemphrases:["Have you seen my [item] anywhere?"],
     userphrases:[],
+  },
+  {
+    tags:"carpenter",
+    phrases:[],
+    npcphrases:[],
+    roomphrases:[],
+    itemphrases:[],
+    userphrases:[],
+  },
+  {
+    tags:"builder",
+    phrases:[],
+    npcphrases:[],
+    roomphrases:[],
+    itemphrases:[],
+    userphrases:[],
+  },
+  {
+    tags:"scribe",
+    phrases:[],
+    npcphrases:[],
+    roomphrases:[],
+    itemphrases:[],
+    userphrases:[],
+  },
+  {
+    tags:"enchanter",
+    phrases:[],
+    npcphrases:[],
+    roomphrases:[],
+    itemphrases:[],
+    userphrases:[],
+  },
+  {
+    tags:"locksmith",
+    phrases:[],
+    npcphrases:[],
+    roomphrases:[],
+    itemphrases:[],
+    userphrases:[],
+  },
+  {
+    tags:"thief",
+    phrases:[],
+    npcphrases:[],
+    roomphrases:[],
+    itemphrases:["Wanna buy an [item]? I uh... found it"],
+    userphrases:[],
+  },
+  {
+    tags:"librarian",
+    phrases:["I love the smell of books"],
+    npcphrases:[],
+    roomphrases:[],
+    itemphrases:[],
+    userphrases:[],
+  },
+  {
+    tags:"courier",
+    phrases:["Looking for a new penpal?"],
+    npcphrases:["[flirty] sends a lot of love letters"],
+    roomphrases:[],
+    itemphrases:[],
+    userphrases:[],
+  },
+  {
+    tags:"hobo",
+    phrases:["I'm not supposed to be here","Spare a golt?"],
+    npcphrases:[],
+    roomphrases:[],
+    itemphrases:[],
+    userphrases:[],
   },{
     tags:"jolly",
-    phrases:["Leave me alone","Don't even talk to me until i've had my potion","I'm not grumpy, you're grumpy"],
+    phrases:["Leave me alone","Don't even talk to me until i've had my potion"],
     npcphrases:["[grumpy] needs cheering up"],
     roomphrases:[],
     itemphrases:[],
@@ -145,6 +218,13 @@ const phrases: phrase[] = [
     roomphrases:[],
     itemphrases:[],
     userphrases:[],
+  },{
+    tags:"flirty",
+    phrases:["Hey god looking"],
+    npcphrases:["[jolly] has a nice personality","[grumpy] is such a dark horse"],
+    roomphrases:[],
+    itemphrases:[],
+    userphrases:["I have a crush on [user], don't tell anyone"],
   },
 ]
 
@@ -330,7 +410,7 @@ export const editAvatar = async (x: number, y: number, character: string, npc: N
 
     //create tombstone
     const rooms = await getAllRooms()
-    const grave = await createFloorItem(Math.floor(Math.random() * rooms.length),"grave","123456123456123456","","grave","grave")
+    const grave = await createFloorItem(Math.floor(Math.random() * rooms.length),"grave","∙╭∙╮∙∙∙│--│∙∙│--│∙","","grave","grave")
     const birth = new Date(npc.birth)
     const death = new Date(Date.now())
     const byyyy = birth.getFullYear();

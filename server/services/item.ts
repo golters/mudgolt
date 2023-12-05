@@ -67,7 +67,7 @@ export const makeFullItem = async (playerID: number, name: string, description: 
 
   return item
 }
-export const createPocketItem = async (roomID: number, name: string, icon: string | null, rarity: string, types: string, tags:string): Promise<Item> => {
+export const createPocketItem = async (playerID: number, name: string, icon: string | null, rarity: string, types: string, tags:string): Promise<Item> => {
   let newicon = icon
   if(!icon){
     newicon = await generateIcon()
@@ -80,7 +80,7 @@ export const createPocketItem = async (roomID: number, name: string, icon: strin
     name,
     `a ${name}`,
     "",
-    roomID,
+    playerID,
     "player",
     newicon,
     time,
@@ -90,7 +90,7 @@ export const createPocketItem = async (roomID: number, name: string, icon: strin
   ])
 
   //get newest item
-  const inventory = await getItemByRoom(roomID)
+  const inventory = await getInvByPlayer(playerID)
   const max = inventory.reduce(function(prev, current) {
     return (prev.id > current.id) ? prev : current
   })

@@ -897,7 +897,7 @@ function drawInbox(){
     const messageBox = document.createElement('span')
     messageBox.classList.add("message-box")
     const message = document.createElement('span')
-    message.classList.add("chat-message")
+    //message.classList.add("chat-message")
     const date = document.createElement('span')
     date.classList.add("date")
     date.appendChild(document.createTextNode(timestamp))
@@ -1059,7 +1059,7 @@ function getCount(){
           <div className="tooltip">
           <span id="button"
             onClick={() => changerightTab("event")}
-          >{"E"}</span>
+          >{"🕭"}</span>
           <span className ="tooltiptext">Event</span>
         </div>
         </div>
@@ -1068,8 +1068,17 @@ function getCount(){
           <div className="tooltip">
           <span id="button"
             onClick={() => changerightTab("news")}
-          >{"N"}</span>
+          >{"🗞"}</span>
           <span className ="tooltiptext">News</span>
+        </div>
+        </div>
+        
+        <div className="pop-up">
+          <div className="tooltip">
+          <span id="button"
+            onClick={() => changerightTab("game")}
+          >{"♞"}</span>
+          <span className ="tooltiptext">Games</span>
         </div>
         </div>
         
