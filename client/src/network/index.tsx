@@ -16,6 +16,7 @@ import {
   TP_EVENT,
   LOG_EVENT,
   UFO_EVENT,
+  PONG_EVENT,
 } from "../../../events"
 import {
   store, 
@@ -60,7 +61,7 @@ export const networkTask = () => new Promise<void>((resolve) => {
   reconnectAttempts++
 
   client.addEventListener("open", () => {
-    //pushToLog("Connected to server")
+    pushToLog("Connected to server")
 
     reconnectAttempts = 0
   })
@@ -133,16 +134,27 @@ setInterval(() => {
   }
 }, 15 * 10)
 
-let ping = setInterval(() => {
-  if(localStorage.getItem("focus") === "open"){
+setTimeout(() => {
+  console.log("new ping")
   sendEvent(PING_EVENT, client)  
   sendEvent(PAY_EVENT, store.player?.id)
-  }else{
-    if(Math.random()*10000 < 1){
-    sendEvent(UFO_EVENT, store.player?.id)
-    }
-  }
 }, 15 * 1000)
+
+//make settimeout then ping server, server return event to start a new timeout
+networkEmitter.on(PONG_EVENT, () => {
+  console.log("pong")
+  setTimeout(() => {
+    console.log("ping")
+    sendEvent(PING_EVENT, client)  
+    if(localStorage.getItem("focus") === "open"){
+    sendEvent(PAY_EVENT, store.player?.id)
+    }else{
+      if(Math.random()*10000 < 5){ 
+      sendEvent(UFO_EVENT, store.player?.id)
+      }
+    }
+  }, 15 * 1000)
+})
 
 window.addEventListener("focus", (event) => { 
   localStorage.setItem("focus","open")

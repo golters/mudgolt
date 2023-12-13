@@ -897,7 +897,7 @@ function drawInbox(){
     const messageBox = document.createElement('span')
     messageBox.classList.add("message-box")
     const message = document.createElement('span')
-    //message.classList.add("chat-message")
+    message.classList.add("chat-message")
     const date = document.createElement('span')
     date.classList.add("date")
     date.appendChild(document.createTextNode(timestamp))

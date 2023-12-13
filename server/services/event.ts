@@ -302,6 +302,7 @@ export const getUpcomingEvents = async (time: number): Promise<Event[]> => {
 
 //spamming offline/afk users with backloged event ending messages
 export const clearOldEvents = async (time: number): Promise<void> => {
+  console.log()
   const oldEvents = await db.all<Event[]>(/*sql*/`
     SELECT * FROM events 
     WHERE "end" < $1 
@@ -716,7 +717,7 @@ export const createRandomEvent = async (time: number): Promise<void> => {
     targetDate.setMinutes(0)
     targetDate.setSeconds(0)
     const start = targetDate.getTime() - new Date().getTime()
-    const length = 4.32e+7
+    const length = 15 * 4.32e+7
     const type = Math.random() * 3
     createEvent(events[Math.floor(type)],time + start, time + start + length)
   }
@@ -941,6 +942,18 @@ export const pollResults = async (Event: Event): Promise<string> => {
 }
 
 export const electionWinner = async (event: number): Promise<void> => {
+  const eventcheck = await db.get<Event>(/*sql*/`
+    SELECT * FROM events WHERE id = $1;
+  `, [event])
+
+  if(!eventcheck){
+    return
+  }
+
+  await db.run(/*sql*/`
+  DELETE FROM events 
+  WHERE "id" = $1; 
+`, [event])	
 
   const votes = await db.all<EventTag[]>(/*sql*/`
   SELECT * FROM eventTags 

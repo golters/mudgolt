@@ -40,7 +40,8 @@ const startMessages: string[] = [
   "Mudgolt stands for Multi User Dungeon... The other four letters represent a secret blend of herbs and spices for legal reasons I am unable to share.",
   "Mudgolt was invented in 1972 in an attempt to communicate with multi dimensional beings. But it turned out to be the ultimate tool for humans to communicate too!",
   "This version of Mudgolt was discovered on a floppy disk in a yard sale in 1986. It was later uploaded to the internet in the 2020s.",
-  "Somebody loves you."
+  "Somebody loves you.",
+  "This is the real metaverse"
 ]
 
 const init = async () => {
