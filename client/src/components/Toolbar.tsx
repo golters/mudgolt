@@ -903,7 +903,11 @@ function drawInbox(){
     date.appendChild(document.createTextNode(timestamp))
     const usernames = document.createElement('span')
     usernames.classList.add("username")
+    if(!(Finbox[i].player.username === store.player?.username)){
     usernames.appendChild(document.createTextNode(" ["+Finbox[i].player.username+"] "))
+    }else{
+      usernames.appendChild(document.createTextNode(" ["+Finbox[i].player.username+"]>["+Finbox[i].recipiant?.username+"]"))
+    }
     inb.appendChild(messageBox)
     messageBox.appendChild(message)
     message.appendChild(date)

@@ -4,6 +4,10 @@ import {
   EventTag,
   Chat,
   ChatHistory,
+  Look,
+  Player,
+  Item,
+  Door,
 } from "../../@types"
 import {
   db,
@@ -162,6 +166,55 @@ export const getRoomByName = async (name: string): Promise<Room> => {
   }
 
   return room
+}
+
+export const getLookByID = async (id:number): Promise<Look> => {
+  const room = await getRoomById(id)
+  const look = (users: string[], items: Item[], doors: Door[], event: string): Look => ({
+    bio: room.description,
+    users: users,
+    items: items,
+    doors: doors,
+    event: event,
+  })
+  const event = await getCurrentEvent(Date.now())
+  const players: string[] = []
+  if(event?.type === "Bear_Week"){
+    for (let i = 0; i < online.length; i++){   
+      if (online[i].player.roomId == room.id) { 
+        const bearTag = await getBearName(event?.id, online[i].player.id)
+        if(bearTag)
+          players.push(bearTag)
+      }
+    }
+  }else{
+    online.forEach(({ player }) => {
+      if (player.roomId == room.id) {
+        players.push(player.username)
+      }
+    })
+  }
+  const items = await getItemByRoom(id)
+  const doors = await getDoorByRoom(id)
+
+  let message = ""
+  if(event && event.type === "Zombie_Invasion") {
+    const zombies = await getZombieDoors(id, event.id)
+    const zroom = await getZombieRooms(event.id)
+    const zroomid = zroom.map(x => x.id)
+    if(zroomid.includes(id)){
+      message = "this room is crawling with zombies"
+    }else
+    if(zombies.length > 0){
+      const znames = zombies.map(x => x.name);
+      message = `zombies are trying to get in through ${znames}`
+    }else {
+      message = "there are no zombies trying to get in... yet"
+    }
+  }
+  
+
+  return look(players,items,doors,message)
 }
 
 export const lookByID = async (id: number): Promise<string> => {

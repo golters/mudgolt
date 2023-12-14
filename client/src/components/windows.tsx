@@ -62,6 +62,63 @@ export function newMesageWindow(Message: string, user:string, npcs: Npc[] | null
 
 }
 
+export function newWhisperWindow(username: string | undefined, npcs: Npc[] | null){
+  if(username === undefined)
+  return
+  let windows = document.getElementById('windows')
+  windows?.childNodes.forEach(element => {
+    if((element as HTMLElement).style.width === "0.1px"){
+    element.remove()
+    }
+  });
+  if(windows){
+    const head = document.createElement('div')
+    head.appendChild(document.createTextNode('Drag Me...'))
+    const window = document.createElement('div')
+    head.setAttribute('id','windowheader')
+    window.setAttribute('id','window')
+    const x = document.createElement('div')
+    x.appendChild(document.createTextNode('X'))
+    x.setAttribute('id','close')
+    windows.appendChild(window)
+    window.appendChild(head)
+    dragElement(window);
+    head.appendChild(x)
+    x.onclick = function () {closeWindow(window)}    
+    window.style.top = (windows?.childNodes.length * 10) + "px";
+    window.style.left = (windows?.childNodes.length * 10) + "px";
+    //get npc   
+    let job = "hobo"
+
+    const menu = document.createElement('div')
+    menu.setAttribute('id','menu')
+    if(username === null)
+    return
+    const person = document.createElement('div')
+    person.appendChild(document.createTextNode(username))
+    menu.appendChild(document.createTextNode("Whisper"))
+    menu.appendChild(person)
+    const message = document.createElement('input')
+    message.setAttribute('id','input')
+    message.setAttribute('value',"nice!")
+    menu.appendChild(message)
+    const button8 = document.createElement('input')
+    button8.setAttribute('type','submit')
+    button8.onclick = function () {replyMessage(username, message.value.toString(),window)}
+    menu.appendChild(button8)  
+    
+    job = "courier"
+    window.appendChild(menu)
+    let npc: Npc[] = []
+    if(npcs){   
+       npc = npcs.filter(npc => {
+        return npc.job === job
+      })      
+    }
+    addNPC(window, npc)
+  }
+
+}
 export function newReplyWindow(Message: Chat | null, npcs: Npc[] | null){
   let windows = document.getElementById('windows')
   windows?.childNodes.forEach(element => {
@@ -425,52 +482,28 @@ function drawAvatar(npc: Npc, x: number, y: number, brush: string){
 
 function describeItem(item: Item, description: String, window: HTMLElement){
   sendEvent(ROOM_DESCRIBE_EVENT, [item.name, description])
-  window.innerHTML = ""
-  window.style.transition = "0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)"
-  window.style.opacity = "0.1"
-  window.style.width = "0.1px"
-  window.style.height = "0.1px"
+  closeWindow(window)
 }
 function enchantItem(item: Item, macro: String, window: HTMLElement){
   sendEvent(ENCHANT_ITEM_EVENT, [item.name, macro])
-  window.innerHTML = ""
-  window.style.transition = "0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)"
-  window.style.opacity = "0.1"
-  window.style.width = "0.1px"
-  window.style.height = "0.1px"
+  closeWindow(window)
 }
 function makeItem(name: string, description: string, macro: string, window: HTMLElement){
   sendEvent(MAKE_EVENT, ["item",name,description,macro])
-  window.innerHTML = ""
-  window.style.transition = "0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)"
-  window.style.opacity = "0.1"
-  window.style.width = "0.1px"
-  window.style.height = "0.1px"
+  closeWindow(window)
 }
 function makeRoom(name: string, description: string, window: HTMLElement){
   sendEvent(MAKE_EVENT, ["room",name,description])
-  window.innerHTML = ""
-  window.style.transition = "0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)"
-  window.style.opacity = "0.1"
-  window.style.width = "0.1px"
-  window.style.height = "0.1px"
+  closeWindow(window)
 }
 function makeDoor(name: string, room: string, window: HTMLElement){
   sendEvent(MAKE_EVENT, ["door",name,room])
-  window.innerHTML = ""
-  window.style.transition = "0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)"
-  window.style.opacity = "0.1"
-  window.style.width = "0.1px"
-  window.style.height = "0.1px"
+  closeWindow(window)
 }
 
 function sendItemEvent(item: string, user:string, window: HTMLElement){
   sendEvent(SEND_EVENT, [item,user])
-  window.innerHTML = ""
-  window.style.transition = "0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)"
-  window.style.opacity = "0.1"
-  window.style.width = "0.1px"
-  window.style.height = "0.1px"
+  closeWindow(window)
 }
 
 function tagItem(item:string, cluster: HTMLElement, newtags:string, window: HTMLElement){
@@ -485,11 +518,7 @@ function tagItem(item:string, cluster: HTMLElement, newtags:string, window: HTML
   tags = newtags + ","
   tags = tags + oldtags.join(",")
   sendEvent(TAG_ITEM_EVENT, [item, tags])
-  window.innerHTML = ""
-  window.style.transition = "0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)"
-  window.style.opacity = "0.1"
-  window.style.width = "0.1px"
-  window.style.height = "0.1px"
+  closeWindow(window)
 }
 
 function removeItemTag(removeelm: HTMLElement){
@@ -498,11 +527,7 @@ function removeItemTag(removeelm: HTMLElement){
 
 function replyMessage(user: string, newMessage: string, window: HTMLElement){
   sendEvent(WHISPER_EVENT, [user, newMessage])
-  window.innerHTML = ""
-  window.style.transition = "0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)"
-  window.style.opacity = "0.1"
-  window.style.width = "0.1px"
-  window.style.height = "0.1px"
+  closeWindow(window)
 }
 
 export function redrawAvatars(boys: Npc[]){

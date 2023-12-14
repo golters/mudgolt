@@ -73,6 +73,7 @@ export const INBOX_UPDATE_EVENT = "INBOX_UPDATE"
 export const CORRESPONDENTS_UPDATE_EVENT = "CORRESPONDENTS_UPDATE"
 export const MORE_INBOX_EVENT ="MORE_INBOX"
 export const WHISPER_POPUP_EVENT = "WHISPER_POPUP"
+export const LOOK_LOG_EVENT = "LOOK_LOG"
 
 // command events
 export const LOG_EVENT = "LOG"
