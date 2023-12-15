@@ -42,9 +42,11 @@ import {
 import {
   networkEmitter, 
 } from "../network/events"
-import { ICON_WIDTH, ICON_HEIGHT, MESSAGE_MAX_LENGTH, AVATAR_HEIGHT, AVATAR_WIDTH, itemRarity } from '../../../constants'
+import { ICON_WIDTH, ICON_HEIGHT, MESSAGE_MAX_LENGTH, AVATAR_HEIGHT, AVATAR_WIDTH, itemRarity,colors } from '../../../constants'
 import{
   setBrush,
+  setBrushBackCol,
+  setBrushPrimeCol,
 }from "./Header"
 import { commandModules } from "../../src/commands"
 import { colorUtil } from "../../src/utils"
@@ -58,6 +60,7 @@ import { type } from "os"
 import { Make } from "src/commands/make"
 import { newCraftWindow, newMesageWindow, newReplyWindow, redrawAvatars } from "./windows"
 import { news } from "./news"
+import { Color } from "src/commands/color"
 
 const rooms: (string)[] = []
 let brushSymbols: (string)[] = ["█","▓","▒","░"]
@@ -142,6 +145,8 @@ let event: string = ""
 
 
 export let brush = localStorage.brush || "+"
+export let brushPrimeCol = localStorage.brushPrimeCol || ""
+export let brushBackCol = localStorage.brushBackCol || ""
 
 export const Toolbar: React.FC = () => { 
   const [volume, setVolume] = useState(localStorage.volume*10)
@@ -743,7 +748,7 @@ function drawicons(items: Item[]){
     texcol = rarity.col
     baccol = rarity.back
     itemblock.style.backgroundColor = rarity.back
-    itemblock.style.textShadow = "2px 1px 1px rgba(0, 30, 255, 0.5), -2px 1px 1px rgba(255,0,80,0.5), 0 0 3px"
+    itemblock.style.textShadow = rarity.shadow
       }
     }
     if(icons && Finventory[i].icon){ 
@@ -1149,11 +1154,23 @@ function getCount(){
       </div>  
       <br></br>
           {
-          mini && lefttab === "pallete"?
+          mini && lefttab === "pallete"?<span>{
           brushSymbols.map((symbol, key) => {
               return <span className= "palette" key={key} onClick={() => setBrush(symbol)}>{symbol}
               </span>
-          }): null} 
+          })}
+          <br></br>
+          {<div style={{backgroundColor:brushBackCol, color:brushPrimeCol}}>X</div>}
+          {colors.map((c) => {return <div style={{backgroundColor:c.color}}  
+          onContextMenu={(event) => event.preventDefault()}
+          
+          onMouseDown={(event) => {
+            if (event.buttons === 1) {
+              setBrushPrimeCol(c.color)
+            } else if (event.buttons === 2) {
+              setBrushBackCol(c.color)
+            }}}>.</div>})}
+          </span>: null} 
         
           <div className="popup" style={{bottom:100, position:"fixed"}}>
             <div className="tooltip">

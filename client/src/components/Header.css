@@ -95,15 +95,21 @@
   font-family: DOS16;
   letter-spacing: 0;
   user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
 }
 
 #banner > div {
-  display: flex;
+  float: left;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
   line-height: 16px;
 }
 
 /* Individual character */
 #banner span {
+  user-select: none;
+  float: right;
   display: inline-block;
   width: 8px;
   cursor: none;

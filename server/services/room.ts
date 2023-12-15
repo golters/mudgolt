@@ -42,6 +42,11 @@ export const generateBanner = () => {
     .fill(BANNER_FILL)
     .join("")
 }
+export const generateColorBanner = () => {
+  return new Array(BANNER_WIDTH * BANNER_HEIGHT)
+    .fill(BANNER_FILL)
+    .join(",")
+}
 
 export const editBaner = async (x: number, y: number, character: string, room: Room): Promise<Room> => {
   const pos = x + (y * BANNER_WIDTH)
@@ -59,6 +64,54 @@ export const editBaner = async (x: number, y: number, character: string, room: R
   `, [room.banner, room.id])
 
   broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
+
+  return room
+}
+
+export const editBanerCol = async (x: number, y: number, col: string, room: Room): Promise<Room> => {
+  const pos = x + (y * BANNER_WIDTH)
+
+  let banner = generateColorBanner().split(",")
+  if(room.primeColor)  
+    banner = room.primeColor.split(",")
+  if(!banner)
+    banner = generateColorBanner().split(",")
+    
+  banner[pos] = col
+
+  room.primeColor = banner.join(",")
+
+  await db.run(/*sql*/`
+    UPDATE rooms
+      SET primeColor = $1
+      WHERE id = $2;
+  `, [room.primeColor, room.id])
+
+  //broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
+
+  return room
+}
+
+export const editBanerBackCol = async (x: number, y: number, col: string, room: Room): Promise<Room> => {
+  const pos = x + (y * BANNER_WIDTH)
+  
+  let banner = generateColorBanner().split(",")
+  if(room.backColor)  
+    banner = room.backColor.split(",")
+  if(!banner)
+    banner = generateColorBanner().split(",")
+
+  banner[pos] = col
+
+  room.backColor = banner.join(",")
+
+  await db.run(/*sql*/`
+    UPDATE rooms
+      SET backColor = $1
+      WHERE id = $2;
+  `, [room.backColor, room.id])
+
+  //broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
 
   return room
 }

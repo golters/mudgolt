@@ -11,6 +11,8 @@ export const initStore = async () => {
       "banner" TEXT NOT NULL,
       "description" TEXT NOT NULL,
       "isProtected" BOOLEAN NOT NULL
+      "primeColor" TEXT,
+      "backColor" TEXT,
     );
 
     CREATE TABLE IF NOT EXISTS players (

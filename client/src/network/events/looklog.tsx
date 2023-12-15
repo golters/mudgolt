@@ -42,10 +42,6 @@ function goDoor(door: Door){
   sendEvent(GO_EVENT,door.name)
 }
 
-
-//show item rarity
-//message for no items or no doors
-//add event string e.g. zombie text
 const handler: NetworkEventHandler = ({ bio, users, items, doors, event}: Look) => {
 
   pushToLog(
@@ -59,23 +55,30 @@ const handler: NetworkEventHandler = ({ bio, users, items, doors, event}: Look) 
       {<div onClick={() => lookAt(username)}>Look </div>} 
       {<div onClick={() => newWhisperWindow(username,null)}>Whisper</div>}</div></div></span>)}
       <br></br>
-      on the floor is:
+      {items.length > 0? 
+      <span>on the floor is:
       <br></br>
       {items.map(item => 
       <span className="itemlook"><div className = "chatdropdown" id="test" 
       style={{color:itemRarity.find(R => R.num.toString() === item.rarity)?.col,
-      backgroundColor:itemRarity.find(R => R.num.toString() === item.rarity)?.back}}
+      backgroundColor:itemRarity.find(R => R.num.toString() === item.rarity)?.back,
+      textShadow:itemRarity.find(R => R.num.toString() === item.rarity)?.shadow}}
       >{item.name}, <div className="chatdropdown-content">
       {<div onClick={() => lookAt(item.name)}>Look </div>}
       {<div onClick={() => takeItem(item)}>Take</div>} 
       </div></div></span>)}
       <br></br>
+      </span>: <span>the floor is bare<br></br></span>
+      }
+      {doors.length > 0?
+      <span>
       the exits are:
       <br></br>
       {doors.map(door => 
-      <span className="doorlook"><div className = "chatdropdown">{door.name}, <div className="chatdropdown-content">
+      <span className="doorlook"><div className = "chatdropdown" onClick={() => goDoor(door)}>{door.name}, <div className="chatdropdown-content">
       {<div onClick={() => goDoor(door)}>Go</div>} 
       </div></div></span>)}
+      </span>:<span>there are no exits</span>}
       <br></br>
       {event}
     </span>
