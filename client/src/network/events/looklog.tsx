@@ -50,20 +50,20 @@ const handler: NetworkEventHandler = ({ bio, users, items, doors, event}: Look) 
       <br></br>
       You see:
       <br></br>
-      {users.map(username => 
-      <span className="username"><div className = "chatdropdown">[{username}], <div className="chatdropdown-content">
+      {users.map((username, i, list )=> 
+      <span className="username"><div className = "chatdropdown">[{username}]{i+1 != list.length? "," : null} <div className="chatdropdown-content">
       {<div onClick={() => lookAt(username)}>Look </div>} 
       {<div onClick={() => newWhisperWindow(username,null)}>Whisper</div>}</div></div></span>)}
       <br></br>
       {items.length > 0? 
       <span>on the floor is:
       <br></br>
-      {items.map(item => 
+      {items.map((item, i, list) => 
       <span className="itemlook"><div className = "chatdropdown" id="test" 
       style={{color:itemRarity.find(R => R.num.toString() === item.rarity)?.col,
       backgroundColor:itemRarity.find(R => R.num.toString() === item.rarity)?.back,
       textShadow:itemRarity.find(R => R.num.toString() === item.rarity)?.shadow}}
-      >{item.name}, <div className="chatdropdown-content">
+      >{item.name}{i+1 != list.length? "," : null} <div className="chatdropdown-content">
       {<div onClick={() => lookAt(item.name)}>Look </div>}
       {<div onClick={() => takeItem(item)}>Take</div>} 
       </div></div></span>)}
@@ -74,8 +74,8 @@ const handler: NetworkEventHandler = ({ bio, users, items, doors, event}: Look) 
       <span>
       the exits are:
       <br></br>
-      {doors.map(door => 
-      <span className="doorlook"><div className = "chatdropdown" onClick={() => goDoor(door)}>{door.name}, <div className="chatdropdown-content">
+      {doors.map((door, i, list) => 
+      <span className="doorlook"><div className = "chatdropdown" onClick={() => goDoor(door)}>{door.name}{i+1 != list.length? "," : null} <div className="chatdropdown-content">
       {<div onClick={() => goDoor(door)}>Go</div>} 
       </div></div></span>)}
       </span>:<span>there are no exits</span>}

@@ -45,6 +45,7 @@ import {
 import { ICON_WIDTH, ICON_HEIGHT, MESSAGE_MAX_LENGTH, AVATAR_HEIGHT, AVATAR_WIDTH, itemRarity,colors } from '../../../constants'
 import{
   setBrush,
+  setBrushType,
   setBrushBackCol,
   setBrushPrimeCol,
 }from "./Header"
@@ -126,7 +127,7 @@ const symbols = [
   {id: "vehicles", chars:["⛟","⛴","✈"]},
   {id: "water", chars:["⛆","﹏","〰","﹌","𐩘","෴","𓆛","𓆜","𓆝","𓆞","𓆟"]},
   {id: "sky", chars:["☁","☀","★","☆","⛈","✦","✧","𓅛"]},
-  {id: "bear", chars:["ﻌ","Ҁ","ҁ","⟟","⧪","ᴥ","ʔ","ʕ","ꮂ","㉨","ｴ","•","ᶘ","ᶅ"]},
+  {id: "bear", chars:["ﻌ","Ҁ","ҁ","⟟","⧪","ᴥ","ʔ","ʕ","ꮂ","㉨","ｴ","•","ᶘ","ᶅ","ܫ"]},
   {id: "music", chars:["👁","✈","✉","✐","-"]},
 ]
 
@@ -1139,37 +1140,49 @@ function getCount(){
       return <span className= "sub-button" key={key} onClick={() => go(log)}> {log}<br></br></span>
       })
       : null}
-      <div className = "dropdown">
         {mini && lefttab === "pallete"?
+      <div className = "dropdown">
+        <span id="button">
+        Brush  
+        </span>
+        <div className = "dropdown-content">
+          <span onClick={()=>setBrushType("draw")}>Draw</span>
+          <span onClick={()=>setBrushType("color")}>Color</span>
+        </div>  
+        </div>
+        :null}
+        {mini && lefttab === "pallete" && (localStorage.brushType === "draw" || !localStorage.brushType)?
+      <div className = "dropdown">
         <span id="button">
         pallete v</span>
-        : null}
-        <div className = "dropdown-content">
-      {mini && lefttab === "pallete"?
+        <div className = "dropdown-content">{
       symbols.map((symbol, key) => {
           return <span className= "sub-button" key={key} onClick={() => setPalette(symbol.id)}>{symbol.id}
           </span>
-      }): null}</div>
+      })}
+      </div>
+      </div>: null}
+      {mini && lefttab === "pallete"&& localStorage.brushType === "color"?
+      <span> 
+      <span onClick={()=>{setBrushPrimeCol(""),setBrushBackCol("")}}>Clear</span>   
+      {colors.map((c) => {return <div style={{backgroundColor:c.color, color:c.color}}  
+      onContextMenu={(event) => event.preventDefault()}
+      className="colorPalette"
+      onMouseDown={(event) => {
+        if (event.buttons === 1) {
+          setBrushPrimeCol(c.color)
+        } else if (event.buttons === 2) {
+          setBrushBackCol(c.color)
+        }}}>X</div>})}</span>
+      :null}
 
-      </div>  
       <br></br>
           {
-          mini && lefttab === "pallete"?<span>{
+          mini && lefttab === "pallete"&& (localStorage.brushType === "draw" || !localStorage.brushType)?<span>{
           brushSymbols.map((symbol, key) => {
               return <span className= "palette" key={key} onClick={() => setBrush(symbol)}>{symbol}
               </span>
           })}
-          <br></br>
-          {<div style={{backgroundColor:brushBackCol, color:brushPrimeCol}}>X</div>}
-          {colors.map((c) => {return <div style={{backgroundColor:c.color}}  
-          onContextMenu={(event) => event.preventDefault()}
-          
-          onMouseDown={(event) => {
-            if (event.buttons === 1) {
-              setBrushPrimeCol(c.color)
-            } else if (event.buttons === 2) {
-              setBrushBackCol(c.color)
-            }}}>.</div>})}
           </span>: null} 
         
           <div className="popup" style={{bottom:100, position:"fixed"}}>

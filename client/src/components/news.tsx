@@ -6,6 +6,11 @@ export interface newsType {
 
 export const news: newsType[] = [
   {
+  name:"Color update!",
+  date:"17/12/2023",
+  text:"We added color brushes to the banner art for you to further explore your creativity with."
+  },
+  {
     name:"Chat update!",
     date:"14/12/2023",
     text:"You can now click on other users names and items to interact with them in the chat."

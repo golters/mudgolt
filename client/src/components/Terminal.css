@@ -19,7 +19,7 @@
   background-color: var(--color-terminal-back);
   transition: 0.5s;
 }
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 1200px) {
   #terminal {
     margin-left:150px;
     margin-right:200px;
@@ -34,7 +34,9 @@
   pointer-events: all;
   display: inline;
 }
-
+#terminal-chat {
+  overflow-y: scroll;
+}
 #terminal-input-container {
   pointer-events: none;
   color: var(--color-input-text);

@@ -49,40 +49,52 @@ export interface colorPallete {
 export const colors: colorPallete[] = [
   {
     code:"A",
-    color:"#F9F5EF",
+    color:"#f9f5ef",
   },{
     code:"B",
-    color:"#8A8FC4",
+    color:"#aabbbb",
   },{
     code:"C",
-    color:"#E3D245",
+    color:"#3388dd",
   },{
     code:"D",
-    color:"#F0D472",
+    color:"#2b2821",
   },{
     code:"E",
-    color:"#D88038",
+    color:"#ffff33",
   },{
     code:"F",
-    color:"#A13D3B",
+    color:"#efb775",
   },{
     code:"G",
-    color:"#4E282E",
+    color:"#dd7711",
   },{
     code:"H",
-    color:"#9A407E",
+    color:"#9b1a0a",
   },{
     code:"I",
-    color:"#47416B",
+    color:"#bbce93",
   },{
     code:"J",
-    color:"#6C8C50",
+    color:"#62b568",
   },{
     code:"K",
-    color:"grey",
+    color:"#2f844e",
   },{
     code:"L",
-    color:"black",
+    color:"#2d6351",
+  },{
+    code:"M",
+    color:"#c9688a",
+  },{
+    code:"N",
+    color:"#6a436c",
+  },{
+    code:"O",
+    color:"#403550",
+  },{
+    code:"P",
+    color:"#433900",
   },
 ]
 

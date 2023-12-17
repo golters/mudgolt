@@ -35,10 +35,17 @@ import {
 const BANNER_MINIMIZE_STORAGE_KEY = 'headerBannerMinimized'
 
 export let brush = localStorage.brush || "+"
+export let brushType = localStorage.brushType || "draw"
 export let brushPrimeCol = localStorage.brushPrimeCol || ""
 export let brushBackCol = localStorage.brushBackCol || ""
 export let bannerT = localStorage.bannerT || "art"
 let R = store.player?.roomId
+
+export const setBrushType = (newBrushType: string) => {
+  localStorage.brushType = newBrushType
+  brushType = newBrushType
+  sendEvent(TOOLBAR_UPDATE_EVENT, store.player?.roomId)
+}
 
 export const setBrush = (newBrush: string) => {
   localStorage.brush = newBrush
@@ -204,6 +211,16 @@ export const Header: React.FC = () => {
             const [currentCharacter, setCurrentCharacter] = useState(character)
             let currentColor = ""
             let currentBackColor = ""
+            let brushColor = ""
+            let brushBackColor = ""
+            let brushCharacter = "+"
+            if(brushType === "color"){
+              brushColor = brushPrimeCol
+              brushBackColor = brushBackCol
+            }
+            if(brushType === "draw"){
+              brushCharacter = brush
+            }
             if(bannerT === "art"){
             if(colorParts.length > 0 && colorParts[x + (y * BANNER_WIDTH)] != BANNER_FILL)
             currentColor = colorParts[x + (y * BANNER_WIDTH)]
@@ -213,7 +230,7 @@ export const Header: React.FC = () => {
             const [col, setCol] = useState(currentColor)
             const [backCol, setBackCol] = useState(currentBackColor)
             return <span
-              onMouseOver={() => {setCurrentCharacter(brush),setCol(brushPrimeCol),setBackCol(brushBackCol)}}
+              onMouseOver={() => {setCurrentCharacter(brushCharacter),setCol(brushColor),setBackCol(brushBackColor)}}
               onMouseLeave={() => {setCurrentCharacter(character),setCol(currentColor),setBackCol(currentBackColor)}}
               onContextMenu={(event) => event.preventDefault()}
               
@@ -221,9 +238,11 @@ export const Header: React.FC = () => {
                 if (event.buttons === 1) {
                   switch(bannerT){
                     case "art":
+                      if(brushType === "draw")
                       sendEvent(DRAW_EVENT, [(usingArrayFrom.length - x - 1), y, brush])
-                      sendEvent(DRAW_COLOR_EVENT, [(usingArrayFrom.length - x - 1),y,brushPrimeCol])
-                      sendEvent(DRAW_BACK_COLOR_EVENT, [(usingArrayFrom.length - x - 1),y,brushBackCol])
+                      if(brushType === "color"){
+                      sendEvent(DRAW_COLOR_EVENT, [(usingArrayFrom.length - x - 1),y,brushPrimeCol,brushBackCol])
+                      }
                       break;
                     case "music":   
                       sendEvent(COMPOSE_EVENT, [(usingArrayFrom.length - x - 1), y, brush])
@@ -233,8 +252,12 @@ export const Header: React.FC = () => {
                       break;
                   }
                 } else if (event.buttons === 2) {
+                  if(brushType === "draw" || bannerT != "art")
                   setBrush(character)
-                  setCurrentCharacter(brush)
+                  if(brushType === "color" && bannerT === "art"){
+                  setBrushPrimeCol(currentColor)
+                  setBrushBackCol(currentBackColor)
+                  }
                 }
               }}
               style={{color:col, backgroundColor:backCol}}

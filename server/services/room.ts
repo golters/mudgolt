@@ -68,50 +68,37 @@ export const editBaner = async (x: number, y: number, character: string, room: R
   return room
 }
 
-export const editBanerCol = async (x: number, y: number, col: string, room: Room): Promise<Room> => {
+export const editBanerCol = async (x: number, y: number, col: string, bac: string, room: Room): Promise<Room> => {
   const pos = x + (y * BANNER_WIDTH)
 
-  let banner = generateColorBanner().split(",")
+  let primebanner = generateColorBanner().split(",")
   if(room.primeColor)  
-    banner = room.primeColor.split(",")
-  if(!banner)
-    banner = generateColorBanner().split(",")
-    
-  banner[pos] = col
+    primebanner = room.primeColor.split(",")
+  if(!primebanner)
+    primebanner = generateColorBanner().split(",")
 
-  room.primeColor = banner.join(",")
+  primebanner[pos] = col
 
-  await db.run(/*sql*/`
-    UPDATE rooms
-      SET primeColor = $1
-      WHERE id = $2;
-  `, [room.primeColor, room.id])
+  room.primeColor = primebanner.join(",")
 
-  //broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
-
-  return room
-}
-
-export const editBanerBackCol = async (x: number, y: number, col: string, room: Room): Promise<Room> => {
-  const pos = x + (y * BANNER_WIDTH)
-  
-  let banner = generateColorBanner().split(",")
+  let backbanner = generateColorBanner().split(",")
   if(room.backColor)  
-    banner = room.backColor.split(",")
-  if(!banner)
-    banner = generateColorBanner().split(",")
+    backbanner = room.backColor.split(",")
+  if(!backbanner)
+    backbanner = generateColorBanner().split(",")
 
-  banner[pos] = col
+  backbanner[pos] = bac
 
-  room.backColor = banner.join(",")
+  room.backColor = backbanner.join(",")
 
   await db.run(/*sql*/`
     UPDATE rooms
-      SET backColor = $1
-      WHERE id = $2;
-  `, [room.backColor, room.id])
+      SET primeColor = $1,
+      backColor = $2
+      WHERE id = $3;
+  `, [room.primeColor, room.backColor, room.id])
 
-  //broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
+  broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
 
   return room
 }
