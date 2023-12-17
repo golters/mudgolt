@@ -141,7 +141,7 @@ const bearbits: bearface[] = [
   },{
     leftear: "ʕ",
     lefteye: "✧",
-    nose: "ᴥ",
+    nose: "ܫ",
     righteye: "✧",
     rightear: "ʔ",
   },{

@@ -42,9 +42,12 @@ import {
 import {
   networkEmitter, 
 } from "../network/events"
-import { ICON_WIDTH, ICON_HEIGHT, MESSAGE_MAX_LENGTH, AVATAR_HEIGHT, AVATAR_WIDTH, itemRarity } from '../../../constants'
+import { ICON_WIDTH, ICON_HEIGHT, MESSAGE_MAX_LENGTH, AVATAR_HEIGHT, AVATAR_WIDTH, itemRarity,colors } from '../../../constants'
 import{
   setBrush,
+  setBrushType,
+  setBrushBackCol,
+  setBrushPrimeCol,
 }from "./Header"
 import { commandModules } from "../../src/commands"
 import { colorUtil } from "../../src/utils"
@@ -58,6 +61,7 @@ import { type } from "os"
 import { Make } from "src/commands/make"
 import { newCraftWindow, newMesageWindow, newReplyWindow, redrawAvatars } from "./windows"
 import { news } from "./news"
+import { Color } from "src/commands/color"
 
 const rooms: (string)[] = []
 let brushSymbols: (string)[] = ["█","▓","▒","░"]
@@ -123,7 +127,7 @@ const symbols = [
   {id: "vehicles", chars:["⛟","⛴","✈"]},
   {id: "water", chars:["⛆","﹏","〰","﹌","𐩘","෴","𓆛","𓆜","𓆝","𓆞","𓆟"]},
   {id: "sky", chars:["☁","☀","★","☆","⛈","✦","✧","𓅛"]},
-  {id: "bear", chars:["ﻌ","Ҁ","ҁ","⟟","⧪","ᴥ","ʔ","ʕ","ꮂ","㉨","ｴ","•","ᶘ","ᶅ"]},
+  {id: "bear", chars:["ﻌ","Ҁ","ҁ","⟟","⧪","ᴥ","ʔ","ʕ","ꮂ","㉨","ｴ","•","ᶘ","ᶅ","ܫ"]},
   {id: "music", chars:["👁","✈","✉","✐","-"]},
 ]
 
@@ -142,6 +146,8 @@ let event: string = ""
 
 
 export let brush = localStorage.brush || "+"
+export let brushPrimeCol = localStorage.brushPrimeCol || ""
+export let brushBackCol = localStorage.brushBackCol || ""
 
 export const Toolbar: React.FC = () => { 
   const [volume, setVolume] = useState(localStorage.volume*10)
@@ -743,7 +749,7 @@ function drawicons(items: Item[]){
     texcol = rarity.col
     baccol = rarity.back
     itemblock.style.backgroundColor = rarity.back
-    itemblock.style.textShadow = "2px 1px 1px rgba(0, 30, 255, 0.5), -2px 1px 1px rgba(255,0,80,0.5), 0 0 3px"
+    itemblock.style.textShadow = rarity.shadow
       }
     }
     if(icons && Finventory[i].icon){ 
@@ -903,7 +909,11 @@ function drawInbox(){
     date.appendChild(document.createTextNode(timestamp))
     const usernames = document.createElement('span')
     usernames.classList.add("username")
+    if(!(Finbox[i].player.username === store.player?.username)){
     usernames.appendChild(document.createTextNode(" ["+Finbox[i].player.username+"] "))
+    }else{
+      usernames.appendChild(document.createTextNode(" ["+Finbox[i].player.username+"]>["+Finbox[i].recipiant?.username+"]"))
+    }
     inb.appendChild(messageBox)
     messageBox.appendChild(message)
     message.appendChild(date)
@@ -1130,26 +1140,50 @@ function getCount(){
       return <span className= "sub-button" key={key} onClick={() => go(log)}> {log}<br></br></span>
       })
       : null}
-      <div className = "dropdown">
         {mini && lefttab === "pallete"?
+      <div className = "dropdown">
+        <span id="button">
+        Brush  
+        </span>
+        <div className = "dropdown-content">
+          <span onClick={()=>setBrushType("draw")}>Draw</span>
+          <span onClick={()=>setBrushType("color")}>Color</span>
+        </div>  
+        </div>
+        :null}
+        {mini && lefttab === "pallete" && (localStorage.brushType === "draw" || !localStorage.brushType)?
+      <div className = "dropdown">
         <span id="button">
         pallete v</span>
-        : null}
-        <div className = "dropdown-content">
-      {mini && lefttab === "pallete"?
+        <div className = "dropdown-content">{
       symbols.map((symbol, key) => {
           return <span className= "sub-button" key={key} onClick={() => setPalette(symbol.id)}>{symbol.id}
           </span>
-      }): null}</div>
+      })}
+      </div>
+      </div>: null}
+      {mini && lefttab === "pallete"&& localStorage.brushType === "color"?
+      <span> 
+      <span onClick={()=>{setBrushPrimeCol(""),setBrushBackCol("")}}>Clear</span>   
+      {colors.map((c) => {return <div style={{backgroundColor:c.color, color:c.color}}  
+      onContextMenu={(event) => event.preventDefault()}
+      className="colorPalette"
+      onMouseDown={(event) => {
+        if (event.buttons === 1) {
+          setBrushPrimeCol(c.color)
+        } else if (event.buttons === 2) {
+          setBrushBackCol(c.color)
+        }}}>X</div>})}</span>
+      :null}
 
-      </div>  
       <br></br>
           {
-          mini && lefttab === "pallete"?
+          mini && lefttab === "pallete"&& (localStorage.brushType === "draw" || !localStorage.brushType)?<span>{
           brushSymbols.map((symbol, key) => {
               return <span className= "palette" key={key} onClick={() => setBrush(symbol)}>{symbol}
               </span>
-          }): null} 
+          })}
+          </span>: null} 
         
           <div className="popup" style={{bottom:100, position:"fixed"}}>
             <div className="tooltip">

@@ -4,4 +4,6 @@ export interface Room {
   banner: string
   description: string
   isProtected: boolean
+  primeColor: string
+  backColor: string
 }

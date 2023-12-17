@@ -13,11 +13,15 @@ import {
   CHANGE_BANNER_EVENT,
   GAME_EVENT,
   TOOLBAR_UPDATE_EVENT,
+  DRAW_COLOR_EVENT,
+  DRAW_BACK_COLOR_EVENT,
+  LOG_EVENT,
 } from "../../../events"
 import {
   networkEmitter, 
 } from "../network/events"
 import {
+  BANNER_FILL,
   BANNER_WIDTH, 
   GOLT,
 } from "../../../constants"
@@ -31,12 +35,31 @@ import {
 const BANNER_MINIMIZE_STORAGE_KEY = 'headerBannerMinimized'
 
 export let brush = localStorage.brush || "+"
+export let brushType = localStorage.brushType || "draw"
+export let brushPrimeCol = localStorage.brushPrimeCol || ""
+export let brushBackCol = localStorage.brushBackCol || ""
 export let bannerT = localStorage.bannerT || "art"
 let R = store.player?.roomId
+
+export const setBrushType = (newBrushType: string) => {
+  localStorage.brushType = newBrushType
+  brushType = newBrushType
+  sendEvent(TOOLBAR_UPDATE_EVENT, store.player?.roomId)
+}
 
 export const setBrush = (newBrush: string) => {
   localStorage.brush = newBrush
   brush = newBrush
+}
+
+export const setBrushPrimeCol = (newCol: string) => {
+  localStorage.brushPrimeCol = newCol
+  brushPrimeCol = newCol
+}
+
+export const setBrushBackCol = (newCol: string) => {
+  localStorage.brushBackCol = newCol
+  brushBackCol = newCol 
 }
 
 export const changeBanner = (newBanner: string) => {
@@ -123,6 +146,8 @@ export const Header: React.FC = () => {
   
   const Banner: React.FC<{ room: Room }> = ({ room }) => {
     const bannerParts: string[] = [] 
+    let colorParts: string[] = [] 
+    let backColorParts: string[] = [] 
 
     const music = store.music
     const game = store.game
@@ -152,6 +177,10 @@ export const Header: React.FC = () => {
         case "art":
           const artFrom = Array.from(room.banner);
           bannerParts.push(artFrom.slice(i * BANNER_WIDTH, (i * BANNER_WIDTH) + BANNER_WIDTH).join(""))
+          if(room.primeColor)
+          colorParts.push(room.primeColor.split(",").slice(i * BANNER_WIDTH, (i * BANNER_WIDTH) + BANNER_WIDTH).reverse().join(","))
+          if(room.backColor)
+          backColorParts.push(room.backColor.split(",").slice(i * BANNER_WIDTH, (i * BANNER_WIDTH) + BANNER_WIDTH).reverse().join(","))
           
           break;
         case "music":   
@@ -167,38 +196,71 @@ export const Header: React.FC = () => {
       }
     }
 
+    if(colorParts.length > 0)
+    colorParts = colorParts.join(",").split(",")
+    if(backColorParts.length > 0)
+    backColorParts = backColorParts.join(",").split(",")
 
 
     const parts = bannerParts.map((part, y) => {
       const usingArrayFrom = Array.from(part);
       
       return <>{
-        usingArrayFrom
+        usingArrayFrom.reverse()
           .map((character, x) => {
             const [currentCharacter, setCurrentCharacter] = useState(character)
+            let currentColor = ""
+            let currentBackColor = ""
+            let brushColor = ""
+            let brushBackColor = ""
+            let brushCharacter = "+"
+            if(brushType === "color"){
+              brushColor = brushPrimeCol
+              brushBackColor = brushBackCol
+            }
+            if(brushType === "draw"){
+              brushCharacter = brush
+            }
+            if(bannerT === "art"){
+            if(colorParts.length > 0 && colorParts[x + (y * BANNER_WIDTH)] != BANNER_FILL)
+            currentColor = colorParts[x + (y * BANNER_WIDTH)]
+            if(backColorParts.length > 0 && backColorParts[x + (y * BANNER_WIDTH)] != BANNER_FILL)
+            currentBackColor = backColorParts[x + (y * BANNER_WIDTH)]
+            }
+            const [col, setCol] = useState(currentColor)
+            const [backCol, setBackCol] = useState(currentBackColor)
             return <span
-              onMouseOver={() => setCurrentCharacter(brush)}
-              onMouseLeave={() => setCurrentCharacter(character)}
+              onMouseOver={() => {setCurrentCharacter(brushCharacter),setCol(brushColor),setBackCol(brushBackColor)}}
+              onMouseLeave={() => {setCurrentCharacter(character),setCol(currentColor),setBackCol(currentBackColor)}}
               onContextMenu={(event) => event.preventDefault()}
               
               onMouseDown={(event) => {
                 if (event.buttons === 1) {
                   switch(bannerT){
                     case "art":
-                      sendEvent(DRAW_EVENT, [x, y, brush])
+                      if(brushType === "draw")
+                      sendEvent(DRAW_EVENT, [(usingArrayFrom.length - x - 1), y, brush])
+                      if(brushType === "color"){
+                      sendEvent(DRAW_COLOR_EVENT, [(usingArrayFrom.length - x - 1),y,brushPrimeCol,brushBackCol])
+                      }
                       break;
                     case "music":   
-                      sendEvent(COMPOSE_EVENT, [x, y, brush])
+                      sendEvent(COMPOSE_EVENT, [(usingArrayFrom.length - x - 1), y, brush])
                       break;
                     case "game":   
-                      sendEvent(CLICK_EVENT, [x, y])
+                      sendEvent(CLICK_EVENT, [(usingArrayFrom.length - x - 1), y])
                       break;
                   }
                 } else if (event.buttons === 2) {
+                  if(brushType === "draw" || bannerT != "art")
                   setBrush(character)
-                  setCurrentCharacter(brush)
+                  if(brushType === "color" && bannerT === "art"){
+                  setBrushPrimeCol(currentColor)
+                  setBrushBackCol(currentBackColor)
+                  }
                 }
               }}
+              style={{color:col, backgroundColor:backCol}}
             >{minimized? null : currentCharacter}</span>
           })
       }<br /></> 

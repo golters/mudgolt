@@ -19,7 +19,7 @@
   background-color: var(--color-terminal-back);
   transition: 0.5s;
 }
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 1200px) {
   #terminal {
     margin-left:150px;
     margin-right:200px;
@@ -30,11 +30,13 @@
   display: inline-block;
   max-width: 100%;
   white-space: pre-wrap;
-  word-break: break-word;
+  word-wrap: break-word;
   pointer-events: all;
   display: inline;
 }
-
+#terminal-chat {
+  overflow-y: scroll;
+}
 #terminal-input-container {
   pointer-events: none;
   color: var(--color-input-text);
@@ -71,8 +73,19 @@ a {
   color: var(--color-text-link);
 }
 
+.look-message {
+  position: relative;
+}
+.look-message .username {
+  color: var(--color-chat-name);
+}
+.look-message .item {
+  text-wrap: nowrap;
+}
+
 .chat-message {
   color: var(--color-chat-message);
+  position: relative;
 }
 
 .chat-message .username {
@@ -89,6 +102,36 @@ a {
 
 .error-message {
   color: var(--color-chat-error);
+}
+
+.chatdropdown {
+  cursor: pointer;
+  user-select: none;
+  transition: 1s;
+}
+
+.chatdropdown-content {
+  display: none !important;
+  position:absolute;
+  top:inherit;
+  left:inherit;
+  color: var(--color-toolbar-dropdown-text);
+  background-color:  var(--color-toolbar-dropdown-back);box-shadow: 2px 1px 1px rgba(0, 30, 255, 0.2), -2px -1px 1px rgba(255,0,80,0.1), 0 0 3px;
+  padding: 12px 16px;
+  z-index: 2;
+  border: var(--color-toolbar-dropdown-edge);
+  outline-offset: -3px;
+  transition: 1s;
+  max-height: 300px;
+  max-width: 100px;
+  width:max-content;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.chatdropdown:hover .chatdropdown-content {
+  display: inline-block !important;  
+  flex-wrap: wrap;
 }
 
 #terminal img {

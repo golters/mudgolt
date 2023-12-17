@@ -9,6 +9,7 @@ import {
   LOG_EVENT,
   NOTIFICATION_EVENT,
   MUSIC_UPDATE_EVENT,
+  LOOK_LOG_EVENT,
 } from "../../../events"
 import {
   broadcastToRoom,
@@ -18,11 +19,12 @@ import {
 import {
   setPlayerRoomByName, 
 } from "../../services/player"
-import { getRoomById,lookByID } from "../../services/room"
+import { getRoomById,getLookByID } from "../../services/room"
 import { getDoorByName, getTargetDoor } from "../../services/door"
 import {
   Room,
   Music,
+  Look,
 } from "@types"
 import {
   insertRoomCommand,
@@ -72,7 +74,7 @@ const handler: NetworkEventHandler = async (socket, doorName: string, player) =>
 
     const room = await setPlayerRoomByName(player.id, newRoom.name.replace(/\s/g, "_"))	  
 
-    const message = await lookByID(newRoom.id)
+    const message = await getLookByID(newRoom.id)
     
     //update room music
     const oldMusic = await getMusicByRoom(room.id)
@@ -104,7 +106,7 @@ const handler: NetworkEventHandler = async (socket, doorName: string, player) =>
     broadcastToRoom<string>(SERVER_LOG_EVENT, enterMessage, room.id)
     broadcastToRoom<string>(NOTIFICATION_EVENT, "doorEnter", room.id)
     //await insertRoomCommand(room.id, player.id, `has joined ${room.name}`, Date.now(), "go")
-    sendEvent<string>(socket, LOG_EVENT, message)    
+    sendEvent<Look>(socket, LOOK_LOG_EVENT, message)    
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)

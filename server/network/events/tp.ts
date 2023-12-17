@@ -6,7 +6,7 @@ import {
   TP_EVENT,
   ROOM_UPDATE_EVENT,
   SERVER_LOG_EVENT,
-  LOG_EVENT,
+  LOOK_LOG_EVENT,
   NOTIFICATION_EVENT,
   MUSIC_UPDATE_EVENT,
 } from "../../../events"
@@ -20,9 +20,9 @@ import {
 import {
   getRoomById,
   getRoomByName,
-  lookByID,
+  getLookByID,
 } from "../../services/room"
-import { Room,Music } from "@types"
+import { Room,Music, Look } from "@types"
 import {
   TELEPORT_COST,
   GOLT,
@@ -74,7 +74,7 @@ const handler: NetworkEventHandler = async (socket, roomNameInput: string, playe
     sendEvent<string>(socket, SERVER_LOG_EVENT, `-${GOLT}${cost}`)
     const room = await setPlayerRoomByName(player.id, roomName)
 
-    const message = await lookByID(room.id)
+    const message = await getLookByID(room.id)
     
     //update room music
     const oldMusic = await getMusicByRoom(room.id)
@@ -120,7 +120,7 @@ const handler: NetworkEventHandler = async (socket, roomNameInput: string, playe
     broadcastToRoom<string>(SERVER_LOG_EVENT, tpoutmessage, room.id)
     broadcastToRoom<string>(NOTIFICATION_EVENT, "teleportEnter", room.id);
     //await insertRoomCommand(room.id, player.id, `has teleported into ${room.name}`, Date.now(), "tp")
-    sendEvent<string>(socket, LOG_EVENT, message)    
+    sendEvent<Look>(socket, LOOK_LOG_EVENT, message)    
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)

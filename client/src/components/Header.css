@@ -16,7 +16,7 @@
   justify-content: flex-start;
   transition: 0.5s;
 }
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 1200px) {
   #header {
     margin-left:150px;
     margin-right:200px;
@@ -95,15 +95,21 @@
   font-family: DOS16;
   letter-spacing: 0;
   user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
 }
 
 #banner > div {
-  display: flex;
+  float: left;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
   line-height: 16px;
 }
 
 /* Individual character */
 #banner span {
+  user-select: none;
+  float: right;
   display: inline-block;
   width: 8px;
   cursor: none;
@@ -123,7 +129,7 @@
   color: var(--color-banner-room-name);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
   #banner, #banner * {
     font-size: 14px;
     font-family: DOS14;
@@ -135,7 +141,7 @@
   }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1000px) {
   #banner, #banner * {
     font-size: 12px;
     font-family: DOS14;
@@ -147,7 +153,7 @@
   }
 }
 
-@media (max-width: 620px) {
+@media (max-width: 800px) {
   #banner, #banner * {
     font-size: 10px;
     font-family: DOS14;

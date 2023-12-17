@@ -153,6 +153,10 @@
   color: var(--color-toolbar-palette-text-hover);
   background-color:  var(--color-toolbar-palette-back-hover);
 }
+.colorPalette{
+  width:16px;
+  margin:8px;
+}
 .themes {
   display: flex;  
   flex-wrap: wrap;

@@ -116,7 +116,7 @@ export const networkTask = () => new Promise<void>((resolve) => {
   })
 
   client.addEventListener("close", () => {
-    //pushErrorToLog(`Disconnected from server. Reconnecting...`)
+    pushErrorToLog(`Disconnected from server. Reconnecting...`)
 
     if (reconnectAttempts === 0) {
       networkTask().catch(console.error)
@@ -135,18 +135,15 @@ setInterval(() => {
 }, 15 * 10)
 
 setTimeout(() => {
-  console.log("new ping")
   sendEvent(PING_EVENT, client)  
   sendEvent(PAY_EVENT, store.player?.id)
 }, 15 * 1000)
 
 //make settimeout then ping server, server return event to start a new timeout
 networkEmitter.on(PONG_EVENT, () => {
-  console.log("pong")
   setTimeout(() => {
-    console.log("ping")
-    sendEvent(PING_EVENT, client)  
     if(localStorage.getItem("focus") === "open"){
+      sendEvent(PING_EVENT, client)  
     sendEvent(PAY_EVENT, store.player?.id)
     }else{
       if(Math.random()*10000 < 5){ 
@@ -162,4 +159,10 @@ window.addEventListener("focus", (event) => {
 
 window.addEventListener("blur", (event) => {
   localStorage.setItem("focus","close")
+  setTimeout(() => {
+    if(localStorage.getItem("focus") !="open")
+    window.addEventListener("focus", (event) => { 
+      window.location.reload()
+  })
+  }, 60 * 1000)
 })
