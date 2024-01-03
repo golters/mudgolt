@@ -190,7 +190,7 @@ const handler: NetworkEventHandler = async (
               
             }
             const fishitem = await createPocketItem(player.id, fishName, "123456123456123456", rarity, "fish,"+fishtype.name+","+fishSize+"inches,"+areaName+","+room, "fish")
-            await setItemBio(fishitem.id, "A " + Math.floor(fishSize).toString() + " inch " + fishtype + " caught in " + room)
+            await setItemBio(fishitem.id, "A " + Math.floor(fishSize).toString() + " inch " + fishtype.name + " caught in " + room)
             if(event)
               await givePoints(player.id, Math.floor(fishSize).toString(), event.id)
           }else{

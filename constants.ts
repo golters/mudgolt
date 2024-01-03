@@ -105,28 +105,29 @@ export interface itemRarityInterface {
   shadow: string
   name: string
 }
+//icon back
 //drop shadow, font
 //rarity names (uncommon, rare, legendary, mythical etc)
 
 export const itemRarity: itemRarityInterface[] = [
   {
     num:0,
-    col:"white",
-    back:"",
-    shadow:"2px 1px 1px rgba(0, 30, 255, 0.5), -2px 1px 1px rgba(255,0,80,0.5), 0 0 3px",
+    col:"",
+    back:"none",
+    shadow:"2px 1px 1px rgba(0, 30, 255, 0.5), -2px 1px 1px rgba(255,0,80,0.5)",
     name:"uncommon",
   },
   {
     num:1,
-    col:colors[3].color,
+    col:colors[4].color,
     back:colors[9].color,
     shadow:"2px 1px 1px rgba(0, 30, 255, 0.5), -2px 1px 1px rgba(255,0,80,0.5), 0 0 3px",
     name:"rare",
   },
   {
     num:2,
-    col:colors[2].color,
-    back:colors[1].color,
+    col:colors[0].color,
+    back:colors[2].color,
     shadow:"2px 1px 1px rgba(0, 30, 255, 0.5), -2px 1px 1px rgba(255,0,80,0.5), 0 0 3px",
     name:"epic",
   },

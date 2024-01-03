@@ -75,7 +75,7 @@ export const recentOnline: {
 
 
 server.on("connection", (socket, request) => {
-  console.log("Socket connected to server")
+  //console.log("Socket connected to server")
 
   const publicKey = decodeURIComponent(querystring.parse(request.url!)["/ws?public-key"] as string)
   let player: Player

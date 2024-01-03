@@ -376,6 +376,7 @@ function addNPC(window: HTMLElement, npc: Npc[]){
   const guy = document.createElement('div')
   guy.setAttribute('id','menu')
   guy.appendChild(document.createTextNode(npc[0].name + " the " + npc[0].job))
+  guy.classList.add('npc_title')
   window.appendChild(guy)
   const avatar = document.createElement('div')
   guy.appendChild(avatar)
@@ -396,10 +397,18 @@ function addNPC(window: HTMLElement, npc: Npc[]){
       iconrow.appendChild(document.createElement('br'))
   }
   const phrase = document.createElement('div')
-  phrase.appendChild(document.createTextNode("["+npc[0].name+"] "+npc[0].phrases[Math.floor(Math.random() * (npc[0].phrases.length))]))
+  const name = document.createElement('span')
+  name.appendChild(document.createTextNode("["+npc[0].name+"] "))
+  name.classList.add('npc_name')
+  const message = document.createElement('span')
+  message.appendChild(document.createTextNode(npc[0].phrases[Math.floor(Math.random() * (npc[0].phrases.length))]))
+  message.classList.add('npc_message')
+  phrase.appendChild(name)
+  phrase.appendChild(message)
+  phrase.classList.add('npc_phrase')
   guy.appendChild(phrase)
   window.appendChild(guy)
-  avatar.classList.add('icon')
+  avatar.classList.add('npc_icon')
 
 }
 

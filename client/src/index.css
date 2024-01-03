@@ -99,6 +99,7 @@
   --color-background-code: magenta;
   --color-divider: rgb(255,255,255,0.5);
 
+  background-image: var(--color-background-gradient);
   background-color: var(--color-background-primary);
   color: var(--color-text-primary);
   font-size: 0.95em;
@@ -128,6 +129,7 @@
   width: 7px;
 }
 html { height: 100%; }
+
 body {
   display: grid;
   grid-template-rows: auto 1fr;
@@ -162,3 +164,4 @@ body::before {
   background-size: 100% 2px, 3px 100%;
   pointer-events: none;
 }
+

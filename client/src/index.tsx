@@ -27,7 +27,7 @@ import { EVENT_EVENT } from "../../events"
 navigator.storage.persist().catch(console.error)
 ReactDOM.render(
   <>
-    <Welcome />
+    
     <Toolbar />
     <Header />
     <Terminal />
