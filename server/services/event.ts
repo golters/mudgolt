@@ -717,7 +717,7 @@ export const createRandomEvent = async (time: number): Promise<void> => {
     targetDate.setMinutes(0)
     targetDate.setSeconds(0)
     const start = targetDate.getTime() - new Date().getTime()
-    const length = 15 * 4.32e+7
+    const length = 4.32e+7
     const type = Math.random() * 3
     createEvent(events[Math.floor(type)],time + start, time + start + length)
   }

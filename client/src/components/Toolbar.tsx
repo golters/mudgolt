@@ -51,7 +51,6 @@ import{
 }from "./Header"
 import { commandModules } from "../../src/commands"
 import { colorUtil } from "../../src/utils"
-import { VALID_COLOR_THEMES } from "../../src/utils/color"
 import { Volume } from "src/commands/volume"
 import {
   commandEmitter, 
@@ -62,6 +61,7 @@ import { Make } from "src/commands/make"
 import { newCraftWindow, newMesageWindow, newReplyWindow, redrawAvatars } from "./windows"
 import { news } from "./news"
 import { Color } from "src/commands/color"
+import { themes } from "../../src/utils/themes"
 
 const rooms: (string)[] = []
 let brushSymbols: (string)[] = ["█","▓","▒","░"]
@@ -449,8 +449,8 @@ function changeleftTab(tab: string){
 
 function changerightTab(tab: string){
   setrighttab(tab)
-  setMini(true)
-  localStorage.setItem("sidemini", '1')
+  setRightMini(true)
+  localStorage.setItem("rightmini", '1')
   localStorage.setItem("righttab",tab)
 }
 
@@ -867,12 +867,14 @@ function drawInbox(){
     const all = document.createElement('div')
     all.appendChild(document.createTextNode("all"))
     dropcontent.appendChild(all)
+    dropcontent.appendChild(document.createTextNode('br'))
     all.onclick = function () {moreinboxcontact("")}
     for(let c = 0; c < correspondents.length; c++){
       const cor = document.createElement('div')
       cor.appendChild(document.createTextNode(correspondents[c]))
       dropcontent.appendChild(cor)
       cor.onclick = function () {moreinboxcontact(correspondents[c])}
+      dropcontent.appendChild(document.createTextNode('br'))
     }
     dropdown.appendChild(dropcontent)
     inb.appendChild(dropdown)
@@ -903,7 +905,6 @@ function drawInbox(){
     const messageBox = document.createElement('span')
     messageBox.classList.add("message-box")
     const message = document.createElement('span')
-    message.classList.add("chat-message")
     const date = document.createElement('span')
     date.classList.add("date")
     date.appendChild(document.createTextNode(timestamp))
@@ -929,7 +930,6 @@ function drawInbox(){
     messageBox.appendChild(reply)
     }else{      
     messageBox.className = "sent-message"
-    //message.classList.add("sent-message")
     }
     inb.appendChild(document.createElement('br'))
   }
@@ -1122,10 +1122,16 @@ function getCount(){
           >{"Publish"}</span>
           </div> : null}
           
-    <div id="sidebar" style={mini? {width:150} : {width:0}}>
+          <div>
+            {mini? null :
+          <span id="side-mini-button"
+            onClick={toggleMini}
+          >{"+"}</span>}
+          </div>
+    <div id="sidebar" style={mini? {width:150} : {width:0, padding:0, border:0}}>
           <span id="button"
             onClick={toggleMini}
-          >{mini? "=" : "+"}</span>
+          >{mini? "=" : null}</span>
           <br></br>
       {mini && lefttab === "doors"? 
       <span>{"The exits are:"}
@@ -1200,8 +1206,8 @@ function getCount(){
             <span>
               Themes<br></br>
               <div className="themes">
-            {VALID_COLOR_THEMES.map((symbol, key) => {
-                return <span className= "sub-button" property="background-color:red;" key={key} onClick={() => colorUtil.changeTheme(symbol)}>{symbol}</span>
+            {themes.map((symbol, key) => {
+                return <span className= "sub-button" property="background-color:red;" key={key} onClick={() => colorUtil.changeTheme(symbol.name)}>{symbol.name}</span>
             })}</div></span>
         </div>
             </div>: null
@@ -1230,10 +1236,16 @@ function getCount(){
           </div> : null}
         </div>
       </div>
-    <div id="rightbar" style={rightmini? {width:150} : {width:20}}>
+      <div>
+            {rightmini? null :
+          <span id="right-mini-button"
+            onClick={toggleRightMini}
+          >{"+"}</span>}
+          </div>
+    <div id="rightbar" style={rightmini? {width:150} : {width:0, padding:0, border:0}}>
           <span id="button"
             onClick={toggleRightMini}
-          >{rightmini? "=" : "+"}</span>
+          >{rightmini? "=" : null}</span>
           <br></br>
           <div id="rightbarstuff">
 

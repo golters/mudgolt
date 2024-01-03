@@ -43,8 +43,7 @@
 }
 
 #header-wrapper .controls {
-  position: fixed;
-  right: 0.5em;
+  float: right;
 }
 
 #mini_button {
@@ -116,6 +115,15 @@
   transition: background-color 1s cubic-bezier(0.075, 0.9, 0.1, 0.075);
 }
 
+#banner span::before{
+  position:sticky;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-color: blue;
+}
+
 #banner span:hover {
   color: var(--color-banner-cursor);
   background-color: var(--color-banner-cursor-back);
@@ -168,6 +176,18 @@
 @media (max-width: 550px) {
   #banner, #banner * {
     font-size: 8px;
+    font-family: DOS14;
+    line-height: 7px;
+  }
+  
+  #banner span {
+    width: 4px;
+  }
+}
+
+@media (max-width: 500px) {
+  #banner, #banner * {
+    font-size: calc(96 / 10%);
     font-family: DOS14;
     line-height: 7px;
   }
