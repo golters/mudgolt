@@ -151,7 +151,7 @@ const phrases: phrase[] = [
   },
   {
     tags:"scribe",
-    phrases:[],
+    phrases:["A B C D... uhm"],
     npcphrases:[],
     roomphrases:[],
     itemphrases:[],
@@ -183,7 +183,7 @@ const phrases: phrase[] = [
   },
   {
     tags:"librarian",
-    phrases:["I love the smell of books"],
+    phrases:["I love the smell of books", "thank you for helping me organise things"],
     npcphrases:[],
     roomphrases:[],
     itemphrases:[],
@@ -191,7 +191,7 @@ const phrases: phrase[] = [
   },
   {
     tags:"courier",
-    phrases:["Looking for a new penpal?"],
+    phrases:["Looking for a new penpal?","I hope it's not a heavy package"],
     npcphrases:["[flirty] sends a lot of love letters"],
     roomphrases:[],
     itemphrases:[],
@@ -224,7 +224,7 @@ const phrases: phrase[] = [
     npcphrases:["[jolly] has a nice personality","[grumpy] is such a dark horse"],
     roomphrases:[],
     itemphrases:[],
-    userphrases:["I have a crush on [user], don't tell anyone"],
+    userphrases:["I have a crush on [user], don't tell anyone","[user] is looking pretty cute"],
   },
 ]
 

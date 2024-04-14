@@ -268,7 +268,12 @@ export const Toolbar: React.FC = () => {
     newMesageWindow(args[1],args[0],npcs)
   })
 
-  
+  if(!mini){
+    setMini(true);
+  }
+  if(!rightmini){
+    setRightMini(true);
+  }
   
 
   Input = React.memo(() => (
@@ -443,14 +448,14 @@ function setCommand(type: string) {
 function changeleftTab(tab: string){
   setlefttab(tab)
   setMini(true)
-  localStorage.setItem("sidemini", '1')
+  localStorage.removeItem("sidemini")
   localStorage.setItem("lefttab",tab)
 }
 
 function changerightTab(tab: string){
   setrighttab(tab)
   setRightMini(true)
-  localStorage.setItem("rightmini", '1')
+  localStorage.removeItem("rightmini")
   localStorage.setItem("righttab",tab)
 }
 

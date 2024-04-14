@@ -189,11 +189,22 @@
   #banner, #banner * {
     font-size: calc(96 / 10%);
     font-family: DOS14;
-    line-height: 7px;
+    line-height: calc(16 / 10%);
   }
   
   #banner span {
     width: 4px;
+  }
+}
+
+@media (max-width: 499px) {
+  #banner, #banner * {
+    font-size: 0;
+    line-height: 0;
+  }
+  
+  #banner span {
+    width: 0;
   }
 }
 
