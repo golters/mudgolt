@@ -256,7 +256,7 @@ export const weeds: itemtypes[] = [
     rarity: "0",
   },{
     name:"daisy",
-    bio:"a cut little white flower",
+    bio:"a cute little white flower",
     icon: "∙∙∙∙∙∙∙☙✿∙∙∙∙∙↡∙∙∙",
     rarity: "0",
   },{
