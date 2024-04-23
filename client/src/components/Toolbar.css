@@ -29,6 +29,12 @@
   color: var(--color-toolbar-title);
 }
 
+@media (max-width: 499px) {
+  #title{
+    font-size: 0px;
+  }
+}
+
 #side-mini-button {
   font-size: 24px;
   cursor: pointer;
