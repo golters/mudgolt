@@ -125,6 +125,7 @@ a {
   max-height: 300px;
   max-width: 100px;
   width:max-content;
+  height: min-content;
   overflow-y: scroll;
   overflow-x: hidden;
 }

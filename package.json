@@ -6,7 +6,7 @@
     "start:server": "cross-env NODE_ENV=production ts-node server",
     "dev:server": "cross-env NODE_ENV=development ts-node-dev server --rs",
     "build:client": "cd client && cross-env webpack build --mode=production",
-    "dev:client": "cd client && cross-env NODE_ENV=development webpack serve --mode=development",
+    "dev:client": "cd client && cross-env NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=development webpack serve --mode=development",
     "lint": "eslint --fix --ext .js,.ts ."
   },
   "repository": {

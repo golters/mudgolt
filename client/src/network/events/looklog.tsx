@@ -64,7 +64,7 @@ const handler: NetworkEventHandler = ({ bio, users, items, doors, event}: Look) 
       backgroundColor:itemRarity.find(R => R.num.toString() === item.rarity)?.back,
       textShadow:itemRarity.find(R => R.num.toString() === item.rarity)?.shadow}}
       >{item.name}{i+1 != list.length? "," : null} <div className="chatdropdown-content">
-      {<div onClick={() => lookAt(item.name)}>Look </div>}
+      {<div onClick={() => lookAt(item.name)}>Look</div>}
       {<div onClick={() => takeItem(item)}>Take</div>} 
       </div></div></span>)}
       <br></br>

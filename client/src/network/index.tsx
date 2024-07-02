@@ -61,7 +61,7 @@ export const networkTask = () => new Promise<void>((resolve) => {
   reconnectAttempts++
 
   client.addEventListener("open", () => {
-    pushToLog("Connected to server")
+    //pushToLog("Connected to server")
 
     reconnectAttempts = 0
   })

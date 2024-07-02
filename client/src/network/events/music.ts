@@ -292,8 +292,28 @@ const handler: NetworkEventHandler = (context: AudioContext) => {
       }
       o.type = type
       o.detune.value = detune
-      o.frequency.value = frequency
-      g.gain.exponentialRampToValueAtTime(localStorage.volume/500 + 0.000001, context.currentTime)
+      o.frequency.value = frequency// Retrieve the volume from localStorage
+      const volumeString = localStorage.getItem("volume");
+      
+      // Check if volumeString is not null and parse it as a float
+      let volume = volumeString !== null ? parseFloat(volumeString) : NaN;
+      
+      // Check if the parsed volume is a valid number and not less than zero
+      if (isNaN(volume) || volume < 0) {
+        volume = 0; // Set to a default value if invalid
+      }
+      
+      // Calculate the target value
+      let targetValue = volume / 500 + 0.000001;
+      
+      // Check if the target value is finite
+      if (!isFinite(targetValue)) {
+        targetValue = 0.000001; // Set to a default value if non-finite
+      }
+      
+      // Use the target value in the exponentialRampToValueAtTime function
+      g.gain.exponentialRampToValueAtTime(targetValue, context.currentTime);
+      
       g.gain.exponentialRampToValueAtTime(0.000001, context.currentTime + time)
       o.connect(g)
       g.connect(context.destination)
