@@ -1,5 +1,3 @@
-import "./index.css"
-
 import {
   cryptoTask, 
 } from "./crypto"
@@ -14,48 +12,54 @@ import {
   Header, 
 } from "./components/Header"
 import {
-  Toolbar,
-} from "./components/Toolbar"
+  Explore,
+} from "./components/explore"
 import {
-  Welcome,
-} from "./components/Welcome"
+  Home,
+} from "./components/home"
 import "./commands"
+import { SoundProvider } from './components/SoundContext';
+
 
 import React from "react"
 import ReactDOM from "react-dom"
 import { EVENT_EVENT } from "../../events"
 navigator.storage.persist().catch(console.error)
-ReactDOM.render(
-  <>
-    
-    <Toolbar />
-    <Header />
-    <Terminal />
-  </>, 
-  document.body
-)
 
-const startMessages: string[] = [
-  "Leave your shoes at the door.",
-  "Mudgolt stands for Multi User Dungeon... The other four letters represent a secret blend of herbs and spices for legal reasons I am unable to share.",
-  "Mudgolt was invented in 1972 in an attempt to communicate with multi dimensional beings. But it turned out to be the ultimate tool for humans to communicate too!",
-  "This version of Mudgolt was discovered on a floppy disk in a yard sale in 1986. It was later uploaded to the internet in the 2020s.",
-  "Somebody loves you.",
-  "This is the real metaverse"
-]
 
 const init = async () => {
-  await cryptoTask()
-  await networkTask()
-  
-  console.log("Client started")
+  await cryptoTask();
+  await networkTask();
 
-  const randomMessage = startMessages[Math.floor(Math.random() * startMessages.length)]
-  pushToLog(/* html */`Welcome to MUDGOLT! <small>${randomMessage}</small>`)
-  // pushToLog(/* html */`Want to contribute? https://github.com/golters/mudgolt`)
-  pushToLog(/* html */`Type <code>/help</code> for a list of commands.`)
-  sendEvent(EVENT_EVENT,"/event check")
-  
+};
+
+const loadComponents = () => {
+  ReactDOM.render(
+    <>
+      <Explore />
+    </>, 
+    document.body
+  )
 }
 
-init().catch(console.error)
+const loadHome = () => {
+  ReactDOM.render(
+    <>
+      <SoundProvider>
+      <Home/>
+      </SoundProvider>
+    </>, 
+    document.body
+  )
+
+}
+
+const url = new URL(window.location.href)
+
+  init().catch(console.error);
+
+if (url.pathname.startsWith('/explore')) {
+  loadComponents()
+} else {
+  loadHome()
+}

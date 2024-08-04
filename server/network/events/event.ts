@@ -84,6 +84,8 @@ const handler: NetworkEventHandler = async (
       date: Date.now(),
       recipiant: null,
       type: "chat",
+      roomId: null,
+      roomName: null,
     }
   
     const now = new Date();
@@ -189,7 +191,7 @@ const handler: NetworkEventHandler = async (
               broadcastToUser<string>(SERVER_LOG_EVENT, "wow it's XXXXL!", player.username); 
               
             }
-            const fishitem = await createPocketItem(player.id, fishName, "123456123456123456", rarity, "fish,"+fishtype.name+","+fishSize+"inches,"+areaName+","+room, "fish")
+            const fishitem = await createPocketItem(player.id, fishName, fishtype.icon, rarity, "fish,"+fishtype.name+","+fishSize+"inches,"+areaName+","+room, "fish")
             await setItemBio(fishitem.id, "A " + Math.floor(fishSize).toString() + " inch " + fishtype.name + " caught in " + room)
             if(event)
               await givePoints(player.id, Math.floor(fishSize).toString(), event.id)

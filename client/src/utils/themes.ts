@@ -424,287 +424,284 @@ export const themes: ColorTheme[] = [
 
   },{
     "name": "green",
-    "toolbar-back": "#019f02",
+    "toolbar-back": "#66FF66",  // Medium Green
     "toolbar-edge": "none",
-    "toolbar-title": "#023401",
+    "toolbar-title": "#003300",  // Deep Green Phosphor toned down
     "toolbar-button-back": "none",
-    "toolbar-button-logos": "#023401",
-    "toolbar-button-back-hover": "#00ef11",
-    "toolbar-button-logos-hover": "#023401",
+    "toolbar-button-logos": "#003300",  // Deep Green Phosphor toned down
+    "toolbar-button-back-hover": "#00FF00",  // Deep Green Phosphor
+    "toolbar-button-logos-hover": "#003300",  // Deep Green Phosphor toned down
     "toolbar-button-edge": "none",
     "toolbar-button-edge-hover": "none",
-    "toolbar-dropdown-back": "#019f02",
-    "toolbar-dropdown-text": "#023401",
+    "toolbar-dropdown-back": "#66FF66",  // Medium Green
+    "toolbar-dropdown-text": "#003300",  // Deep Green Phosphor toned down
     "toolbar-dropdown-edge": "none",
     "toolbar-dropdown-shadow": "none",
-    "toolbar-hovernames-back": "#00ef11",
-    "toolbar-hovernames-text": "#023401",
+    "toolbar-hovernames-back": "#00FF00",  // Deep Green Phosphor
+    "toolbar-hovernames-text": "#003300",  // Deep Green Phosphor toned down
     "toolbar-hovernames-edge": "none",
-    "toolbar-slider-back": "#023401",
+    "toolbar-slider-back": "#003300",  // Deep Green Phosphor toned down
     "toolbar-slider-back-edge": "none",
-    "toolbar-slider-thumb": "#00ef11",
+    "toolbar-slider-thumb": "#00FF00",  // Deep Green Phosphor
     "toolbar-slider-thumb-edge": "none",
-    "toolbar-slider-back-hover": "#023401",
+    "toolbar-slider-back-hover": "#003300",  // Deep Green Phosphor toned down
     "toolbar-slider-back-edge-hover": "none",
-    "toolbar-slider-thumb-hover": "#00ef11",
+    "toolbar-slider-thumb-hover": "#00FF00",  // Deep Green Phosphor
     "toolbar-slider-thumb-edge-hover": "none",
-    "toolbar-charlimit": "#023401",
-    "toolbar-charlimit-over": "#00ef11",
+    "toolbar-charlimit": "#003300",  // Deep Green Phosphor toned down
+    "toolbar-charlimit-over": "#00FF00",  // Deep Green Phosphor
     "toolbar-charlimit-back": "none",
-    "toolbar-charlimit-over-back": "#023401",
-    "toolbar-input-text": "#00ef11",
-    "toolbar-input-back": "#023401",
+    "toolbar-charlimit-over-back": "#003300",  // Deep Green Phosphor toned down
+    "toolbar-input-text": "#00FF00",  // Deep Green Phosphor
+    "toolbar-input-back": "#003300",  // Deep Green Phosphor toned down
     "toolbar-input-edge": "none",
-    "toolbar-publish-button-text": "#019f02",
-    "toolbar-publish-button-back": "#00ef11",
+    "toolbar-publish-button-text": "#66FF66",  // Medium Green
+    "toolbar-publish-button-back": "#00FF00",  // Deep Green Phosphor
     "toolbar-publish-button-edge": "none",
-    "toolbar-publish-button-text-hover": "#00ef11",
-    "toolbar-publish-button-back-hover": "#023401",
+    "toolbar-publish-button-text-hover": "#00FF00",  // Deep Green Phosphor
+    "toolbar-publish-button-back-hover": "#003300",  // Deep Green Phosphor toned down
     "toolbar-publish-button-edge-hover": "none",
-    "toolbar-sub-button-text":"#019f02",
-    "toolbar-sub-button-back":"#00ef11",
+    "toolbar-sub-button-text":"#66FF66",  // Medium Green
+    "toolbar-sub-button-back":"#00FF00",  // Deep Green Phosphor
     "toolbar-sub-button-edge": "none",
-    "toolbar-sub-button-text-hover":"#00ef11",
-    "toolbar-sub-button-back-hover":"#023401",
+    "toolbar-sub-button-text-hover":"#00FF00",  // Deep Green Phosphor
+    "toolbar-sub-button-back-hover":"#003300",  // Deep Green Phosphor toned down
     "toolbar-sub-button-edge-hover":"none",
-    "toolbar-palette-text":"#00ef11",
-    "toolbar-palette-back":"#019f02",
-    "toolbar-palette-text-hover":"#023401",
-    "toolbar-palette-back-hover":"#00ef11",
-    "banner-line":"2px solid #00ef11",
-    "banner-mini":"#00ef11",
+    "toolbar-palette-text":"#00FF00",  // Deep Green Phosphor
+    "toolbar-palette-back":"#66FF66",  // Medium Green
+    "toolbar-palette-text-hover":"#003300",  // Deep Green Phosphor toned down
+    "toolbar-palette-back-hover":"#00FF00",  // Deep Green Phosphor
+    "banner-line":"2px solid #00FF00",  // Deep Green Phosphor
+    "banner-mini":"#00FF00",  // Deep Green Phosphor
     "banner-mini-edge":"none",
-    "banner-mini-hover":"#019f02",
+    "banner-mini-hover":"#66FF66",  // Medium Green
     "banner-mini-back":"none",
     "banner-mini-edge-hover":"none",
     "banner-mini-back-hover":"none",
-    "banner-type":"#00ef11",
+    "banner-type":"#00FF00",  // Deep Green Phosphor
     "banner-type-back":"none",
     "banner-type-edge":"none",
-    "banner-type-hover":"#019f02",
+    "banner-type-hover":"#66FF66",  // Medium Green
     "banner-type-back-hover":"none",
     "banner-type-edge-hover":"none",
-    "banner-type-select": "#023401",
-    "banner-type-select-back": "#00ef11",
+    "banner-type-select": "#003300",  // Deep Green Phosphor toned down
+    "banner-type-select-back": "#00FF00",  // Deep Green Phosphor
     "banner-type-select-back-edge":"none",
-    "banner-color":"#00ef11",
+    "banner-color":"#00FF00",  // Deep Green Phosphor
     "banner-back":"none",
     "banner-border":"none",
-    "banner-cursor":"#019f02",
+    "banner-cursor":"#66FF66",  // Medium Green
     "banner-cursor-back":"none",
-    "banner-room-name":"#00ef11",
-  
+    "banner-room-name":"#00FF00",  // Deep Green Phosphor
+
     "terminal-back":"none",
-    "text-primary": "#00ef11",
-    "text-link": "#00ef11",
-    "chat-date": "#019f02",
-    "chat-name": "#00ef11",
-    "chat-error": "#00ef11",
-    "chat-message": "#019f02",
-    "charlimit": "#00ef11",
-    "charlimit-over": "#00ef11",
-    "input-text": "#00ef11",
+    "text-primary": "#00FF00",  // Deep Green Phosphor
+    "text-link": "#00FF00",  // Deep Green Phosphor
+    "chat-date": "#66FF66",  // Medium Green
+    "chat-name": "#00FF00",  // Deep Green Phosphor
+    "chat-error": "#00FF00",  // Deep Green Phosphor
+    "chat-message": "#66FF66",  // Medium Green
+    "charlimit": "#00FF00",  // Deep Green Phosphor
+    "charlimit-over": "#00FF00",  // Deep Green Phosphor
+    "input-text": "#00FF00",  // Deep Green Phosphor
     "input-back": "none",
-    "input-back-edge": "none", 
-  
+    "input-back-edge": "none",
+
     "scrollbar-back": "none",
-    "scrollbar-thumb": "#00ef11",
+    "scrollbar-thumb": "#00FF00",  // Deep Green Phosphor
     "scrollbar-back-edge": "none",
     "scrollbar-thumb-edge": "none",
-  
-    "background-primary": "#023401",
-    "background-code": "#019f02",
-    "divider": "#019f02",
+
+    "background-primary": "#003300",  // Deep Green Phosphor toned down
+    "background-code": "#66FF66",  // Medium Green
+    "divider": "#66FF66",  // Medium Green
     "background-gradient": "none",
-    "sidebar-back": "#019f02",
-    "sidebar-text":"#023401",
+    "sidebar-back": "#66FF66",  // Medium Green
+    "sidebar-text":"#003300",  // Deep Green Phosphor toned down
     "sidebar-border":"none",
     "sidebar-shadow":"2px 0 1px rgba(0, 30, 255, 0.2), -2px 0 1px rgba(255,0,80,0.1), 0 0 3px",
-    "rightbar-back":"#019f02",
-    "rightbar-text":"#023401",
+    "rightbar-back":"#66FF66",  // Medium Green
+    "rightbar-text":"#003300",  // Deep Green Phosphor toned down
     "rightbar-border":"none",
     "rightbar-shadow":"2px 0 1px rgba(0, 30, 255, 0.2), -2px 0 1px rgba(255,0,80,0.1), 0 0 3px",
-    "inventory-icon-text":"#023401",
+    "inventory-icon-text":"#003300",  // Deep Green Phosphor toned down
     "inventory-icon-back":"none",
     "inventory-icon-border":"none",
-    "inventory-icon-cursor-text":"#00ef11",
-    "inventory-icon-cursor-back":"#00ef11",
+    "inventory-icon-cursor-text":"#00FF00",  // Deep Green Phosphor
+    "inventory-icon-cursor-back":"#00FF00",  // Deep Green Phosphor
     "inbox-back":"none",
-    "inbox-sent-text":"#023401",
-    "inbox-sent-back":"#00ef11",
-    "inbox-sent-date":"#019f02",
-    "inbox-sent-name":"#023401",
-    "inbox-received-text":"#00ef11",
-    "inbox-received-back":"#023401",
-    "inbox-received-date":"#019f02",
-    "inbox-received-name":"#00ef11",
-    "window-back":"#019f02",
-    "window-text":"#023401",
-    "window-border":"#019f02",
+    "inbox-sent-text":"#003300",  // Deep Green Phosphor toned down
+    "inbox-sent-back":"#00FF00",  // Deep Green Phosphor
+    "inbox-sent-date":"#66FF66",  // Medium Green
+    "inbox-sent-name":"#003300",  // Deep Green Phosphor toned down
+    "inbox-received-text":"#00FF00",  // Deep Green Phosphor
+    "inbox-received-back":"#003300",  // Deep Green Phosphor toned down
+    "inbox-received-date":"#66FF66",  // Medium Green
+    "inbox-received-name":"#00FF00",  // Deep Green Phosphor
+    "window-back":"#66FF66",  // Medium Green
+    "window-text":"#003300",  // Deep Green Phosphor toned down
+    "window-border":"#66FF66",  // Medium Green
     "window-shadow":"2px 1px 1px rgba(0, 30, 255, 0.2), -2px -1px 1px rgba(255,0,80,0.1), 0 0 3px",
-    "window-bar-text":"#019f02",
-    "window-bar-back":"#023401",
-    "window-close-hover-text":"#019f02",
-    "window-close-hover-back":"#00ef11",
-    "npc-text":"#023401",
+    "window-bar-text":"#66FF66",  // Medium Green
+    "window-bar-back":"#003300",  // Deep Green Phosphor toned down
+    "window-close-hover-text":"#66FF66",  // Medium Green
+    "window-close-hover-back":"#00FF00",  // Deep Green Phosphor
+    "npc-text":"#003300",  // Deep Green Phosphor toned down
     "npc-back":"none",
     "npc-border":"none",
-    "npc-cursor-text":"#00ef11",
-    "npc-cursor-back":"#023401",
-    "npc-title-text":"#023401",
+    "npc-cursor-text":"#00FF00",  // Deep Green Phosphor
+    "npc-cursor-back":"#003300",  // Deep Green Phosphor toned down
+    "npc-title-text":"#003300",  // Deep Green Phosphor toned down
     "npc-title-back":"none",
     "npc-title-border":"none",
-    "npc-name-text":"#00ef11",
+    "npc-name-text":"#00FF00",  // Deep Green Phosphor
     "npc-name-back":"none",
-    "npc-message-text":"#023401",
+    "npc-message-text":"#003300",  // Deep Green Phosphor toned down
     "npc-message-back":"none",
     "npc-phrase-back":"none",
     "npc-phrase-border":"none",
-    "cluster-text":"#00ef11",
-    "cluster-back":"#023401",
-
-  },{
+    "cluster-text":"#00FF00",  // Deep Green Phosphor
+    "cluster-back":"#003300",  // Deep Green Phosphor toned down
+  }
+  ,{
     "name": "amber",
-    "toolbar-back": "#ffdb30",
+    "toolbar-back": "#DD9E2C",  // Bright Amber
     "toolbar-edge": "none",
-    "toolbar-title": "#792400",
+    "toolbar-title": "#3D1402",  // Deep Amber
     "toolbar-button-back": "none",
-    "toolbar-button-logos": "#792400",
-    "toolbar-button-back-hover": "#eb7900",
-    "toolbar-button-logos-hover": "#792400",
+    "toolbar-button-logos": "#3D1402",  // Deep Amber
+    "toolbar-button-back-hover": "#BC4E03",  // Medium Amber
+    "toolbar-button-logos-hover": "#3D1402",  // Deep Amber
     "toolbar-button-edge": "none",
     "toolbar-button-edge-hover": "none",
-    "toolbar-dropdown-back": "#ffdb30",
-    "toolbar-dropdown-text": "#792400",
+    "toolbar-dropdown-back": "#DD9E2C",  // Bright Amber
+    "toolbar-dropdown-text": "#3D1402",  // Deep Amber
     "toolbar-dropdown-edge": "none",
     "toolbar-dropdown-shadow": "none",
-    "toolbar-hovernames-back": "#792400",
-    "toolbar-hovernames-text": "#ffdb30",
+    "toolbar-hovernames-back": "#DD9E2C",  // Bright Amber
+    "toolbar-hovernames-text": "#3D1402",  // Deep Amber
     "toolbar-hovernames-edge": "none",
-    "toolbar-slider-back": "#792400",
+    "toolbar-slider-back": "#3D1402",  // Deep Amber
     "toolbar-slider-back-edge": "none",
-    "toolbar-slider-thumb": "#ffdb30",
+    "toolbar-slider-thumb": "#DD9E2C",  // Bright Amber
     "toolbar-slider-thumb-edge": "none",
-    "toolbar-slider-back-hover": "#792400",
+    "toolbar-slider-back-hover": "#3D1402",  // Deep Amber
     "toolbar-slider-back-edge-hover": "none",
-    "toolbar-slider-thumb-hover": "#ffdb30",
+    "toolbar-slider-thumb-hover": "#DD9E2C",  // Bright Amber
     "toolbar-slider-thumb-edge-hover": "none",
-    "toolbar-charlimit": "#792400",
-    "toolbar-charlimit-over": "#ffdb30",
+    "toolbar-charlimit": "#3D1402",  // Deep Amber
+    "toolbar-charlimit-over": "#DD9E2C",  // Bright Amber
     "toolbar-charlimit-back": "none",
-    "toolbar-charlimit-over-back": "#792400",
-    "toolbar-input-text": "#ffdb30",
-    "toolbar-input-back": "#792400",
+    "toolbar-charlimit-over-back": "#3D1402",  // Deep Amber
+    "toolbar-input-text": "#DD9E2C",  // Bright Amber
+    "toolbar-input-back": "#3D1402",  // Deep Amber
     "toolbar-input-edge": "none",
-    "toolbar-publish-button-text": "#ffdb30",
-    "toolbar-publish-button-back": "#792400",
+    "toolbar-publish-button-text": "#DD9E2C",  // Bright Amber
+    "toolbar-publish-button-back": "#3D1402",  // Deep Amber
     "toolbar-publish-button-edge": "none",
-    "toolbar-publish-button-text-hover": "#ffdb30",
-    "toolbar-publish-button-back-hover": "#eb7900",
+    "toolbar-publish-button-text-hover": "#DD9E2C",  // Bright Amber
+    "toolbar-publish-button-back-hover": "#BC4E03",  // Medium Amber
     "toolbar-publish-button-edge-hover": "none",
-    "toolbar-sub-button-text":"#ffdb30",
-    "toolbar-sub-button-back":"#792400",
+    "toolbar-sub-button-text": "#DD9E2C",  // Bright Amber
+    "toolbar-sub-button-back": "#3D1402",  // Deep Amber
     "toolbar-sub-button-edge": "none",
-    "toolbar-sub-button-text-hover":"#ffdb30",
-    "toolbar-sub-button-back-hover":"#eb7900",
-    "toolbar-sub-button-edge-hover":"none",
-    "toolbar-palette-text":"#ffdb30",
-    "toolbar-palette-back":"#eb7900",
-    "toolbar-palette-text-hover":"#792400",
-    "toolbar-palette-back-hover":"#ffdb30",
-    "banner-line":"2px solid #ffdb30",
-    "banner-mini":"#ffdb30",
-    "banner-mini-edge":"none",
-    "banner-mini-hover":"#eb7900",
-    "banner-mini-back":"none",
-    "banner-mini-edge-hover":"none",
-    "banner-mini-back-hover":"none",
-    "banner-type":"#ffdb30",
-    "banner-type-back":"none",
-    "banner-type-edge":"none",
-    "banner-type-hover":"#eb7900",
-    "banner-type-back-hover":"none",
-    "banner-type-edge-hover":"none",
-    "banner-type-select": "#792400",
-    "banner-type-select-back": "#ffdb30",
-    "banner-type-select-back-edge":"none",
-    "banner-color":"#ffdb30",
-    "banner-back":"none",
-    "banner-border":"none",
-    "banner-cursor":"#eb7900",
-    "banner-cursor-back":"none",
-    "banner-room-name":"#ffdb30",
-  
-    "terminal-back":"none",
-    "text-primary": "#ffdb30",
-    "text-link": "#ffdb30",
-    "chat-date": "#eb7900",
-    "chat-name": "#ffdb30",
-    "chat-error": "#ffdb30",
-    "chat-message": "#eb7900",
-    "charlimit": "#ffdb30",
-    "charlimit-over": "#ffdb30",
-    "input-text": "#ffdb30",
+    "toolbar-sub-button-text-hover": "#DD9E2C",  // Bright Amber
+    "toolbar-sub-button-back-hover": "#BC4E03",  // Medium Amber
+    "toolbar-sub-button-edge-hover": "none",
+    "toolbar-palette-text": "#DD9E2C",  // Bright Amber
+    "toolbar-palette-back": "#BC4E03",  // Medium Amber
+    "toolbar-palette-text-hover": "#3D1402",  // Deep Amber
+    "toolbar-palette-back-hover": "#DD9E2C",  // Bright Amber
+    "banner-line": "2px solid #DD9E2C",  // Bright Amber
+    "banner-mini": "#DD9E2C",  // Bright Amber
+    "banner-mini-edge": "none",
+    "banner-mini-hover": "#BC4E03",  // Medium Amber
+    "banner-mini-back": "none",
+    "banner-mini-edge-hover": "none",
+    "banner-mini-back-hover": "none",
+    "banner-type": "#DD9E2C",  // Bright Amber
+    "banner-type-back": "none",
+    "banner-type-edge": "none",
+    "banner-type-hover": "#BC4E03",  // Medium Amber
+    "banner-type-back-hover": "none",
+    "banner-type-edge-hover": "none",
+    "banner-type-select": "#3D1402",  // Deep Amber
+    "banner-type-select-back": "#DD9E2C",  // Bright Amber
+    "banner-type-select-back-edge": "none",
+    "banner-color": "#DD9E2C",  // Bright Amber
+    "banner-back": "none",
+    "banner-border": "none",
+    "banner-cursor": "#BC4E03",  // Medium Amber
+    "banner-cursor-back": "none",
+    "banner-room-name": "#DD9E2C",  // Bright Amber
+    "terminal-back": "none",
+    "text-primary": "#DD9E2C",  // Bright Amber
+    "text-link": "#DD9E2C",  // Bright Amber
+    "chat-date": "#BC4E03",  // Medium Amber
+    "chat-name": "#DD9E2C",  // Bright Amber
+    "chat-error": "#DD9E2C",  // Bright Amber
+    "chat-message": "#BC4E03",  // Medium Amber
+    "charlimit": "#DD9E2C",  // Bright Amber
+    "charlimit-over": "#DD9E2C",  // Bright Amber
+    "input-text": "#DD9E2C",  // Bright Amber
     "input-back": "none",
-    "input-back-edge": "none", 
-  
+    "input-back-edge": "none",
     "scrollbar-back": "none",
-    "scrollbar-thumb": "#ffdb30",
+    "scrollbar-thumb": "#DD9E2C",  // Bright Amber
     "scrollbar-back-edge": "none",
     "scrollbar-thumb-edge": "none",
-  
-    "background-primary": "#792400",
-    "background-code": "#eb7900",
-    "divider": "#eb7900",
+    "background-primary": "#3D1402",  // Deep Amber
+    "background-code": "#BC4E03",  // Medium Amber
+    "divider": "#BC4E03",  // Medium Amber
     "background-gradient": "none",
-    "sidebar-back": "darkGrey",
-    "sidebar-text":"black",
-    "sidebar-border":"none",
-    "sidebar-shadow":"2px 0 1px rgba(0, 30, 255, 0.2), -2px 0 1px rgba(255,0,80,0.1), 0 0 3px",
-    "rightbar-back":"darkGrey",
-    "rightbar-text":"black",
-    "rightbar-border":"none",
-    "rightbar-shadow":"2px 0 1px rgba(0, 30, 255, 0.2), -2px 0 1px rgba(255,0,80,0.1), 0 0 3px",
-    "inventory-icon-text":"black",
-    "inventory-icon-back":"none",
-    "inventory-icon-border":"none",
-    "inventory-icon-cursor-text":"magenta",
-    "inventory-icon-cursor-back":"white",
-    "inbox-back":"none",
-    "inbox-sent-text":"black",
-    "inbox-sent-back":"white",
-    "inbox-sent-date":"grey",
-    "inbox-sent-name":"purple",
-    "inbox-received-text":"white",
-    "inbox-received-back":"black",
-    "inbox-received-date":"grey",
-    "inbox-received-name":"Magenta",
-    "window-back":"white",
-    "window-text":"black",
-    "window-border":"1px solid #d3d3d3",
-    "window-shadow":"2px 1px 1px rgba(0, 30, 255, 0.2), -2px -1px 1px rgba(255,0,80,0.1), 0 0 3px",
-    "window-bar-text":"white",
-    "window-bar-back":"darkGrey",
-    "window-close-hover-text":"white",
-    "window-close-hover-back":"red",
-    "npc-text":"black",
-    "npc-back":"none",
-    "npc-border":"none",
-    "npc-cursor-text":"magenta",
-    "npc-cursor-back":"black",
-    "npc-title-text":"black",
-    "npc-title-back":"none",
-    "npc-title-border":"none",
-    "npc-name-text":"magenta",
-    "npc-name-back":"none",
-    "npc-message-text":"black",
-    "npc-message-back":"none",
-    "npc-phrase-back":"none",
-    "npc-phrase-border":"none",
-    "cluster-text":"white",
-    "cluster-back":"black",
-
-  },{
+    "sidebar-back": "#DD9E2C",  // Bright Amber
+    "sidebar-text": "#3D1402",  // Deep Amber
+    "sidebar-border": "none",
+    "sidebar-shadow": "2px 0 1px rgba(0, 30, 255, 0.2), -2px 0 1px rgba(255,0,80,0.1), 0 0 3px",
+    "rightbar-back": "#DD9E2C",  // Bright Amber
+    "rightbar-text": "#3D1402",  // Deep Amber
+    "rightbar-border": "none",
+    "rightbar-shadow": "2px 0 1px rgba(0, 30, 255, 0.2), -2px 0 1px rgba(255,0,80,0.1), 0 0 3px",
+    "inventory-icon-text": "#3D1402",  // Deep Amber
+    "inventory-icon-back": "#DD9E2C",  // Bright Amber
+    "inventory-icon-border": "none",
+    "inventory-icon-cursor-text": "#BC4E03",  // Medium Amber
+    "inventory-icon-cursor-back": "#DD9E2C",  // Bright Amber
+    "inbox-back": "none",
+    "inbox-sent-text": "#3D1402",  // Deep Amber
+    "inbox-sent-back": "#BC4E03",  // Medium Amber
+    "inbox-sent-date": "#3D1402",  // Deep Amber
+    "inbox-sent-name": "#3D1402",  // Deep Amber
+    "inbox-received-text": "#DD9E2C",  // Bright Amber
+    "inbox-received-back": "#3D1402",  // Deep Amber
+    "inbox-received-date": "#BC4E03",  // Medium Amber
+    "inbox-received-name": "#DD9E2C",  // Bright Amber
+    "window-back": "#DD9E2C",  // Bright Amber
+    "window-text": "#3D1402",  // Deep Amber
+    "window-border": "#DD9E2C",  // Bright Amber
+    "window-shadow": "2px 1px 1px rgba(0, 30, 255, 0.2), -2px -1px 1px rgba(255,0,80,0.1), 0 0 3px",
+    "window-bar-text": "#DD9E2C",  // Bright Amber
+    "window-bar-back": "#3D1402",  // Deep Amber
+    "window-close-hover-text": "#DD9E2C",  // Bright Amber
+    "window-close-hover-back": "#BC4E03",  // Medium Amber
+    "npc-text": "#3D1402",  // Deep Amber
+    "npc-back": "#DD9E2C",  // Bright Amber
+    "npc-border": "none",
+    "npc-cursor-text": "#BC4E03",  // Medium Amber
+    "npc-cursor-back": "#DD9E2C",  // Bright Amber
+    "npc-title-text": "#3D1402",  // Deep Amber
+    "npc-title-back": "#DD9E2C",  // Bright Amber
+    "npc-title-border": "none",
+    "npc-name-text": "#3D1402",  // Deep Amber
+    "npc-name-back": "#DD9E2C",  // Bright Amber
+    "npc-message-text": "#3D1402",  // Deep Amber
+    "npc-message-back": "#DD9E2C",  // Bright Amber
+    "npc-phrase-back": "#DD9E2C",  // Bright Amber
+    "npc-phrase-border": "none",
+    "cluster-text": "#3D1402",  // Deep Amber
+    "cluster-back": "#DD9E2C",  // Bright Amber
+  }
+  ,{
     "name": "cga",
     "toolbar-back": "white",
     "toolbar-edge": "none",
@@ -798,11 +795,11 @@ export const themes: ColorTheme[] = [
     "background-code": "cyan",
     "divider": "magenta",
     "background-gradient": "none",
-    "sidebar-back": "darkGrey",
+    "sidebar-back": "white",
     "sidebar-text":"black",
     "sidebar-border":"none",
     "sidebar-shadow":"2px 0 1px rgba(0, 30, 255, 0.2), -2px 0 1px rgba(255,0,80,0.1), 0 0 3px",
-    "rightbar-back":"darkGrey",
+    "rightbar-back":"white",
     "rightbar-text":"black",
     "rightbar-border":"none",
     "rightbar-shadow":"2px 0 1px rgba(0, 30, 255, 0.2), -2px 0 1px rgba(255,0,80,0.1), 0 0 3px",
@@ -2655,7 +2652,570 @@ export const themes: ColorTheme[] = [
     "cluster-text":"white",
     "cluster-back":"black",
 
+  },{
+    "name": "Ocean",
+    "toolbar-back": "#008080", // Teal
+    "toolbar-edge": "none",
+    "toolbar-title": "#002B36", // Navy Blue
+    "toolbar-button-back": "none",
+    "toolbar-button-logos": "#FF7F50", // Coral
+    "toolbar-button-back-hover": "#20B2AA", // Light Sea Green
+    "toolbar-button-logos-hover": "#002B36", // Navy Blue
+    "toolbar-button-edge": "none",
+    "toolbar-button-edge-hover": "none",
+    "toolbar-dropdown-back": "#008080", // Teal
+    "toolbar-dropdown-text": "#FF7F50", // Coral
+    "toolbar-dropdown-edge": "none",
+    "toolbar-dropdown-shadow": "none",
+    "toolbar-hovernames-back": "#002B36", // Navy Blue
+    "toolbar-hovernames-text": "#FF7F50", // Coral
+    "toolbar-hovernames-edge": "none",
+    "toolbar-slider-back": "#002B36", // Navy Blue
+    "toolbar-slider-back-edge": "none",
+    "toolbar-slider-thumb": "#FF7F50", // Coral
+    "toolbar-slider-thumb-edge": "none",
+    "toolbar-slider-back-hover": "#20B2AA", // Light Sea Green
+    "toolbar-slider-back-edge-hover": "none",
+    "toolbar-slider-thumb-hover": "#FF7F50", // Coral
+    "toolbar-slider-thumb-edge-hover": "none",
+    "toolbar-charlimit": "#002B36", // Navy Blue
+    "toolbar-charlimit-over": "#FF7F50", // Coral
+    "toolbar-charlimit-back": "none",
+    "toolbar-charlimit-over-back": "#002B36", // Navy Blue
+    "toolbar-input-text": "#FF7F50", // Coral
+    "toolbar-input-back": "#002B36", // Navy Blue
+    "toolbar-input-edge": "none",
+    "toolbar-publish-button-text": "#008080", // Teal
+    "toolbar-publish-button-back": "#FF7F50", // Coral
+    "toolbar-publish-button-edge": "none",
+    "toolbar-publish-button-text-hover": "#FF7F50", // Coral
+    "toolbar-publish-button-back-hover": "#002B36", // Navy Blue
+    "toolbar-publish-button-edge-hover": "none",
+    "toolbar-sub-button-text": "#008080", // Teal
+    "toolbar-sub-button-back": "#FF7F50", // Coral
+    "toolbar-sub-button-edge": "none",
+    "toolbar-sub-button-text-hover": "#FF7F50", // Coral
+    "toolbar-sub-button-back-hover": "#002B36", // Navy Blue
+    "toolbar-sub-button-edge-hover": "none",
+    "toolbar-palette-text": "#FF7F50", // Coral
+    "toolbar-palette-back": "#008080", // Teal
+    "toolbar-palette-text-hover": "#002B36", // Navy Blue
+    "toolbar-palette-back-hover": "#FF7F50", // Coral
+    "banner-line": "2px solid #FF7F50", // Coral
+    "banner-mini": "#FF7F50", // Coral
+    "banner-mini-edge": "none",
+    "banner-mini-hover": "#20B2AA", // Light Sea Green
+    "banner-mini-back": "none",
+    "banner-mini-edge-hover": "none",
+    "banner-mini-back-hover": "none",
+    "banner-type": "#FF7F50", // Coral
+    "banner-type-back": "none",
+    "banner-type-edge": "none",
+    "banner-type-hover": "#20B2AA", // Light Sea Green
+    "banner-type-back-hover": "none",
+    "banner-type-edge-hover": "none",
+    "banner-type-select": "#002B36", // Navy Blue
+    "banner-type-select-back": "#FF7F50", // Coral
+    "banner-type-select-back-edge": "none",
+    "banner-color": "#FF7F50", // Coral
+    "banner-back": "none",
+    "banner-border": "none",
+    "banner-cursor": "#20B2AA", // Light Sea Green
+    "banner-cursor-back": "none",
+    "banner-room-name": "#FF7F50", // Coral
+
+    "terminal-back": "none",
+    "text-primary": "#FF7F50", // Coral
+    "text-link": "#FF7F50", // Coral
+    "chat-date": "#20B2AA", // Light Sea Green
+    "chat-name": "#FF7F50", // Coral
+    "chat-error": "#FF7F50", // Coral
+    "chat-message": "#20B2AA", // Light Sea Green
+    "charlimit": "#FF7F50", // Coral
+    "charlimit-over": "#FF7F50", // Coral
+    "input-text": "#FF7F50", // Coral
+    "input-back": "none",
+    "input-back-edge": "none", 
+
+    "scrollbar-back": "none",
+    "scrollbar-thumb": "#FF7F50", // Coral
+    "scrollbar-back-edge": "none",
+    "scrollbar-thumb-edge": "none",
+
+    "background-primary": "#002B36", // Navy Blue
+    "background-code": "#008080", // Teal
+    "divider": "#20B2AA", // Light Sea Green
+    "background-gradient": "none",
+    "sidebar-back": "#20B2AA", // Light Sea Green
+    "sidebar-text": "#002B36", // Navy Blue
+    "sidebar-border": "none",
+    "sidebar-shadow": "2px 0 1px rgba(0, 30, 255, 0.2), -2px 0 1px rgba(255,0,80,0.1), 0 0 3px",
+    "rightbar-back": "#20B2AA", // Light Sea Green
+    "rightbar-text": "#002B36", // Navy Blue
+    "rightbar-border": "none",
+    "rightbar-shadow": "2px 0 1px rgba(0, 30, 255, 0.2), -2px 0 1px rgba(255,0,80,0.1), 0 0 3px",
+    "inventory-icon-text": "#002B36", // Navy Blue
+    "inventory-icon-back": "none",
+    "inventory-icon-border": "none",
+    "inventory-icon-cursor-text": "#FF7F50", // Coral
+    "inventory-icon-cursor-back": "#20B2AA", // Light Sea Green
+    "inbox-back": "none",
+    "inbox-sent-text": "#002B36", // Navy Blue
+    "inbox-sent-back": "#FF7F50", // Coral
+    "inbox-sent-date": "#20B2AA", // Light Sea Green
+    "inbox-sent-name": "#002B36", // Navy Blue
+    "inbox-received-text": "#FF7F50", // Coral
+    "inbox-received-back": "#002B36", // Navy Blue
+    "inbox-received-date": "#20B2AA", // Light Sea Green
+    "inbox-received-name": "#FF7F50", // Coral
+    "window-back": "#20B2AA", // Light Sea Green
+    "window-text": "#002B36", // Navy Blue
+    "window-border": "#20B2AA", // Light Sea Green
+    "window-shadow": "2px 1px 1px rgba(0, 30, 255, 0.2), -2px -1px 1px rgba(255,0,80,0.1), 0 0 3px",
+    "window-bar-text": "#20B2AA", // Light Sea Green
+    "window-bar-back": "#002B36", // Navy Blue
+    "window-close-hover-text": "#20B2AA", // Light Sea Green
+    "window-close-hover-back": "#FF7F50", // Coral
+    "npc-text": "#002B36", // Navy Blue
+    "npc-back": "none",
+    "npc-border": "none",
+    "npc-cursor-text": "#FF7F50", // Coral
+    "npc-cursor-back": "#20B2AA", // Light Sea Green
+    "npc-title-text": "#002B36", // Navy Blue
+    "npc-title-back": "none",
+    "npc-title-border": "none",
+    "npc-name-text": "#FF7F50", // Coral
+    "npc-name-back": "none",
+    "npc-message-text": "#002B36", // Navy Blue
+    "npc-message-back": "none",
+    "npc-phrase-back": "none",
+    "npc-phrase-border": "none",
+    "cluster-text": "#FF7F50", // Coral
+    "cluster-back": "#002B36", // Navy Blue
+  },{
+    "name": "Neon",
+    "toolbar-back": "#0d0d0d", // Dark Grey
+    "toolbar-edge": "solid 2px #ff00ff", // Neon Magenta Border
+    "toolbar-title": "#00ff99", // Neon Green
+    "toolbar-button-back": "#1a1a1a", // Dark Grey
+    "toolbar-button-logos": "#ff00ff", // Neon Magenta
+    "toolbar-button-back-hover": "#ff00ff", // Neon Magenta
+    "toolbar-button-logos-hover": "#00ff99", // Neon Green
+    "toolbar-button-edge": "solid 2px #00ffff", // Neon Cyan Border
+    "toolbar-button-edge-hover": "solid 2px #ff00ff", // Neon Magenta Border
+    "toolbar-dropdown-back": "#1a1a1a", // Dark Grey
+    "toolbar-dropdown-text": "#00ff99", // Neon Green
+    "toolbar-dropdown-edge": "solid 2px #00ffff", // Neon Cyan Border
+    "toolbar-dropdown-shadow": "0px 8px 16px 0px rgba(0,0,0,0.8)", // Dark Shadow
+    "toolbar-hovernames-back": "#00ffff", // Neon Cyan
+    "toolbar-hovernames-text": "#1a1a1a", // Dark Grey
+    "toolbar-hovernames-edge": "solid 2px #ff00ff", // Neon Magenta Border
+    "toolbar-slider-back": "#1a1a1a", // Dark Grey
+    "toolbar-slider-back-edge": "inset 2px #00ffff", // Neon Cyan Inset
+    "toolbar-slider-thumb": "#ff00ff", // Neon Magenta
+    "toolbar-slider-thumb-edge": "solid 2px #00ffff", // Neon Cyan Border
+    "toolbar-slider-back-hover": "#ff00ff", // Neon Magenta
+    "toolbar-slider-back-edge-hover": "inset 2px #00ffff", // Neon Cyan Inset
+    "toolbar-slider-thumb-hover": "#00ff99", // Neon Green
+    "toolbar-slider-thumb-edge-hover": "solid 2px #1a1a1a", // Dark Grey Border
+    "toolbar-charlimit": "#ff00ff", // Neon Magenta
+    "toolbar-charlimit-over": "#00ff99", // Neon Green
+    "toolbar-charlimit-back": "none",
+    "toolbar-charlimit-over-back": "none",
+    "toolbar-input-text": "#00ff99", // Neon Green
+    "toolbar-input-back": "#1a1a1a", // Dark Grey
+    "toolbar-input-edge": "solid 2px #00ffff", // Neon Cyan Border
+    "toolbar-publish-button-text": "#00ff99", // Neon Green
+    "toolbar-publish-button-back": "#ff00ff", // Neon Magenta
+    "toolbar-publish-button-edge": "solid 2px #00ffff", // Neon Cyan Border
+    "toolbar-publish-button-text-hover": "#1a1a1a", // Dark Grey
+    "toolbar-publish-button-back-hover": "#00ff99", // Neon Green
+    "toolbar-publish-button-edge-hover": "solid 2px #ff00ff", // Neon Magenta Border
+    "toolbar-sub-button-text": "#00ff99", // Neon Green
+    "toolbar-sub-button-back": "#1a1a1a", // Dark Grey
+    "toolbar-sub-button-edge": "solid 2px #00ffff", // Neon Cyan Border
+    "toolbar-sub-button-text-hover": "#1a1a1a", // Dark Grey
+    "toolbar-sub-button-back-hover": "#ff00ff", // Neon Magenta
+    "toolbar-sub-button-edge-hover": "solid 2px #ff00ff", // Neon Magenta Border
+    "toolbar-palette-text": "#00ff99", // Neon Green
+    "toolbar-palette-back": "#1a1a1a", // Dark Grey
+    "toolbar-palette-text-hover": "#ff00ff", // Neon Magenta
+    "toolbar-palette-back-hover": "#00ffff", // Neon Cyan
+    "banner-line": "solid 2px #00ffff", // Neon Cyan Border
+    "banner-mini": "#00ffff", // Neon Cyan
+    "banner-mini-edge": "solid 2px #ff00ff", // Neon Magenta Border
+    "banner-mini-hover": "#ff00ff", // Neon Magenta
+    "banner-mini-back": "none",
+    "banner-mini-edge-hover": "solid 2px #00ffff", // Neon Cyan Border
+    "banner-mini-back-hover": "none",
+    "banner-type": "#ff00ff", // Neon Magenta
+    "banner-type-back": "#1a1a1a", // Dark Grey
+    "banner-type-edge": "solid 2px #00ffff", // Neon Cyan Border
+    "banner-type-hover": "#00ffff", // Neon Cyan
+    "banner-type-back-hover": "#1a1a1a", // Dark Grey
+    "banner-type-edge-hover": "solid 2px #ff00ff", // Neon Magenta Border
+    "banner-type-select": "#00ff99", // Neon Green
+    "banner-type-select-back": "#1a1a1a", // Dark Grey
+    "banner-type-select-back-edge": "solid 2px #ff00ff", // Neon Magenta Border
+    "banner-color": "#ff00ff", // Neon Magenta
+    "banner-back": "#1a1a1a", // Dark Grey
+    "banner-border": "solid 2px #00ffff", // Neon Cyan Border
+    "banner-cursor": "#00ff99", // Neon Green
+    "banner-cursor-back": "#1a1a1a", // Dark Grey
+    "banner-room-name": "#00ffff", // Neon Cyan
+
+    "terminal-back": "#0d0d0d", // Dark Grey
+    "text-primary": "#00ff99", // Neon Green
+    "text-link": "#ff00ff", // Neon Magenta
+    "chat-date": "#00ffff", // Neon Cyan
+    "chat-name": "#ff00ff", // Neon Magenta
+    "chat-error": "#ff00ff", // Neon Magenta
+    "chat-message": "#00ffff", // Neon Cyan
+    "charlimit": "#ff00ff", // Neon Magenta
+    "charlimit-over": "#00ff99", // Neon Green
+    "input-text": "#00ff99", // Neon Green
+    "input-back": "#1a1a1a", // Dark Grey
+    "input-back-edge": "solid 2px #00ffff", // Neon Cyan Border
+
+    "scrollbar-back": "#1a1a1a", // Dark Grey
+    "scrollbar-thumb": "#00ffff", // Neon Cyan
+    "scrollbar-back-edge": "solid 2px #ff00ff", // Neon Magenta Border
+    "scrollbar-thumb-edge": "solid 2px #00ff99", // Neon Green Border
+
+    "background-primary": "#0d0d0d", // Dark Grey
+    "background-code": "#1a1a1a", // Dark Grey
+    "divider": "#00ffff", // Neon Cyan
+    "background-gradient": "none",
+    "sidebar-back": "#1a1a1a", // Dark Grey
+    "sidebar-text": "#00ff99", // Neon Green
+    "sidebar-border": "solid 2px #ff00ff", // Neon Magenta Border
+    "sidebar-shadow": "2px 0 1px rgba(0, 255, 255, 0.4), -2px 0 1px rgba(255, 0, 255, 0.4), 0 0 3px",
+    "rightbar-back": "#1a1a1a", // Dark Grey
+    "rightbar-text": "#00ff99", // Neon Green
+    "rightbar-border": "solid 2px #ff00ff", // Neon Magenta Border
+    "rightbar-shadow": "2px 0 1px rgba(0, 255, 255, 0.4), -2px 0 1px rgba(255, 0, 255, 0.4), 0 0 3px",
+    "inventory-icon-text": "#00ff99", // Neon Green
+    "inventory-icon-back": "#1a1a1a", // Dark Grey
+    "inventory-icon-border": "solid 2px #ff00ff", // Neon Magenta Border
+    "inventory-icon-cursor-text": "#ff00ff", // Neon Magenta
+    "inventory-icon-cursor-back": "#00ffff", // Neon Cyan
+    "inbox-back": "#1a1a1a", // Dark Grey
+    "inbox-sent-text": "#00ff99", // Neon Green
+    "inbox-sent-back": "#ff00ff", // Neon Magenta
+    "inbox-sent-date": "#00ffff", // Neon Cyan
+    "inbox-sent-name": "#00ff99", // Neon Green
+    "inbox-received-text": "#00ffff", // Neon Cyan
+    "inbox-received-back": "#1a1a1a", // Dark Grey
+    "inbox-received-date": "#00ff99", // Neon Green
+    "inbox-received-name": "#ff00ff", // Neon Magenta
+
+    "window-back": "#1a1a1a", // Dark Grey
+    "window-text": "#00ff99", // Neon Green
+    "window-border": "solid 2px #00ffff", // Neon Cyan Border
+    "window-shadow": "2px 1px 1px rgba(0, 255, 255, 0.4), -2px -1px 1px rgba(255, 0, 255, 0.4), 0 0 3px",
+    "window-bar-text": "#00ff99", // Neon Green
+    "window-bar-back": "#1a1a1a", // Dark Grey
+    "window-close-hover-text": "#00ffff", // Neon Cyan
+    "window-close-hover-back": "#ff00ff", // Neon Magenta
+    "npc-text": "#00ff99", // Neon Green
+    "npc-back": "#1a1a1a", // Dark Grey
+    "npc-border": "solid 2px #00ffff", // Neon Cyan Border
+    "npc-cursor-text": "#ff00ff", // Neon Magenta
+    "npc-cursor-back": "#1a1a1a", // Dark Grey
+    "npc-title-text": "#00ff99", // Neon Green
+    "npc-title-back": "#1a1a1a", // Dark Grey
+    "npc-title-border": "solid 2px #ff00ff", // Neon Magenta Border
+    "npc-name-text": "#00ffff", // Neon Cyan
+    "npc-name-back": "#1a1a1a", // Dark Grey
+    "npc-message-text": "#00ff99", // Neon Green
+    "npc-message-back": "#1a1a1a", // Dark Grey
+    "npc-phrase-back": "#1a1a1a", // Dark Grey
+    "npc-phrase-border": "solid 2px #ff00ff", // Neon Magenta Border
+    "cluster-text": "#00ff99", // Neon Green
+    "cluster-back": "#1a1a1a", // Dark Grey
+  },{
+    "name": "art-deco",
+    "toolbar-back": "#1d1d1d", // Dark Charcoal
+    "toolbar-edge": "solid 2px #d4af37", // Gold
+    "toolbar-title": "#d4af37", // Gold
+    "toolbar-button-back": "#2e2e2e", // Dark Grey
+    "toolbar-button-logos": "#d4af37", // Gold
+    "toolbar-button-back-hover": "#d4af37", // Gold
+    "toolbar-button-logos-hover": "#1d1d1d", // Dark Charcoal
+    "toolbar-button-edge": "solid 2px #d4af37", // Gold
+    "toolbar-button-edge-hover": "solid 2px #d4af37", // Gold
+    "toolbar-dropdown-back": "#2e2e2e", // Dark Grey
+    "toolbar-dropdown-text": "#d4af37", // Gold
+    "toolbar-dropdown-edge": "solid 2px #d4af37", // Gold
+    "toolbar-dropdown-shadow": "0px 4px 8px rgba(0, 0, 0, 0.5)", // Subtle Shadow
+    "toolbar-hovernames-back": "#d4af37", // Gold
+    "toolbar-hovernames-text": "#1d1d1d", // Dark Charcoal
+    "toolbar-hovernames-edge": "solid 2px #d4af37", // Gold
+    "toolbar-slider-back": "#2e2e2e", // Dark Grey
+    "toolbar-slider-back-edge": "solid 2px #d4af37", // Gold
+    "toolbar-slider-thumb": "#d4af37", // Gold
+    "toolbar-slider-thumb-edge": "solid 2px #1d1d1d", // Dark Charcoal
+    "toolbar-slider-back-hover": "#d4af37", // Gold
+    "toolbar-slider-back-edge-hover": "solid 2px #d4af37", // Gold
+    "toolbar-slider-thumb-hover": "#1d1d1d", // Dark Charcoal
+    "toolbar-slider-thumb-edge-hover": "solid 2px #d4af37", // Gold
+    "toolbar-charlimit": "#d4af37", // Gold
+    "toolbar-charlimit-over": "#d4af37", // Gold
+    "toolbar-charlimit-back": "none",
+    "toolbar-charlimit-over-back": "none",
+    "toolbar-input-text": "#d4af37", // Gold
+    "toolbar-input-back": "#2e2e2e", // Dark Grey
+    "toolbar-input-edge": "solid 2px #d4af37", // Gold
+    "toolbar-publish-button-text": "#1d1d1d", // Dark Charcoal
+    "toolbar-publish-button-back": "#d4af37", // Gold
+    "toolbar-publish-button-edge": "solid 2px #d4af37", // Gold
+    "toolbar-publish-button-text-hover": "#d4af37", // Gold
+    "toolbar-publish-button-back-hover": "#1d1d1d", // Dark Charcoal
+    "toolbar-publish-button-edge-hover": "solid 2px #d4af37", // Gold
+    "toolbar-sub-button-text": "#d4af37", // Gold
+    "toolbar-sub-button-back": "#2e2e2e", // Dark Grey
+    "toolbar-sub-button-edge": "solid 2px #d4af37", // Gold
+    "toolbar-sub-button-text-hover": "#1d1d1d", // Dark Charcoal
+    "toolbar-sub-button-back-hover": "#d4af37", // Gold
+    "toolbar-sub-button-edge-hover": "solid 2px #d4af37", // Gold
+    "toolbar-palette-text": "#d4af37", // Gold
+    "toolbar-palette-back": "#2e2e2e", // Dark Grey
+    "toolbar-palette-text-hover": "#1d1d1d", // Dark Charcoal
+    "toolbar-palette-back-hover": "#d4af37", // Gold
+    "banner-line": "solid 2px #d4af37", // Gold
+    "banner-mini": "#d4af37", // Gold
+    "banner-mini-edge": "solid 2px #1d1d1d", // Dark Charcoal Border
+    "banner-mini-hover": "#1d1d1d", // Dark Charcoal
+    "banner-mini-back": "none",
+    "banner-mini-edge-hover": "solid 2px #d4af37", // Gold
+    "banner-mini-back-hover": "none",
+    "banner-type": "#d4af37", // Gold
+    "banner-type-back": "#2e2e2e", // Dark Grey
+    "banner-type-edge": "solid 2px #d4af37", // Gold
+    "banner-type-hover": "#1d1d1d", // Dark Charcoal
+    "banner-type-back-hover": "#d4af37", // Gold
+    "banner-type-edge-hover": "solid 2px #d4af37", // Gold
+    "banner-type-select": "#d4af37", // Gold
+    "banner-type-select-back": "#2e2e2e", // Dark Grey
+    "banner-type-select-back-edge": "solid 2px #d4af37", // Gold
+    "banner-color": "#d4af37", // Gold
+    "banner-back": "#2e2e2e", // Dark Grey
+    "banner-border": "solid 2px #d4af37", // Gold
+    "banner-cursor": "#d4af37", // Gold
+    "banner-cursor-back": "#2e2e2e", // Dark Grey
+    "banner-room-name": "#d4af37", // Gold
+
+    "terminal-back": "#1d1d1d", // Dark Charcoal
+    "text-primary": "#d4af37", // Gold
+    "text-link": "#d4af37", // Gold
+    "chat-date": "#d4af37", // Gold
+    "chat-name": "#d4af37", // Gold
+    "chat-error": "#d4af37", // Gold
+    "chat-message": "#d4af37", // Gold
+    "charlimit": "#d4af37", // Gold
+    "charlimit-over": "#d4af37", // Gold
+    "input-text": "#d4af37", // Gold
+    "input-back": "#2e2e2e", // Dark Grey
+    "input-back-edge": "solid 2px #d4af37", // Gold
+
+    "scrollbar-back": "#2e2e2e", // Dark Grey
+    "scrollbar-thumb": "#d4af37", // Gold
+    "scrollbar-back-edge": "solid 2px #d4af37", // Gold
+    "scrollbar-thumb-edge": "solid 2px #1d1d1d", // Dark Charcoal
+
+    "background-primary": "#1d1d1d", // Dark Charcoal
+    "background-code": "#2e2e2e", // Dark Grey
+    "divider": "#d4af37", // Gold
+    "background-gradient": "none",
+    "sidebar-back": "#2e2e2e", // Dark Grey
+    "sidebar-text": "#d4af37", // Gold
+    "sidebar-border": "solid 2px #d4af37", // Gold
+    "sidebar-shadow": "2px 0 2px rgba(0, 0, 0, 0.6)", // Soft Shadow
+    "rightbar-back": "#2e2e2e", // Dark Grey
+    "rightbar-text": "#d4af37", // Gold
+    "rightbar-border": "solid 2px #d4af37", // Gold
+    "rightbar-shadow": "2px 0 2px rgba(0, 0, 0, 0.6)", // Soft Shadow
+    "inventory-icon-text": "#d4af37", // Gold
+    "inventory-icon-back": "#2e2e2e", // Dark Grey
+    "inventory-icon-border": "solid 2px #d4af37", // Gold
+    "inventory-icon-cursor-text": "#d4af37", // Gold
+    "inventory-icon-cursor-back": "#1d1d1d", // Dark Charcoal
+    "inbox-back": "#2e2e2e", // Dark Grey
+    "inbox-sent-text": "#d4af37", // Gold
+    "inbox-sent-back": "#1d1d1d", // Dark Charcoal
+    "inbox-sent-date": "#d4af37", // Gold
+    "inbox-sent-name": "#d4af37", // Gold
+    "inbox-received-text": "#d4af37", // Gold
+    "inbox-received-back": "#1d1d1d", // Dark Charcoal
+    "inbox-received-date": "#d4af37", // Gold
+    "inbox-received-name": "#d4af37", // Gold
+
+    "window-back": "#1d1d1d", // Dark Charcoal
+    "window-text": "#d4af37", // Gold
+    "window-border": "solid 2px #d4af37", // Gold
+    "window-shadow": "2px 1px 1px rgba(0, 0, 0, 0.6), -2px -1px 1px rgba(0, 0, 0, 0.3), 0 0 3px", // Soft Shadow
+    "window-bar-text": "#d4af37", // Gold
+    "window-bar-back": "#1d1d1d", // Dark Charcoal
+    "window-close-hover-text": "#d4af37", // Gold
+    "window-close-hover-back": "#1d1d1d", // Dark Charcoal
+    "npc-text": "#d4af37", // Gold
+    "npc-back": "#1d1d1d", // Dark Charcoal
+    "npc-border": "solid 2px #d4af37", // Gold
+    "npc-cursor-text": "#d4af37", // Gold
+    "npc-cursor-back": "#1d1d1d", // Dark Charcoal
+    "npc-title-text": "#d4af37", // Gold
+    "npc-title-back": "#1d1d1d", // Dark Charcoal
+    "npc-title-border": "solid 2px #d4af37", // Gold
+    "npc-name-text": "#d4af37", // Gold
+    "npc-name-back": "#1d1d1d", // Dark Charcoal
+    "npc-message-text": "#d4af37", // Gold
+    "npc-message-back": "#1d1d1d", // Dark Charcoal
+    "npc-phrase-back": "#1d1d1d", // Dark Charcoal
+    "npc-phrase-border": "solid 2px #d4af37", // Gold
+    "cluster-text": "#d4af37", // Gold
+    "cluster-back": "#1d1d1d", // Dark Charcoal
+  },{
+    "name": "vampire",
+    "toolbar-back": "#2E2E2E",  // Dark Gray
+    "toolbar-edge": "none",
+    "toolbar-title": "#D4A4A4",  // Pale Rose
+    "toolbar-button-back": "none",
+    "toolbar-button-logos": "#D4A4A4",  // Pale Rose
+    "toolbar-button-back-hover": "#C23B22",  // Dark Red
+    "toolbar-button-logos-hover": "#D4A4A4",  // Pale Rose
+    "toolbar-button-edge": "none",
+    "toolbar-button-edge-hover": "none",
+    "toolbar-dropdown-back": "#2E2E2E",  // Dark Gray
+    "toolbar-dropdown-text": "#D4A4A4",  // Pale Rose
+    "toolbar-dropdown-edge": "none",
+    "toolbar-dropdown-shadow": "none",
+    "toolbar-hovernames-back": "#C23B22",  // Dark Red
+    "toolbar-hovernames-text": "#D4A4A4",  // Pale Rose
+    "toolbar-hovernames-edge": "none",
+    "toolbar-slider-back": "#D4A4A4",  // Pale Rose
+    "toolbar-slider-back-edge": "none",
+    "toolbar-slider-thumb": "#C23B22",  // Dark Red
+    "toolbar-slider-thumb-edge": "none",
+    "toolbar-slider-back-hover": "#D4A4A4",  // Pale Rose
+    "toolbar-slider-back-edge-hover": "none",
+    "toolbar-slider-thumb-hover": "#C23B22",  // Dark Red
+    "toolbar-slider-thumb-edge-hover": "none",
+    "toolbar-charlimit": "#D4A4A4",  // Pale Rose
+    "toolbar-charlimit-over": "#C23B22",  // Dark Red
+    "toolbar-charlimit-back": "none",
+    "toolbar-charlimit-over-back": "#D4A4A4",  // Pale Rose
+    "toolbar-input-text": "#D4A4A4",  // Pale Rose
+    "toolbar-input-back": "#2E2E2E",  // Dark Gray
+    "toolbar-input-edge": "none",
+    "toolbar-publish-button-text": "#D4A4A4",  // Pale Rose
+    "toolbar-publish-button-back": "#C23B22",  // Dark Red
+    "toolbar-publish-button-edge": "none",
+    "toolbar-publish-button-text-hover": "#D4A4A4",  // Pale Rose
+    "toolbar-publish-button-back-hover": "#2E2E2E",  // Dark Gray
+    "toolbar-publish-button-edge-hover": "none",
+    "toolbar-sub-button-text": "#D4A4A4",  // Pale Rose
+    "toolbar-sub-button-back": "#C23B22",  // Dark Red
+    "toolbar-sub-button-edge": "none",
+    "toolbar-sub-button-text-hover": "#D4A4A4",  // Pale Rose
+    "toolbar-sub-button-back-hover": "#2E2E2E",  // Dark Gray
+    "toolbar-sub-button-edge-hover": "none",
+    "toolbar-palette-text": "#D4A4A4",  // Pale Rose
+    "toolbar-palette-back": "#2E2E2E",  // Dark Gray
+    "toolbar-palette-text-hover": "#C23B22",  // Dark Red
+    "toolbar-palette-back-hover": "#D4A4A4",  // Pale Rose
+    "banner-line": "2px solid #C23B22",  // Dark Red
+    "banner-mini": "#C23B22",  // Dark Red
+    "banner-mini-edge": "none",
+    "banner-mini-hover": "#2E2E2E",  // Dark Gray
+    "banner-mini-back": "none",
+    "banner-mini-edge-hover": "none",
+    "banner-mini-back-hover": "none",
+    "banner-type": "#C23B22",  // Dark Red
+    "banner-type-back": "none",
+    "banner-type-edge": "none",
+    "banner-type-hover": "#2E2E2E",  // Dark Gray
+    "banner-type-back-hover": "none",
+    "banner-type-edge-hover": "none",
+    "banner-type-select": "#D4A4A4",  // Pale Rose
+    "banner-type-select-back": "#C23B22",  // Dark Red
+    "banner-type-select-back-edge": "none",
+    "banner-color": "#C23B22",  // Dark Red
+    "banner-back": "none",
+    "banner-border": "none",
+    "banner-cursor": "#D4A4A4",  // Pale Rose
+    "banner-cursor-back": "#2E2E2E",  // Dark Gray
+    "banner-room-name": "#C23B22",  // Dark Red
+  
+    "terminal-back": "#2E2E2E",  // Dark Gray
+    "text-primary": "#D4A4A4",  // Pale Rose
+    "text-link": "#C23B22",  // Dark Red
+    "chat-date": "#D4A4A4",  // Pale Rose
+    "chat-name": "#C23B22",  // Dark Red
+    "chat-error": "#C23B22",  // Dark Red
+    "chat-message": "#D4A4A4",  // Pale Rose
+    "charlimit": "#C23B22",  // Dark Red
+    "charlimit-over": "#D4A4A4",  // Pale Rose
+    "input-text": "#D4A4A4",  // Pale Rose
+    "input-back": "#2E2E2E",  // Dark Gray
+    "input-back-edge": "none",
+  
+    "scrollbar-back": "#2E2E2E",  // Dark Gray
+    "scrollbar-thumb": "#D4A4A4",  // Pale Rose
+    "scrollbar-back-edge": "none",
+    "scrollbar-thumb-edge": "none",
+  
+    "background-primary": "#2E2E2E",  // Dark Gray
+    "background-code": "#C23B22",  // Dark Red
+    "divider": "#C23B22",  // Dark Red
+    "background-gradient": "none",
+    "sidebar-back": "#2E2E2E",  // Dark Gray
+    "sidebar-text": "#D4A4A4",  // Pale Rose
+    "sidebar-border": "none",
+    "sidebar-shadow": "2px 0 1px rgba(0, 0, 0, 0.2), -2px 0 1px rgba(255, 255, 255, 0.1), 0 0 3px",
+    "rightbar-back": "#2E2E2E",  // Dark Gray
+    "rightbar-text": "#D4A4A4",  // Pale Rose
+    "rightbar-border": "none",
+    "rightbar-shadow": "2px 0 1px rgba(0, 0, 0, 0.2), -2px 0 1px rgba(255, 255, 255, 0.1), 0 0 3px",
+    "inventory-icon-text": "#D4A4A4",  // Pale Rose
+    "inventory-icon-back": "#2E2E2E",  // Dark Gray
+    "inventory-icon-border": "none",
+    "inventory-icon-cursor-text": "#D4A4A4",  // Pale Rose
+    "inventory-icon-cursor-back": "#C23B22",  // Dark Red
+    "inbox-back": "#2E2E2E",  // Dark Gray
+    "inbox-sent-text": "#D4A4A4",  // Pale Rose
+    "inbox-sent-back": "#C23B22",  // Dark Red
+    "inbox-sent-date": "#D4A4A4",  // Pale Rose
+    "inbox-sent-name": "#D4A4A4",  // Pale Rose
+    "inbox-received-text": "#C23B22",  // Dark Red
+    "inbox-received-back": "#2E2E2E",  // Dark Gray
+    "inbox-received-date": "#D4A4A4",  // Pale Rose
+    "inbox-received-name": "#C23B22",  // Dark Red
+    "window-back": "#2E2E2E",  // Dark Gray
+    "window-text": "#D4A4A4",  // Pale Rose
+    "window-border": "#C23B22",  // Dark Red
+    "window-shadow": "2px 1px 1px rgba(0, 0, 0, 0.2), -2px -1px 1px rgba(255, 255, 255, 0.1), 0 0 3px",
+    "window-bar-text": "#D4A4A4",  // Pale Rose
+    "window-bar-back": "#2E2E2E",  // Dark Gray
+    "window-close-hover-text": "#D4A4A4",  // Pale Rose
+    "window-close-hover-back": "#C23B22",  // Dark Red
+    "npc-text": "#D4A4A4",  // Pale Rose
+    "npc-back": "#2E2E2E",  // Dark Gray
+    "npc-border": "none",
+    "npc-cursor-text": "#D4A4A4",  // Pale Rose
+    "npc-cursor-back": "#C23B22",  // Dark Red
+    "npc-title-text": "#D4A4A4",  // Pale Rose
+    "npc-title-back": "#2E2E2E",  // Dark Gray
+    "npc-title-border": "none",
+    "npc-name-text": "#D4A4A4",  // Pale Rose
+    "npc-name-back": "#2E2E2E",  // Dark Gray
+    "npc-message-text": "#D4A4A4",  // Pale Rose
+    "npc-message-back": "#2E2E2E",  // Dark Gray
+    "npc-phrase-back": "#2E2E2E",  // Dark Gray
+    "npc-phrase-border": "none",
+    "cluster-text": "#D4A4A4",  // Pale Rose
+    "cluster-back": "#2E2E2E",  // Dark Gray
   },
+
 ]
 //pride
 //blogger
@@ -2665,3 +3225,4 @@ export const themes: ColorTheme[] = [
 //vaporwave
 //halloween orange and black (green highlights)
 //christmas red and green
+//blood "#D7263D" on black

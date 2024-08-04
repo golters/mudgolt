@@ -7,7 +7,7 @@ import {
 import { pushErrorToLog } from "../../components/Terminal"
 
 const handler: NetworkEventHandler = () => {
-  window.location.reload()  
+  //window.location.reload()  
   pushErrorToLog("sorry, something went wrong")
 }
 

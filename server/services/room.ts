@@ -55,6 +55,14 @@ export const editBaner = async (x: number, y: number, character: string, room: R
 
   banner[pos] = character
 
+
+  if(banner.length > BANNER_WIDTH * BANNER_HEIGHT){
+    //shorten banner
+  }else if(banner.length < BANNER_WIDTH * BANNER_HEIGHT){
+    const extra = (BANNER_WIDTH * BANNER_HEIGHT) - room.banner.length
+    banner.push(BANNER_FILL.repeat(extra))
+  }
+
   room.banner = banner.join("")
 
   await db.run(/*sql*/`
@@ -78,6 +86,13 @@ export const editBanerCol = async (x: number, y: number, col: string, bac: strin
     primebanner = generateColorBanner().split(",")
 
   primebanner[pos] = col
+  
+  if(primebanner.length > BANNER_WIDTH * BANNER_HEIGHT){
+    //shorten banner
+  }else if(primebanner.length < BANNER_WIDTH * BANNER_HEIGHT){
+    const extra = (BANNER_WIDTH * BANNER_HEIGHT) - primebanner.length
+    primebanner.push(BANNER_FILL.repeat(extra))
+  }
 
   room.primeColor = primebanner.join(",")
 
@@ -88,6 +103,13 @@ export const editBanerCol = async (x: number, y: number, col: string, bac: strin
     backbanner = generateColorBanner().split(",")
 
   backbanner[pos] = bac
+
+  if(backbanner.length > BANNER_WIDTH * BANNER_HEIGHT){
+    //shorten banner
+  }else if(backbanner.length < BANNER_WIDTH * BANNER_HEIGHT){
+    const extra = (BANNER_WIDTH * BANNER_HEIGHT) - backbanner.length
+    backbanner.push(BANNER_FILL.repeat(extra))
+  }
 
   room.backColor = backbanner.join(",")
 
@@ -386,4 +408,40 @@ export const weedCheck = async (room: Room) => {
   }
 
   return
+}
+
+export const activeRooms = async (): Promise<Room[]> => {  
+  const chats = await db.all<Chat[]>(/*sql*/`
+    SELECT *
+    FROM (
+      SELECT *, ROW_NUMBER() OVER (PARTITION BY roomId ORDER BY date DESC) as rn
+      FROM chats
+    ) as ranked
+    WHERE rn = 1
+    ORDER BY date DESC
+    LIMIT 5;
+  `);
+  
+  const rooms: Room[] = [];
+  for (const chat of chats) {
+    if (chat.roomId) {
+      const room = await getRoomById(chat.roomId);
+      rooms.push(room);
+    }
+  }
+
+  return rooms;
+
+}
+
+export const randomRooms = async (): Promise<Room[]> => {  
+  const rooms = await db.all<Room[]>(/*sql*/`
+    SELECT * FROM rooms
+    ORDER BY RANDOM()
+    LIMIT 3;
+  `); 
+
+
+  return rooms;
+
 }
