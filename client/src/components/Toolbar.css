@@ -1,14 +1,3 @@
-@font-face {
-  font-family: DOS16;
-  src: url(../assets/ModernDOS8x16.ttf);
-  font-size: 16px;
-}
-
-@font-face {
-  font-family: DOS14;
-  src: url(../assets/ModernDOS8x14.ttf);
-  font-size: 14px;
-}
 
 #toolbar {
   display: flex;
@@ -26,7 +15,14 @@
   right: 0.5em;
   font-size: 24px;
   font-family: DOS16;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
   color: var(--color-toolbar-title);
+  border-radius: 2px;
+}
+#title:hover {
+  color: var(--color-toolbar-button-logos-hover);
+  background-color:  var(--color-toolbar-button-back-hover);
 }
 
 @media (max-width: 499px) {
@@ -36,6 +32,7 @@
 }
 
 #side-mini-button {
+  font-family: DOS16;
   font-size: 24px;
   cursor: pointer;
   user-select: none;
@@ -58,6 +55,7 @@
 }
 
 #right-mini-button {
+  font-family: DOS16;
   font-size: 24px;
   cursor: pointer;
   user-select: none;
@@ -520,99 +518,4 @@
   color: var(--color-inventory-icon-cursor-text);
   background-color: var(--color-inventory-icon-cursor-back);
   transition: background-color 0.25s;
-}
-
-.npc_icon span span {
-  display: inline-block;
-  width: 8px;
-  cursor: none;
-  transition: background-color 1s cubic-bezier(0.075, 0.9, 0.1, 0.075);
-  pointer-events: auto;
-}
-.npc_icon span span:hover {
-  color: var(--color-npc-cursor-text);
-  background-color: var(--color-npc-cursor-back);
-  transition: background-color 0.25s;
-}
-.npc_name {
-  color: var(--color-npc-name-text);
-  background-color: var(--color-npc-name-back);
-
-}
-.npc_message {
-  color: var(--color-npc-message-text);
-  background-color: var(--color-npc-message-back);
-
-}
-.npc_phrase {
-  background-color: var(--color-npc-phrase-back);
-  border: var(--color-npc-phrase-border);
-
-}
-.npc_title {
-  color: var(--color-npc-title-text);
-  background-color: var(--color-npc-title-back);
-  border: var(--color-npc-title-border);
-
-}
-
-#window {
-  position: absolute;
-  z-index: 2;
-  color: var(--color-window-text);
-  background-color: var(--color-window-back);
-  text-align: center;
-  border: var(--color-window-border);
-  transition: 1s cubic-bezier(0.6, -0.28, 0.735, 0.045);
-  max-width:310px;
-  min-width:100px;
-  min-height:50px;
-  height:fit-content;
-  width: fit-content;
-  text-shadow: 0.4389924193300864px 0 1px rgba(0, 30, 255, 0.2), -0.4389924193300864px 0 1px rgba(255,0,80,0.1), 0 0 3px;
-  box-shadow: var(--color-window-shadow);
-}
-
-#windowheader {  
-  cursor: grab;
-  z-index: 3;
-  background-color: var(--color-window-bar-back);
-  color: var(--color-window-bar-text);
-}
-#windheader:active {
-  cursor: grabbing;
-}
-#windowMessage{
-  max-height: 200px;
-  max-width: 300px;
-  height:min-content;
-  width:max-content;
-  overflow-y: scroll;
-  overflow-wrap: break-word;
-}
-#close {
-  float: right;
-  cursor:pointer;
-  pointer-events:auto;
-}
-#close:hover {
-  background-color: red;
-  color: white;
-}
-
-#menu {
-  width: 150px;
-  float:left;
-}
-
-.cluster{
-  flex:auto;
-}
-.clustercontent{
-  color: white;
-  background-color: black;
-  width:min-content;
-  padding:1px;
-  margin:1px;
-  border-radius: 2px;
 }

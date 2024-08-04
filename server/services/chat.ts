@@ -75,6 +75,8 @@ export const fetchRoomChats = async (roomId: number, limit = 500): Promise<Chat[
       date,
       recipiant: null,
       type,
+      roomId,
+      roomName: null,
     }
 
     return chat
@@ -168,6 +170,8 @@ export const fetchInbox = async (playerId: number, limit: number, Player2name: s
         username: players.find(({ id }) => id === toPlayerId)!.username,        
       },
       type,
+      roomId: null,
+      roomName: null,
     }
 
     return chat

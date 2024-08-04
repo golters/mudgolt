@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="140mm"
+   height="108mm"
+   viewBox="0 0 140 108"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   sodipodi:docname="chest1.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.0015858"
+     inkscape:cx="172.22688"
+     inkscape:cy="173.2253"
+     inkscape:window-width="1920"
+     inkscape:window-height="991"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="path1-3"
+       style="fill:#d38d5f;stroke:none;stroke-width:1.873;stroke-linecap:square;stroke-opacity:1;paint-order:markers stroke fill"
+       d="M 33.256644,36.64519 V 59.8076 H 100.02621 V 108 H 140 V 56.07191 A 19.98679,19.426414 0 0 0 123.10387,36.886 v -0.24081 h -3.09076 z" />
+    <rect
+       style="fill:#deaa87;stroke:none;stroke-width:1.873;stroke-linecap:square;stroke-opacity:1;paint-order:markers stroke fill"
+       id="rect1"
+       width="87.79245"
+       height="48.192451"
+       x="53.243324"
+       y="59.807598" />
+    <path
+       id="path1"
+       style="fill:#784421;stroke:none;stroke-width:3.173;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+       d="M 33.256644,36.64519 C 22.218081,36.645134 13.269576,45.342839 13.26975,56.07191 L 13.327522,98.950779 53.243538,108 V 56.07191 C 53.243712,45.342839 44.295207,36.645134 33.256644,36.64519 Z"
+       sodipodi:nodetypes="cccccc" />
+    <rect
+       style="fill:#ffff00;stroke-width:1.873;stroke-linecap:square;paint-order:markers stroke fill"
+       id="rect2"
+       width="87.792244"
+       height="3.735688"
+       x="53.243538"
+       y="56.071903" />
+    <rect
+       style="fill:#ffff00;stroke-width:1.30212;stroke-linecap:square;paint-order:markers stroke fill"
+       id="rect3"
+       width="23.909433"
+       height="14.196351"
+       x="87.986725"
+       y="50.841572" />
+  </g>
+</svg>

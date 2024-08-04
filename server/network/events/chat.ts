@@ -2,10 +2,12 @@ import {
   networkEmitter, NetworkEventHandler, 
 } from "./emitter"
 import {
+  broadcast,
   broadcastToRoom,
   sendEvent,
 } from "../"
 import {
+  CHAT_ALL_EVENT,
   CHAT_EVENT, 
   ERROR_EVENT,
   NOTIFICATION_EVENT,
@@ -17,6 +19,9 @@ import { Chat } from "@types"
 import {
   insertRoomChat,
 } from "../../services/chat"
+import {
+  getRoomById,
+} from "../../services/room"
 import {
   getBearName,
   getCurrentEvent, getEventTag,
@@ -69,7 +74,8 @@ const handler: NetworkEventHandler = async (socket, message: string, player) => 
       }
     }
   
-  
+    const roomname = await getRoomById(player.roomId)
+
     const chat: Chat = {
       player: {
         username,
@@ -78,10 +84,12 @@ const handler: NetworkEventHandler = async (socket, message: string, player) => 
       date: Date.now(),
       recipiant: null,
       type: "chat",
+      roomId: player.roomId,
+      roomName: roomname.name,
     }
   
     broadcastToRoom<Chat>(CHAT_EVENT, chat, player.roomId)
-  
+    broadcast<Chat>(CHAT_ALL_EVENT,chat)
     await insertRoomChat(player.roomId, player.id, filteredMessage, chat.date)
     broadcastToRoom<string>(NOTIFICATION_EVENT, "chat", player.roomId);
   } catch (error) {

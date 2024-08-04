@@ -38,13 +38,16 @@ import {
 export let client: WebSocket
 export let context = new AudioContext()
 
-// TSX doens't like generics
-export const sendEvent = async <TPayload,> (code: string, payload: TPayload) => {
-  client.send(JSON.stringify({
-    code,
-    payload,
-  }))
-}
+export const sendEvent = async <TPayload,>(code: string, payload: TPayload) => {
+  if (typeof client !== 'undefined') {
+    client.send(JSON.stringify({
+      code,
+      payload,
+    }));
+  } else {
+    console.error('Client is undefined');
+  }
+};
 
 // @ts-ignore
 const host = NODE_ENV === "development"
@@ -102,7 +105,6 @@ export const networkTask = () => new Promise<void>((resolve) => {
         networkEmitter.emit(COMMAND_LOG_EVENT, chats[i])
         }
       }
-      sendEvent(LOOK_EVENT, null)
       resolve()    
     break;
     
@@ -162,7 +164,7 @@ window.addEventListener("blur", (event) => {
   setTimeout(() => {
     if(localStorage.getItem("focus") !="open")
     window.addEventListener("focus", (event) => { 
-      window.location.reload()
+      //window.location.reload()
   })
   }, 600 * 1000)
 })
