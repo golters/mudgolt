@@ -164,7 +164,7 @@ window.addEventListener("blur", (event) => {
   setTimeout(() => {
     if(localStorage.getItem("focus") !="open")
     window.addEventListener("focus", (event) => { 
-      //window.location.reload()
+      window.location.reload()
   })
   }, 600 * 1000)
 })
