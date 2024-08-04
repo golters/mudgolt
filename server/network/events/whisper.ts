@@ -85,7 +85,7 @@ const handler: NetworkEventHandler = async (
     broadcastToUser<string[]>(CORRESPONDENTS_UPDATE_EVENT, correspondents2, name)
     broadcastToUser<string[]>(WHISPER_POPUP_EVENT, [player.username, message], name)
   } catch (error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }

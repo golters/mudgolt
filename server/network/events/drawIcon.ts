@@ -77,7 +77,7 @@ const handler: NetworkEventHandler = async (socket, payload: [number, number, st
     await editIcon(x, y, char, payload[3])
     broadcastToUser<string>(NOTIFICATION_EVENT, "pop", player.username);
   }catch(error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }

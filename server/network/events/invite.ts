@@ -194,7 +194,7 @@ const handler: NetworkEventHandler = async (
     }
     
   } catch (error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }

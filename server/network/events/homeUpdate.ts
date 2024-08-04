@@ -46,7 +46,7 @@ const handler: NetworkEventHandler = async (socket, nothing: string, player) => 
     broadcastToUser<Room[]>(RANDOM_ROOM_EVENT, randomRoomNames, player.username)
 
   }catch(error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }

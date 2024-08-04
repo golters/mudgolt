@@ -110,14 +110,14 @@ const handler: NetworkEventHandler = async (
             await clearOldEvents(Date.now())
             const event = await getCurrentEvent(Date.now())
             if(event){
-              sendEvent<Event>(socket, EVENT_UPDATE_EVENT, event)
+              sendEvent<Event>(socket, EVENT_UPDATE_EVENT, event as any)
             }else{
               const events = await getUpcomingEvents(Date.now());
               if(events.length === 0){
                 await createRandomEvent(Date.now())
 
               }else{         
-                sendEvent<Event>(socket, EVENT_UPDATE_EVENT, events[0])
+                sendEvent<Event>(socket, EVENT_UPDATE_EVENT, events[0] as any)
               }
             }
             
@@ -281,7 +281,7 @@ const handler: NetworkEventHandler = async (
         break;
     }    
   } catch (error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }

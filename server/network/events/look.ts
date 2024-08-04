@@ -20,7 +20,7 @@ const handler: NetworkEventHandler = async (socket, roomID: number, player) => {
 
     sendEvent<Look>(socket, LOOK_LOG_EVENT, look)
   } catch (error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }

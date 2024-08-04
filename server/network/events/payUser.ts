@@ -57,7 +57,7 @@ const handler: NetworkEventHandler = async (socket, args: string[], player) => {
     broadcastToUser<string>(NOTIFICATION_EVENT, "pay", player.username); 
     broadcastToUser<string>(NOTIFICATION_EVENT, "pay", args[0]); 
   } catch (error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }

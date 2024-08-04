@@ -108,7 +108,7 @@ const handler: NetworkEventHandler = async (socket, doorName: string, player) =>
     //await insertRoomCommand(room.id, player.id, `has joined ${room.name}`, Date.now(), "go")
     //sendEvent<Look>(socket, LOOK_LOG_EVENT, message)    
   } catch (error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }

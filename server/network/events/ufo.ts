@@ -83,7 +83,7 @@ const handler: NetworkEventHandler = async (socket, playerID: number) => {
       await createPocketItem(player.id, "alien_artifact", null, "2", "alien,artifact","alien,artifact")
     //await insertRoomCommand(room.id, player.id, `has teleported into ${room.name}`, Date.now(), "tp")
   } catch (error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }

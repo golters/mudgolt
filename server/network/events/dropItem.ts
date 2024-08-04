@@ -50,7 +50,7 @@ const handler: NetworkEventHandler = async (socket, item: string, player) => {
     const inv = await getInvByPlayer(player.id)
     sendEvent<Item[]>(socket, INVENTORY_UPDATE_EVENT, inv)
   } catch (error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }

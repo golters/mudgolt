@@ -1,1 +1,4 @@
 User-agent: *
+Disallow: 
+
+Sitemap: https://mudgolt.com/sitemap.xml

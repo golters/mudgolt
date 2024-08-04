@@ -26,7 +26,7 @@ const handler: NetworkEventHandler = async (socket, nothing: string, player) => 
     broadcastToRoom<Room>(ROOM_UPDATE_EVENT, room, room.id)
 
   }catch(error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }
