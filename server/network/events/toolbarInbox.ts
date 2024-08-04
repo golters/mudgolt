@@ -29,7 +29,7 @@ const handler: NetworkEventHandler = async (socket, args: string, player) => {
     broadcastToUser<string[]>(CORRESPONDENTS_UPDATE_EVENT, correspondents, player.username)
 
   }catch(error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }

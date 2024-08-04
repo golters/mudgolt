@@ -70,7 +70,7 @@ const handler: NetworkEventHandler = async (socket, payload: [number, number, st
     await editMusic(x, y, char, room)
 
   }catch(error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }

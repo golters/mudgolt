@@ -12,4 +12,12 @@ export default defineConfig({
     'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     'PORT': JSON.stringify(process.env.PORT),
   },
+
+  build: {
+    sourcemap: true,
+  },
+
+  server: {
+    port: 5555,
+  },
 })
