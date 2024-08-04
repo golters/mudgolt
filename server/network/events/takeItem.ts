@@ -24,7 +24,7 @@ const handler: NetworkEventHandler = async (socket, item: string, player) => {
     broadcastToRoom<string>(SERVER_LOG_EVENT, `${player.username} took ${item}`,player.roomId)
     await insertRoomCommand(player.roomId, player.id, `took ${item}`, Date.now(), "take")
   } catch (error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }

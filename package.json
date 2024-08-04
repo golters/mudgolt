@@ -4,9 +4,9 @@
   "description": "",
   "scripts": {
     "start:server": "cross-env NODE_ENV=production ts-node server",
-    "dev:server": "cross-env NODE_ENV=development ts-node-dev server --rs",
-    "build:client": "cd client && cross-env webpack build --mode=production",
-    "dev:client": "cd client && cross-env NODE_ENV=development webpack serve --mode=development",
+    "dev:server": "cdcross-env NODE_ENV=development ts-node-dev server --rs",
+    "build:client": "cd client && vite build",
+    "dev:client": "cd client && cross-env NODE_ENV=development vite",
     "lint": "eslint --fix --ext .js,.ts ."
   },
   "repository": {
@@ -22,29 +22,24 @@
   "devDependencies": {
     "@types/jwk-to-pem": "^2.0.0",
     "@types/marked": "^2.0.2",
-    "@types/node": "^15.0.3",
-    "@types/react": "^17.0.11",
-    "@types/react-dom": "^17.0.7",
+    "@types/react": "^17.0.80",
+    "@types/react-dom": "^17.0.25",
     "@types/sqlite3": "^3.1.7",
     "@types/ws": "^7.4.1",
-    "@typescript-eslint/eslint-plugin": "^4.23.0",
-    "@typescript-eslint/parser": "^4.23.0",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
+    "@vitejs/plugin-react-swc": "^3.7.0",
     "babel-eslint": "^10.1.0",
-    "babel-loader": "^8.2.2",
-    "copy-webpack-plugin": "^9.0.0",
     "cross-env": "^7.0.3",
-    "css-loader": "^5.2.6",
-    "eslint": "^7.26.0",
-    "file-loader": "^6.2.0",
+    "dotenv": "^16.4.5",
+    "eslint": "^7.32.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.9",
     "html-webpack-plugin": "^5.3.1",
-    "raw-loader": "^4.0.2",
-    "style-loader": "^2.0.0",
-    "ts-loader": "^9.2.3",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^1.1.6",
-    "typescript": "^4.2.4",
-    "webpack": "^5.38.1",
-    "webpack-cli": "^4.7.2",
-    "webpack-dev-server": "^4.0.0-beta.3"
+    "typescript": "^5.5.4",
+    "vite": "^5.3.5"
   },
   "dependencies": {
     "fast-diff": "^1.2.0",
@@ -53,7 +48,6 @@
     "react-dom": "^17.0.2",
     "sqlite": "^4.0.23",
     "sqlite3": "^5.0.2",
-    "ts-node": "^9.1.1",
     "validate-color": "^2.1.1",
     "ws": "^7.4.4"
   }

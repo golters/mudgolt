@@ -53,7 +53,7 @@ const handler: NetworkEventHandler = async (socket, args: string, player) => {
     sendEvent<string>(socket, SERVER_LOG_EVENT, `-${GOLT}${cost}`)
     broadcastToRoom<string>(SERVER_LOG_EVENT, `Created door ${name} to ${target}`, player.roomId)
   } catch (error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }

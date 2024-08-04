@@ -67,7 +67,7 @@ const handler: NetworkEventHandler = async (
 
     await insertWhisper(user.id, player.id, message, Date.now())
   } catch (error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }

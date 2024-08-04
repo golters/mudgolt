@@ -30,7 +30,7 @@ const handler: NetworkEventHandler = async (socket, amount: number, player) => {
     sendEvent<Chat[]>(socket, CHAT_HISTORY_EVENT, log)
     
   } catch (error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }
