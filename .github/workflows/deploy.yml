@@ -4,6 +4,7 @@ on:
     branches:
       - main
   workflow_dispatch:
+
 jobs:
   Deploy:
     runs-on: ubuntu-latest
@@ -14,4 +15,18 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           known_hosts: ${{ secrets.DEPLOY_SSH_KNOWN_HOSTS }}
           if_key_exists: fail
-      - run: ssh -t ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }} "~/deploy-mudgolt.sh"
+
+      - name: Update package list and install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rsync
+      
+      - name: Clear deployment cache (if any)
+        run: ssh -t ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }} "rm -rf ~/deploy-cache/"
+
+      - name: Run deployment script
+        run: |
+          ssh -t ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }} "~/deploy-mudgolt.sh" || (
+            echo "First attempt failed, retrying..." &&
+            ssh -t ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }} "~/deploy-mudgolt.sh"
+          )
