@@ -1,22 +1,24 @@
-const path = require("path")
-const HtmlWebpackPlugin = require("html-webpack-plugin")
-const CopyPlugin = require("copy-webpack-plugin")
-const webpack = require("webpack")
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
+const webpack = require("webpack");
 
-const dist = path.join(__dirname, "./dist")
+const dist = path.join(__dirname, "./dist");
 
-console.log("dist path", dist)
+console.log("dist path", dist);
 
 module.exports = () => ({
   plugins: [
+    // Plugin for index.html
     new HtmlWebpackPlugin({
       template: "src/index.html",
+      filename: "index.html",  // Outputs to dist/index.html
     }),
 
     new CopyPlugin({
       patterns: [
         {
-          from: "public", 
+          from: "public",
           to: "",
         },
       ],
@@ -38,7 +40,7 @@ module.exports = () => ({
       {
         test: /\.css$/i,
         use: [
-          "style-loader", 
+          "style-loader",
           "css-loader",
         ],
       },
@@ -78,4 +80,4 @@ module.exports = () => ({
     port: process.env.PORT || 5555,
     historyApiFallback: true,
   },
-})
+});

@@ -1,4 +1,4 @@
-import "./Toolbar.css"
+import "./windows.css"
 import { sendEvent } from "../network"
 import {
   ROOM_DESCRIBE_EVENT,
@@ -16,6 +16,7 @@ import { MESSAGE_MAX_LENGTH, AVATAR_HEIGHT, AVATAR_WIDTH } from '../../../consta
 import{
   setBrush,
 }from "./Header"
+
 
 export function newMesageWindow(Message: string, user:string, npcs: Npc[] | null){
   let windows = document.getElementById('windows')

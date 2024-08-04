@@ -120,7 +120,7 @@ const handler: NetworkEventHandler = async (socket, roomNameInput: string, playe
     broadcastToRoom<string>(SERVER_LOG_EVENT, tpoutmessage, room.id)
     broadcastToRoom<string>(NOTIFICATION_EVENT, "teleportEnter", room.id);
     //await insertRoomCommand(room.id, player.id, `has teleported into ${room.name}`, Date.now(), "tp")
-    sendEvent<Look>(socket, LOOK_LOG_EVENT, message)    
+    //sendEvent<Look>(socket, LOOK_LOG_EVENT, message)    
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, error.message)
     console.error(error)

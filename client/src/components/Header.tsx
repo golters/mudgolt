@@ -22,6 +22,7 @@ import {
 } from "../network/events"
 import {
   BANNER_FILL,
+  BANNER_HEIGHT,
   BANNER_WIDTH, 
   GOLT,
 } from "../../../constants"
@@ -171,8 +172,7 @@ export const Header: React.FC = () => {
     }
   }
   
-  
-    for (let i = 0; i < room.banner.length / BANNER_WIDTH; i++) {    
+    for (let i = 0; i < room.banner.length / BANNER_WIDTH && i < BANNER_HEIGHT; i++) {    
       switch(bannerT){
         case "art":
           const artFrom = Array.from(room.banner);

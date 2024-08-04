@@ -174,22 +174,100 @@ export const Toolbar: React.FC = () => {
   const [righttab, setrighttab] = useState(!!localStorage.getItem("righttab") || "inv")
   const [mini, setMini] = useState(!!localStorage.getItem("sidemini") || false)
   const [rightmini, setRightMini] = useState(!!localStorage.getItem("rightmini") || false)
+  const [rightmaxi, setRightMaxi] = useState(!!localStorage.getItem("rightmaxi") || false)
   const [icons, setIcons] = useState(!!localStorage.getItem("icons") || false)
   const [itemTags, setItemTags] = useState(!!localStorage.getItem("itemtag") || "none")
   const [invpage, setinvpage] = useState(0)
   const [inboxpage, setinboxpage] = useState(0)
   const [contact, setcontact] = useState("")
-  const [northdoor, setnorthdoor] = useState(false)
-  const [southdoor, setsouthdoor] = useState(false)
-  const [eastdoor, seteastdoor] = useState(false)
-  const [westdoor, setwestdoor] = useState(false)
+  const [northDoor, setNorthDoor] = useState(false)
+  const [southDoor, setSouthDoor] = useState(false)
+  const [eastDoor, setEastDoor] = useState(false)
+  const [westDoor, setWestDoor] = useState(false)
   const [npcs, setNpcs] = useState<Npc[] | null>(null)
-  
-  networkEmitter.on(NPC_UPDATE_EVENT, (npcs: Npc[]) => {
-    setNpcs(npcs)
-    redrawAvatars(npcs)
-  })
-  
+  const eventListenerRef = useRef<null | (() => void)>(null);
+
+  const eventHandler = (event: string, data: any) => {
+    switch (event) {
+        case INVENTORY_UPDATE_EVENT:
+            setInv(data);
+            break;
+        case INBOX_UPDATE_EVENT:
+            setInbox(data);
+            break;
+        case CORRESPONDENTS_UPDATE_EVENT:
+            setCorrespondents(data);
+            break;
+        case WHISPER_POPUP_EVENT:
+            newMesageWindow(data[1], data[0], npcs);
+            break;
+        case NPC_UPDATE_EVENT:
+          setNpcs(data)
+          redrawAvatars(data)
+          break;
+            case DOOR_UPDATE_EVENT:
+                setNorthDoor(false);
+                setSouthDoor(false);
+                setEastDoor(false);
+                setWestDoor(false);
+                const updatedDoors = [...data];
+                for (let d = 0; d < updatedDoors.length; d++) {
+                    switch (updatedDoors[d].name) {
+                        case "north":
+                            setNorthDoor(true);
+                            updatedDoors.splice(d, 1);
+                            break;
+                        case "south":
+                            setSouthDoor(true);
+                            updatedDoors.splice(d, 1);
+                            break;
+                        case "east":
+                            setEastDoor(true);
+                            updatedDoors.splice(d, 1);
+                            break;
+                        case "west":
+                            setWestDoor(true);
+                            updatedDoors.splice(d, 1);
+                            break;
+                    }
+                }
+                setDoors(updatedDoors.sort((a, b) => a.name.localeCompare(b.name)));
+                break;
+    }
+  }
+
+  const addEventListeners = () => {
+    const listener = (event: string, data: any) => eventHandler(event, data);
+    networkEmitter.on(INVENTORY_UPDATE_EVENT, data => listener(INVENTORY_UPDATE_EVENT, data));
+    networkEmitter.on(INBOX_UPDATE_EVENT, data => listener(INBOX_UPDATE_EVENT, data));
+    networkEmitter.on(CORRESPONDENTS_UPDATE_EVENT, data => listener(CORRESPONDENTS_UPDATE_EVENT, data));
+    networkEmitter.on(WHISPER_POPUP_EVENT, data => listener(WHISPER_POPUP_EVENT, data));
+    networkEmitter.on(NPC_UPDATE_EVENT, data => listener(NPC_UPDATE_EVENT,data));
+    networkEmitter.on(DOOR_UPDATE_EVENT, data => listener(DOOR_UPDATE_EVENT,data));
+    eventListenerRef.current = () => {
+        networkEmitter.off(INVENTORY_UPDATE_EVENT, data => listener(INVENTORY_UPDATE_EVENT, data));
+        networkEmitter.off(INBOX_UPDATE_EVENT, data => listener(INBOX_UPDATE_EVENT, data));
+        networkEmitter.off(CORRESPONDENTS_UPDATE_EVENT, data => listener(CORRESPONDENTS_UPDATE_EVENT, data));
+        networkEmitter.off(WHISPER_POPUP_EVENT, data => listener(WHISPER_POPUP_EVENT, data));
+        networkEmitter.off(NPC_UPDATE_EVENT, data => listener(NPC_UPDATE_EVENT, data));
+        networkEmitter.off(DOOR_UPDATE_EVENT, data => listener(DOOR_UPDATE_EVENT,data));
+    };
+};
+
+useEffect(() => {
+  if (!eventListenerRef.current) {
+      addEventListeners();
+  }
+
+  return () => {
+      if (eventListenerRef.current) {
+          eventListenerRef.current();
+          eventListenerRef.current = null;
+      }
+  };
+}, []);
+
+    
   if (Math.random() * 100000 < 1) {
     setEye(true)
   }
@@ -227,52 +305,14 @@ export const Toolbar: React.FC = () => {
   }
   roomMap = []  
   useEffect(() => {
-  networkEmitter.on(DOOR_UPDATE_EVENT, (doors: Door[]) => {
-    setnorthdoor(false)
-    setsouthdoor(false)
-    seteastdoor(false)
-    setwestdoor(false)
-    for(let d = 0; d < doors.length; d++){
-      switch (doors[d].name){
-        case "north":
-          setnorthdoor(true)
-          doors.splice(d,1)
-        break;
-        case "south":
-          setsouthdoor(true)
-          doors.splice(d,1)
-        break;
-        case "east":
-          seteastdoor(true)
-         doors.splice(d,1)
-        break;
-        case "west":
-          setwestdoor(true)
-          doors.splice(d,1)        
-        break;
-      }
-    }
-    doors = doors.sort((a,b) => a.name.localeCompare(b.name))
-    setDoors(doors)
-  })
-  networkEmitter.on(INVENTORY_UPDATE_EVENT, (inventory: Item[]) => {
-    setInv(inventory)
-  })
-  networkEmitter.on(INBOX_UPDATE_EVENT, (inbox: Chat[]) => {
-    setInbox(inbox)
-  })
-  networkEmitter.on(CORRESPONDENTS_UPDATE_EVENT, (users: string[]) => {
-    setCorrespondents(users)
-  })
-  networkEmitter.on(WHISPER_POPUP_EVENT, (args: string[]) => {
-    newMesageWindow(args[1],args[0],npcs)
-  })
-
   if(!mini){
     setMini(true);
   }
   if(!rightmini){
     setRightMini(true);
+  }
+  if(!rightmaxi){
+    setRightMaxi(false);
   }
   
 
@@ -357,10 +397,22 @@ const toggleMini = useCallback(() => {
     
     if (rightmini) {
       localStorage.removeItem("rightmini")
+      setRightMaxi(false)
+      localStorage.removeItem("rightmaxi")
     } else {
       localStorage.setItem("rightmini", '1')
     }
   }, [rightmini])
+  
+  const toggleRightMaxi = useCallback(() => {
+    setRightMaxi(!rightmaxi)
+    
+    if (rightmaxi) {
+      localStorage.removeItem("rightmaxi")
+    } else {
+      localStorage.setItem("rightmaxi", '1')
+    }
+  }, [rightmaxi])
 
 const toggleMute = useCallback(() => {
   setMuted(!muted)
@@ -453,8 +505,12 @@ function changeleftTab(tab: string){
 }
 
 function changerightTab(tab: string){
+  if(tab === "inbox"){
+    setRightMaxi(true)
+  }
   setrighttab(tab)
   setRightMini(true)
+  localStorage.removeItem("rightmaxi")
   localStorage.removeItem("rightmini")
   localStorage.setItem("righttab",tab)
 }
@@ -1013,7 +1069,10 @@ function getCount(){
     }
     
   } 
- 
+  const handleHomeClick = () => {
+    window.location.href = `${window.location.origin}/`;
+  };
+
 
   return (
     <main
@@ -1107,7 +1166,7 @@ function getCount(){
         
         
       <div className ="title">
-        <span id="title">MUDGOLT.COM</span>
+        <span id="title" onClick={handleHomeClick} >MUDGOLT.COM</span>
       </div>   </div>
       <div className="secret">{secret ? "go back" : null}</div>
       <div id="windows"></div>
@@ -1137,20 +1196,58 @@ function getCount(){
           <span id="button"
             onClick={toggleMini}
           >{mini? "=" : null}</span>
-          <br></br>
-      {mini && lefttab === "doors"? 
-      <span>{"The exits are:"}
-      <div>{westdoor?<span className="sub-button" onClick={() => go ("west")}>{"west "}</span>:"_____"}↖↗
-      {northdoor?<span className="sub-button" onClick={() => go ("north")}>{"north"}</span>:"_____"}</div>
-      <div>{southdoor?<span className="sub-button" onClick={() => go ("south")}>{"south"}</span> :"_____"}↙↘
-      {eastdoor?<span className="sub-button" onClick={() => go ("east")}>{"east "}</span>:"_____"}</div></span>
-      : null}
-      <br></br>
-      {mini && lefttab === "doors"? 
-      roomMap.map((log, key) => {
-      return <span className= "sub-button" key={key} onClick={() => go(log)}> {log}<br></br></span>
-      })
-      : null}
+          <br></br>{mini && lefttab === "doors" ? (
+  <span>
+    {"The exits are:"}
+    <div>
+      {westDoor ? (
+        <span className="sub-button" onClick={() => go("west")}>
+          {"west "}
+        </span>
+      ) : (
+        "_____"
+      )}
+      ↖↗
+      {northDoor ? (
+        <span className="sub-button" onClick={() => go("north")}>
+          {"north"}
+        </span>
+      ) : (
+        "_____"
+      )}
+    </div>
+    <div>
+      {southDoor ? (
+        <span className="sub-button" onClick={() => go("south")}>
+          {"south"}
+        </span>
+      ) : (
+        "_____"
+      )}
+      ↙↘
+      {eastDoor ? (
+        <span className="sub-button" onClick={() => go("east")}>
+          {"east "}
+        </span>
+      ) : (
+        "_____"
+      )}
+    </div>
+    {roomMap.map((log, key) => (
+      <span className="sub-button" key={key} onClick={() => go(log)}>
+        {log}
+        <br />
+      </span>
+    ))}
+    <br></br>
+    <br></br>
+    <div onClick={() => newCraftWindow("makeDoor", null, npcs)}>
+      make new door
+    </div>
+  </span>
+) : null}
+<br />
+
         {mini && lefttab === "pallete"?
       <div className = "dropdown">
         <span id="button">
@@ -1247,10 +1344,13 @@ function getCount(){
             onClick={toggleRightMini}
           >{"+"}</span>}
           </div>
-    <div id="rightbar" style={rightmini? {width:150} : {width:0, padding:0, border:0}}>
+    <div id="rightbar" style={rightmini? rightmaxi? {width:500}:{width:150} : {width:0, padding:0, border:0}}>
           <span id="button"
             onClick={toggleRightMini}
           >{rightmini? "=" : null}</span>
+          <span id="button"
+            onClick={toggleRightMaxi}
+          >{rightmaxi? ">" : "<"}</span>
           <br></br>
           <div id="rightbarstuff">
 

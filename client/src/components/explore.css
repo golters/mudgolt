@@ -1,14 +1,18 @@
 @font-face {
-  font-family: DOS16;
-  src: url(./assets/ModernDOS8x16.ttf);
-  font-size: 16px;
+  font-family: DOS8;
+  src: url(../assets/ModernDOS8x8.ttf);
 }
 
 @font-face {
   font-family: DOS14;
-  src: url(./assets/ModernDOS8x14.ttf);
-  font-size: 14px;
+  src: url(../assets/ModernDOS8x14.ttf);
 }
+
+@font-face {
+  font-family: DOS16;
+  src: url(../assets/ModernDOS8x16.ttf);
+}
+
 :root {
   --color-toolbar-back: white;
   --color-toolbar-edge: none;
@@ -157,7 +161,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: DOS16, monospace;
   font-weight: 400;
   scrollbar-width: thin;
   scrollbar-color: var(--color-scrollbar) var(--color-background-primary);
@@ -180,8 +183,8 @@ html { height: 100%; }
 body {
   display: grid;
   grid-template-rows: auto 1fr;
-  height: 100vh;
   overflow:hidden;
+  height: 100%;
   text-shadow: 0.4389924193300864px 0.4389924193300864px 1px rgba(0, 30, 255, 0.2), -0.4389924193300864px -0.4389924193300864px 1px rgba(255,0,80,0.1), 0 0 3px;
 }
 

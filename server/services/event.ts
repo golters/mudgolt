@@ -996,12 +996,13 @@ export const electionWinner = async (event: number): Promise<void> => {
   let message = ""
   if(scoreBoard.length < 1){
     message = "Nobody has been elected. Anarchy wins"
-    for(let o = 0; o < online.length; o++){
-      const sash = await createPocketItem(online[o].player.id, "anarchy_sash", "∙∙╱∙∙∙╱∙AN╱∙∙∙╱∙∙∙", "1","sash,anarchy", "sash")
-      await setItemBio(sash.id, "A sash awarded to everyone who didn't vote during an election day where nobody won on " + timestamp)
-      broadcastToUser<string>(SERVER_LOG_EVENT, "you got an Anarchy_Sash", online[o].player.username)
-      broadcastToUser<string>(NOTIFICATION_EVENT, "gotmail", online[o].player.username); 
-    }
+    if(online.length > 20)
+      for(let o = 0; o < online.length; o++){
+        const sash = await createPocketItem(online[o].player.id, "anarchy_sash", "∙∙╱∙∙∙╱∙AN╱∙∙∙╱∙∙∙", "1","sash,anarchy", "sash")
+        await setItemBio(sash.id, "A sash awarded to everyone who didn't vote during an election day where nobody won on " + timestamp)
+        broadcastToUser<string>(SERVER_LOG_EVENT, "you got an Anarchy_Sash", online[o].player.username)
+        broadcastToUser<string>(NOTIFICATION_EVENT, "gotmail", online[o].player.username); 
+      }
   }else if (scoreBoard.length === 1){
     const winner = await getPlayerById(scoreBoard[0][0])
     if(!winner){
@@ -1034,37 +1035,73 @@ export const electionWinner = async (event: number): Promise<void> => {
       }  
     }
   }
-  const rooms = await getAllRooms()
-  for (let r = 0; r < rooms.length; r++){
-    if(Math.random() > 0.8){
-      let areaNameNum = 0
-      const roomarray = rooms[r].name.split(/(?:-|_| )+/)
-      if(roomarray.length > 1){
-        for(let i = 0; i < roomarray.length; i++){
-          if(Number.isNaN(roomarray[i])){
-            delete roomarray[i]
-          }
-          if(roomarray[i].length === 1){
-            delete roomarray[i]
-          }
-          if(roomarray[i] === "left" || roomarray[i] === "right"
+  if(online.length > 20 || scoreBoard.length > 1){
+    const rooms = await getAllRooms()
+    for (let r = 0; r < rooms.length; r++){
+      if(Math.random() > 0.99){
+        let areaNameNum = 0
+        const roomarray = rooms[r].name.split(/(?:-|_| )+/)
+        if(roomarray.length > 1){
+          for(let i = 0; i < roomarray.length; i++){
+            if(Number.isNaN(roomarray[i])){
+              delete roomarray[i]
+            }
+            if(roomarray[i].length === 1){
+              delete roomarray[i]
+            }
+            if(roomarray[i] === "left" || roomarray[i] === "right"
           || roomarray[i] === "north"|| roomarray[i] === "east"|| roomarray[i] === "south"|| roomarray[i] === "west"){
-            delete roomarray[i]
+              delete roomarray[i]
+            }
           }
+        
+          areaNameNum = Math.floor(Math.random() * (roomarray.length-1))
         }
-        
-        areaNameNum = Math.floor(Math.random() * (roomarray.length-1))
+        const areaName = roomarray[areaNameNum]
+        const papertype = newspapers[Math.floor(Math.random() * (newspapers.length-1))]
+        const newspaper = "the_" + areaName + "_" + papertype
+        const paper = await createFloorItem(rooms[r].id, newspaper, null, "","newspaper","newspaper")
+        await setItemBio(paper.id, message + " " + timestamp + ". in other news: "+generateHeadline())
       }
-      const areaName = roomarray[areaNameNum]
-      const papertype = newspapers[Math.floor(Math.random() * (newspapers.length-1))]
-      const newspaper = "the_" + areaName + "_" + papertype
-      const paper = await createFloorItem(rooms[r].id, newspaper, null, "","newspaper","newspaper")
-      await setItemBio(paper.id, message + " " + timestamp)
-        
     }
   }
   
   broadcast(SERVER_LOG_EVENT, message)
   
   return 
+}
+function generateHeadline(): string {
+  const nouns = ["Cat", "Politician", "Alien", "Robot", "Dog", "Chicken", "Celebrity", "Scientist", "Pirate", "Wizard", "Baby", "Aardvark", "Axolotl", "Capybara", "Narwhal", "Quokka", "Tarsier", 
+    "Blobfish", "Kakapo", "Pangolin", "Saiga", "Shoebill", "Tuatara","Zebra", "Platypus", "Okapi", "Fossa", "Numbat", "Kiwi", "Dugong","Dragon", "Elf", "Goblin", "Unicorn", "Fairy", "Knight", "God", "The Devil", 
+    "Troll", "Witch", "Mermaid", "Orc", "Sorcerer", "Giant", "Phoenix", "Vampire", "Werewolf", "Gnome", "Griffin","Bigfoot", "Anubis", "The Sun God Ra", "Baphomet", "Shogoth", "Hobbit"];
+  const verbs = ["Eats", "Kidnaps", "Transforms into", "Befriends", "Challenges", "Outsmarts", "Confuses", "Helps", "Terrifies", "Amazes",
+    "Bewitches", "Enchants", "Turns into", "Battles", "Steals from", "Hypnotizes", "Saves", "Transports", "Curses", "Resurrects", "Shrinks", "Expands"];
+  const endings = [
+    "in Shocking Turn of Events", 
+    "in Unbelievable Incident", 
+    "in Astonishing News", 
+    "in Unprecedented Event", 
+    "in Bizarre Happenings", 
+    "in Unexpected Twist", 
+    "in Surprising Development", 
+    "in Unforeseen Circumstance", 
+    "in Stunning Revelation", 
+    "in Incredible Scene",
+  ];
+
+  // Helper function to get a random element from an array
+  function getRandomElement(arr: string[]): string {
+    const randomIndex = Math.floor(Math.random() * arr.length);
+    
+    return arr[randomIndex];
+  }
+
+  // Randomly pick a noun and a verb
+  const noun1 = getRandomElement(nouns);
+  const noun2 = getRandomElement(nouns);
+  const verb = getRandomElement(verbs);
+  const ending = getRandomElement(endings);
+
+  // Construct a comical headline
+  return `${noun1} ${verb} ${noun2} ${ending}`;
 }

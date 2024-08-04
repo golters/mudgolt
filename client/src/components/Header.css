@@ -1,20 +1,11 @@
-@font-face {
-  font-family: DOS16;
-  src: url(../assets/ModernDOS8x16.ttf);
-  font-size: 16px;
-}
-
-@font-face {
-  font-family: DOS14;
-  src: url(../assets/ModernDOS8x14.ttf);
-  font-size: 14px;
-}
 
 #header {
   border-bottom: var(--color-banner-line);
   display: flex;
   justify-content: flex-start;
   transition: 0.5s;
+  font-family: DOS14;
+  font-size: 16px;
 }
 @media only screen and (min-width: 1200px) {
   #header {
@@ -81,17 +72,25 @@
 }
 
 #banner {
-  line-height: 1;
+  line-height: 0.5;
   height:fit-content;
   color: var(--color-banner-color);
   background-color: var(--color-banner-back);
   border: var(--color-banner-border);
   transition: 0.5s;
+  width:100%;
+  --banner-span-size: calc(100vw / 100);
+}
+@media only screen and (min-width: 1200px) {
+  #banner {
+    width:100%;
+    --banner-span-size: calc(60vw / 96);
+  }
 }
 
 #banner, #banner * {
-  font-size: 16px;
-  font-family: DOS16;
+  font-size: calc(var(--banner-span-size)*2);
+  font-family: DOS8;
   letter-spacing: 0;
   user-select: none;
   -ms-user-select: none;
@@ -110,7 +109,7 @@
   user-select: none;
   float: right;
   display: inline-block;
-  width: 8px;
+  width: var(--banner-span-size);
   cursor: none;
   transition: background-color 1s cubic-bezier(0.075, 0.9, 0.1, 0.075);
 }
@@ -135,77 +134,6 @@
   margin-top: 0.2em;
   margin-bottom: 0.3em;
   color: var(--color-banner-room-name);
-}
-
-@media (max-width: 1200px) {
-  #banner, #banner * {
-    font-size: 14px;
-    font-family: DOS14;
-    line-height: 12px;
-  }
-  
-  #banner span {
-    width: 7px;
-  }
-}
-
-@media (max-width: 1000px) {
-  #banner, #banner * {
-    font-size: 12px;
-    font-family: DOS14;
-    line-height: 10px;
-  }
-  
-  #banner span {
-    width: 6px;
-  }
-}
-
-@media (max-width: 800px) {
-  #banner, #banner * {
-    font-size: 10px;
-    font-family: DOS14;
-    line-height: 9px;
-  }
-  
-  #banner span {
-    width: 5px;
-  }
-}
-
-@media (max-width: 550px) {
-  #banner, #banner * {
-    font-size: 8px;
-    font-family: DOS14;
-    line-height: 7px;
-  }
-  
-  #banner span {
-    width: 4px;
-  }
-}
-
-@media (max-width: 500px) {
-  #banner, #banner * {
-    font-size: calc(96 / 10%);
-    font-family: DOS14;
-    line-height: calc(16 / 10%);
-  }
-  
-  #banner span {
-    width: 4px;
-  }
-}
-
-@media (max-width: 499px) {
-  #banner, #banner * {
-    font-size: 0;
-    line-height: 0;
-  }
-  
-  #banner span {
-    width: 0;
-  }
 }
 
 mark { 

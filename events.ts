@@ -1,6 +1,7 @@
 // network events
 export const ERROR_EVENT = "ERROR"
 export const CHAT_EVENT = "CHAT"
+export const CHAT_ALL_EVENT = "CHAT_ALL"
 export const AUTH_EVENT = "AUTH"
 export const PLAYER_EVENT = "PLAYER"
 export const SERVER_LOG_EVENT = "SERVER_LOG"
@@ -76,6 +77,9 @@ export const WHISPER_POPUP_EVENT = "WHISPER_POPUP"
 export const LOOK_LOG_EVENT = "LOOK_LOG"
 export const DRAW_COLOR_EVENT = "DRAW_COLOR"
 export const DRAW_BACK_COLOR_EVENT = "DRAW_BACK_COLOR_EVENT"
+export const ACTIVE_UPDATE_EVENT = "ACTIVE_UPDATE"
+export const RANDOM_ROOM_EVENT = "RANDOM_ROOM"
+export const HOME_UPDATE_EVENT = "HOME_UPDATE"
 
 // command events
 export const LOG_EVENT = "LOG"

@@ -30,6 +30,6 @@ export const Go: CommandModule = {
     }
 
     sendEvent(GO_EVENT, roomName.trim())
-    sendEvent(LOOK_EVENT, store.player?.roomId)
+    //sendEvent(LOOK_EVENT, store.player?.roomId)
   },
 }
