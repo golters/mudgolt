@@ -10,7 +10,9 @@ export const initStore = async () => {
       "name" TEXT NOT NULL,
       "banner" TEXT NOT NULL,
       "description" TEXT NOT NULL,
-      "isProtected" BOOLEAN NOT NULL
+      "isProtected" BOOLEAN NOT NULL,
+      "primeColor" TEXT,
+      "backColor" TEXT
     );
 
     CREATE TABLE IF NOT EXISTS players (
@@ -31,8 +33,17 @@ export const initStore = async () => {
 	    "description"	TEXT NOT NULL,
 	    "macro"	TEXT NOT NULL,
 	    "holderId"	INTEGER NOT NULL,
-	    "holderType"	TEXT NOT NULL
+	    "holderType"	TEXT NOT NULL,
+      "rarity" TEXT,
+      "type" TEXT,
+      "tags" TEXT,
+      "date" INTEGER,
+      "creator" INTEGER,
+      "password" TEXT,
+      "stats" TEXT,
+      "icon" TEXT
     );
+    
 
     CREATE TABLE IF NOT EXISTS inventories (
       "itemId" INTEGER NOT NULL,
@@ -65,6 +76,77 @@ export const initStore = async () => {
       FOREIGN KEY("room_id") REFERENCES rooms("id"),
       FOREIGN KEY("target_room_id") REFERENCES rooms("id")
     );
+
+    CREATE TABLE IF NOT EXISTS music (
+      "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+      "room_id" INTEGER,
+      "banner" TEXT NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS games (
+      "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+      "type" TEXT NOT NULL,
+      "banner" TEXT NOT NULL,
+      "game_info" TEXT,
+      "player1" INTEGER NOT NULL,
+      "p1_score" INTEGER,
+      "p1_pieces" TEXT,
+      "player2" INTEGER,
+      "p2_score" INTEGER,
+      "p2_pieces" TEXT,
+      "player3" INTEGER,
+      "p3_score" INTEGER,
+      "p3_pieces" TEXT,
+      "player4" INTEGER,
+      "p4_score" INTEGER,
+      "p4_pieces" TEXT,
+
+      FOREIGN KEY("player1") REFERENCES players("id"),
+      FOREIGN KEY("player2") REFERENCES players("id"),
+      FOREIGN KEY("player3") REFERENCES players("id"),
+      FOREIGN KEY("player4") REFERENCES players("id")
+    );
+
+    CREATE TABLE IF NOT EXISTS invites (
+      "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+      "type" TEXT NOT NULL,
+      "player1" INTEGER NOT NULL,
+      "player2" INTEGER,
+      "player3" INTEGER,
+      "player4" INTEGER,
+
+      FOREIGN KEY("player1") REFERENCES players("id"),
+      FOREIGN KEY("player2") REFERENCES players("id"),
+      FOREIGN KEY("player3") REFERENCES players("id"),
+      FOREIGN KEY("player4") REFERENCES players("id")
+    );
+
+    CREATE TABLE IF NOT EXISTS eventTags (
+      "id" INTEGER,
+      "type" TEXT NOT NULL,
+      "info" TEXT,
+      "eventId" INTEGER
+    );
+
+    CREATE TABLE IF NOT EXISTS events (
+      "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+      "type" TEXT NOT NULL,
+      "start" INTEGER NOT NULL,
+      "end" INTEGER NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS NPCS (
+      "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+      "name" TEXT,
+      "icon" TEXT,
+      "health" INTEGER,
+      "job" TEXT,
+      "personality" TEXT,
+      "phrases" TEXT,
+      "birth" INTEGER,
+      "death" INTEGER
+    );
+
   `)
 
   const rooms = await db.all(/*sql*/`

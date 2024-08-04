@@ -1,0 +1,217 @@
+@font-face {
+  font-family: DOS8;
+  src: url(../assets/ModernDOS8x8.ttf);
+}
+
+@font-face {
+  font-family: DOS14;
+  src: url(../assets/ModernDOS8x14.ttf);
+}
+
+@font-face {
+  font-family: DOS16;
+  src: url(../assets/ModernDOS8x16.ttf);
+}
+
+:root {
+  --color-toolbar-back: white;
+  --color-toolbar-edge: none;
+  --color-toolbar-title: black;
+  --color-toolbar-button-back: white;
+  --color-toolbar-button-logos: black;
+  --color-toolbar-button-back-hover: black;
+  --color-toolbar-button-logos-hover: white;
+  --color-toolbar-button-edge: none;
+  --color-toolbar-button-edge-hover: none;
+  --color-toolbar-dropdown-back: white;
+  --color-toolbar-dropdown-text: black;
+  --color-toolbar-dropdown-edge: none;
+  --color-toolbar-dropdown-shadow: none;
+  --color-toolbar-hovernames-back: black;
+  --color-toolbar-hovernames-text: white;
+  --color-toolbar-hovernames-edge: none;
+  --color-toolbar-slider-back: grey;
+  --color-toolbar-slider-back-edge: none;
+  --color-toolbar-slider-thumb: black;
+  --color-toolbar-slider-thumb-edge: none;
+  --color-toolbar-slider-back-hover: black;
+  --color-toolbar-slider-back-edge-hover: none;
+  --color-toolbar-slider-thumb-hover: grey;
+  --color-toolbar-slider-thumb-edge-hover: none;
+  --color-toolbar-charlimit: black;
+  --color-toolbar-charlimit-over: magenta;
+  --color-toolbar-charlimit-back: rbg(0,0,0,0);
+  --color-toolbar-charlimit-over-back: rbg(0,0,0,0);
+  --color-toolbar-input-text: black;
+  --color-toolbar-input-back: rbg(0,0,0,0);
+  --color-toolbar-input-edge: none;
+  --color-toolbar-publish-button-text: black;
+  --color-toolbar-publish-button-back: rbg(0,0,0,0);
+  --color-toolbar-publish-button-edge: none;
+  --color-toolbar-publish-button-text-hover: white;
+  --color-toolbar-publish-button-back-hover: black;
+  --color-toolbar-publish-button-edge-hover: none;
+  --color-toolbar-sub-button-text:black;
+  --color-toolbar-sub-button-back: rbg(0,0,0,0);
+  --color-toolbar-sub-button-edge: none;
+  --color-toolbar-sub-button-text-hover:white;
+  --color-toolbar-sub-button-back-hover:black;
+  --color-toolbar-sub-button-edge-hover:none;
+  --color-toolbar-palette-text:black;
+  --color-toolbar-palette-back:rbg(0,0,0,0);
+  --color-toolbar-palette-text-hover:magenta;
+  --color-toolbar-palette-back-hover:rbg(0,0,0,0);  
+  --color-banner-line:1px solid white;
+  --color-banner-mini:white;
+  --color-banner-mini-edge:none;
+  --color-banner-mini-hover:rgb(255,255,255,0.5);
+  --color-banner-mini-back:rgb(0,0,0,0);
+  --color-banner-mini-edge-hover:none;
+  --color-banner-mini-back-hover:rgb(0,0,0,0);
+  --color-banner-type:white;
+  --color-banner-type-back:rgb(0,0,0,0);
+  --color-banner-type-edge:none;
+  --color-banner-type-hover:rgb(255,255,255,0.5);
+  --color-banner-type-back-hover:rgb(0,0,0,0);
+  --color-banner-type-edge-hover:none;
+  --color-banner-type-select:black;
+  --color-banner-type-select-back:white;
+  --color-banner-type-select-back-edge:none;
+  --color-banner-color:white;
+  --color-banner-back:rgb(0,0,0,0);
+  --color-banner-border:none;
+  --color-banner-cursor:magenta;
+  --color-banner-cursor-back:rgb(255,255,255,0.5);
+  --color-banner-room-name:white;
+  --color-terminal-back:rgb(0,0,0,0);
+  --color-text-primary:white;
+  --color-text-link:magenta;
+  --color-chat-date:white;
+  --color-chat-name:magenta;
+  --color-chat-message:white;
+  --color-chat-error:red;
+  --color-charlimit:white;
+  --color-charlimit-over:magenta;
+  --color-input-text:white;
+  --color-input-back:black;
+  --color-input-back-edge:none; 
+  --color-scrollbar-back:black;
+  --color-scrollbar-thumb:white;
+  --color-scrollbar-back-edge:none;
+  --color-scrollbar-thumb-edge:none;
+  --color-background-primary:black;
+  --color-background-code:magenta;
+  --color-divider:rgb(255,255,255,0.5);
+  --color-background-gradient:none;
+  --color-sidebar-back:darkGrey;
+  --color-sidebar-text:black;
+  --color-sidebar-border:none;
+  --color-sidebar-shadow:2px 0 1px rgba(0, 30, 255, 0.2), -2px 0 1px rgba(255,0,80,0.1), 0 0 3px;
+  --color-rightbar-back:darkGrey;
+  --color-rightbar-text:black;
+  --color-rightbar-border:none;
+  --color-rightbar-shadow:2px 0 1px rgba(0, 30, 255, 0.2), -2px 0 1px rgba(255,0,80,0.1), 0 0 3px;
+  --color-inventory-icon-text:black;
+  --color-inventory-icon-back:none;
+  --color-inventory-icon-border:none;
+  --color-inventory-icon-cursor-text:magenta;
+  --color-inventory-icon-cursor-back:white;
+  --color-inbox-back:none;
+  --color-inbox-sent-text:black;
+  --color-inbox-sent-back:white;
+  --color-inbox-sent-date:grey;
+  --color-inbox-sent-name:purple;
+  --color-inbox-received-text:white;
+  --color--received-back:black;
+  --color-inbox-received-date:grey;
+  --color-inbox-received-name:Magenta;
+  --color-window-back:white;
+  --color-window-text:black;
+  --color-window-border:2px solid white;
+  --color-window-shadow:2px 1px 1px rgba(0, 30, 255, 0.2), -2px -1px 1px rgba(255,0,80,0.1), 0 0 3px;
+  --color-window-bar-text:white;
+  --color-window-bar-back:darkGrey;
+  --color-window-close-hover-text:white;
+  --color-window-close-hover-back:red;
+  --color-npc-text:black;
+  --color-npc-back:none;
+  --color-npc-border:none;
+  --color-npc-cursor-text:magenta;
+  --color-npc-cursor-back:black;
+  --color-npc-title-text:black;
+  --color-npc-title-back:none;
+  --color-npc-title-border:none;
+  --color-npc-name-text:magenta;
+  --color-npc-name-back:none;
+  --color-npc-message-text:black;
+  --color-npc-message-back:none;
+  --color-npc-phrase-back:none;
+  --color-npc-phrase-border:none;
+  --color-cluster-text:white;
+  --color-cluster-back:black;
+
+  background-image: var(--color-background-gradient);
+  background-color: var(--color-background-primary);
+  color: var(--color-text-primary);
+  font-size: 0.95em;
+  overscroll-behavior: none;
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-weight: 400;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar) var(--color-background-primary);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-scrollbar-thumb);
+  outline-style: var(--color-scrollbar-thumb-edge);
+  outline-color: var(--color-toolbar-thumb);
+}
+
+*::-webkit-scrollbar {
+  background-color: var(--color-scrollbar-back);
+  outline-style: var(--color-scrollbar-back-edge);
+  outline-color: var(--color-toolbar-back);
+  width: 7px;
+}
+html { height: 100%; }
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow:hidden;
+  height: 100%;
+  text-shadow: 0.4389924193300864px 0.4389924193300864px 1px rgba(0, 30, 255, 0.2), -0.4389924193300864px -0.4389924193300864px 1px rgba(255,0,80,0.1), 0 0 3px;
+}
+
+body::after {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(18, 16, 16, 0.1);
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.27861;
+}
+body::before {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 100;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+}
+

@@ -1,23 +1,38 @@
+
 #terminal {
   /* pointer-events: none; */
   line-height: 1.5;
-  overflow: auto;
+  overflow-y: scroll;
   padding: 1em;
-  overflow-x: hidden;
+  overflow-x: wrap;
+  background-color: var(--color-terminal-back);
+  transition: 0.5s;
+  font-family: DOS16;
+}
+@media only screen and (min-width: 1200px) {
+  #terminal {
+    margin-left:150px;
+    margin-right:200px;
+  }
 }
 
 #terminal * {
   display: inline-block;
   max-width: 100%;
   white-space: pre-wrap;
-  word-break: break-word;
+  word-wrap: break-word;
   pointer-events: all;
   display: inline;
-  overflow-x: visible;
 }
-
+#terminal-chat {
+  overflow-y: scroll;
+}
 #terminal-input-container {
   pointer-events: none;
+  color: var(--color-input-text);
+  background-color: var(--color-input-back);
+  outline-style: var(--color-input-back-edge);
+  outline-color: var(--color-input-back);
 }
 
 #terminal-input-container * {
@@ -36,21 +51,35 @@
 }
 
 #terminal-input-container .char-limit {
-  color: var(--color-text-secondary);
-  opacity: 0.75;
+  color: var(--color-charlimit);
   float: right;
 }
 
 #terminal-input-container .char-limit.invalid {
-  color: var(--color-text-negative);
+  color: var(--color-charlimit-over);
+}
+
+a {
+  color: var(--color-text-link);
+}
+
+.look-message {
+  position: relative;
+}
+.look-message .username {
+  color: var(--color-chat-name);
+}
+.look-message .item {
+  text-wrap: nowrap;
 }
 
 .chat-message {
-  color: var(--color-text-secondary);
+  color: var(--color-chat-message);
+  position: relative;
 }
 
 .chat-message .username {
-  color: var(--color-text-tertiary);
+  color: var(--color-chat-name);
 }
 
 .chat-message .date, .chat-message .username  {
@@ -58,12 +87,36 @@
 }
 
 .chat-message .date {
-  opacity: 0.75;
+  color: var(--color-chat-date);
 }
 
 .error-message {
-  color: var(--color-text-negative);
+  color: var(--color-chat-error);
 }
+.chatdropdown {
+  cursor: pointer;
+  user-select: none;
+  position: relative; /* Required for positioning the dropdown content */
+  width: max-content !important;
+}
+
+.chatdropdown-content {
+  display: none !important; /* Initially hidden */
+  position: absolute;
+  top: 100%; /* Position below the parent */
+  left: 0;
+  color: var(--color-toolbar-dropdown-text);
+  background-color: var(--color-toolbar-dropdown-back);
+  box-shadow: 2px 1px 1px rgba(0, 30, 255, 0.2), -2px -1px 1px rgba(255, 0, 80, 0.1), 0 0 3px;
+  padding: 12px 16px;
+  z-index: 2;
+  border: 1px solid var(--color-toolbar-dropdown-edge);
+}
+
+.chatdropdown:hover .chatdropdown-content {
+  display: block !important; /* Show the dropdown content on hover */
+}
+
 
 #terminal img {
   max-width: 50vmin;

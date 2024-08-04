@@ -1,141 +1,8 @@
 import { getConstantValue } from "typescript";
 import validateColor from "validate-color";
 
-import { ColorTheme } from "../types/ColorTheme";
-
-const VALID_COLOR_KEYS = [
-  "background-primary",
-  "background-code",
-  "text-primary",
-  "text-secondary",
-  "text-tertiary",
-  "text-link",
-  "text-negative",
-  "divider",
-  "scrollbar",
-  "brush",
-];
-
-const VALID_COLOR_THEMES = [
-  "amiga",
-  "commodore",
-  "green",
-  "amber",
-  "cga",
-  "windows",
-  "gba",
-  "light",
-];
-
-const DEFAULT_THEME: ColorTheme = {
-  "background-primary": "black",
-  "background-code": "rgb(26, 26, 39)",
-  "text-primary": "white",
-  "text-secondary": "rgba(255, 255, 255, 0.6)",
-  "text-tertiary": "rgb(196, 92, 236)",
-  "text-link": "rgb(83, 143, 255)",
-  "text-negative": "rgb(228, 34, 76)",
-  "divider": "rgb(35, 32, 35)",
-  "scrollbar": "white",
-  "brush": "grey",
-}
-
-const amiga: ColorTheme = {
-  "background-primary": "#0055ab",
-  "background-code": "#f5690d",
-  "text-primary": "white",
-  "text-secondary": "white",
-  "text-tertiary": "white",
-  "text-link": "white",
-  "text-negative": "white)",
-  "divider": "white",
-  "scrollbar": "white",
-  "brush": "#f5690d",
-}
-const commodore: ColorTheme = {
-  "background-primary": "#4835ad",
-  "background-code": "#84cdcf",
-  "text-primary": "#8677e1",
-  "text-secondary": "#84cdcf",
-  "text-tertiary": "#d9e474",
-  "text-link": "#d9e474",
-  "text-negative": "#d9e474",
-  "divider": "#8677e1",
-  "scrollbar": "#8677e1",
-  "brush": "#8677e1",
-}
-const green: ColorTheme = {
-  "background-primary": "#023401",
-  "background-code": "#019f02",
-  "text-primary": "#00ef11",
-  "text-secondary": "#019f02",
-  "text-tertiary": "#00ef11",
-  "text-link": "#00ef11",
-  "text-negative": "#00ef11",
-  "divider": "#019f02",
-  "scrollbar": "#019f02",
-  "brush": "#019f02",
-}
-const amber: ColorTheme = {
-  "background-primary": "#792400",
-  "background-code": "#eb7900",
-  "text-primary": "#ffdb30",
-  "text-secondary": "#eb7900",
-  "text-tertiary": "#ffdb30",
-  "text-link": "#ffdb30",
-  "text-negative": "#ffdb30",
-  "divider": "#eb7900",
-  "scrollbar": "#eb7900",
-  "brush": "#eb7900",
-}
-const cga: ColorTheme = {
-  "background-primary": "black",
-  "background-code": "magenta",
-  "text-primary": "white",
-  "text-secondary": "magenta",
-  "text-tertiary": "cyan",
-  "text-link": "cyan",
-  "text-negative": "cyan",
-  "divider": "magenta",
-  "scrollbar": "magenta",
-  "brush": "magenta",
-}
-const windows: ColorTheme = {
-  "background-primary": "#008483",
-  "background-code": "#0e0087",
-  "text-primary": "white",
-  "text-secondary": "white",
-  "text-tertiary": "white",
-  "text-link": "black",
-  "text-negative": "black",
-  "divider": "#c3c3c3",
-  "scrollbar": "#c3c3c3",
-  "brush": "#0e0087",
-}
-const gba: ColorTheme = {
-  "background-primary": "#081820",
-  "background-code": "#346856",
-  "text-primary": "#88c070",
-  "text-secondary": "#88c070",
-  "text-tertiary": "#e0f8d0",
-  "text-link": "#e0f8d0",
-  "text-negative": "#e0f8d0",
-  "divider": "#346856",
-  "scrollbar": "#346856",
-  "brush": "#346856",
-}
-const light: ColorTheme = {
-  "background-primary": "white",
-  "background-code": "grey",
-  "text-primary": "black",
-  "text-secondary": "black",
-  "text-tertiary": "black",
-  "text-link": "grey",
-  "text-negative": "grey",
-  "divider": "grey",
-  "scrollbar": "grey",
-  "brush": "grey",
-}
+import { ColorTheme, VALID_COLOR_KEYS } from "../types/ColorTheme";
+import { themes } from "./themes"
 
 const THEME_STORAGE_KEY = "colorTheme";
 
@@ -145,7 +12,7 @@ class ColorUtil {
   /**
    * The user's current theme
    */
-  private currentTheme: ColorTheme = DEFAULT_THEME;
+  private currentTheme: ColorTheme = themes[0];
 
   /**
    * Load a saved theme, if present
@@ -160,7 +27,7 @@ class ColorUtil {
           rootElement.style.setProperty(`--color-${key}`, value!);
         }
         this.currentTheme = {
-          ...DEFAULT_THEME,
+          ...themes[0],
           ...parsedTheme,
         };
       } catch {}
@@ -187,7 +54,7 @@ class ColorUtil {
    * Whether a color theme is valid
    */
   public isValidColorTheme = (theme: string) => {
-    return VALID_COLOR_THEMES.includes(theme);
+    return themes.map(t => t.name).includes(theme);
   }
 
   /**
@@ -201,7 +68,7 @@ class ColorUtil {
       throw new Error(`Invalid color "${value}"`);
     }
     rootElement.style.setProperty(`--color-${key}`, value);
-    this.currentTheme[key as keyof typeof DEFAULT_THEME] = value;
+    this.currentTheme[key as keyof typeof themes[0]] = value;
     this.saveTheme();
   }
 
@@ -209,11 +76,11 @@ class ColorUtil {
    * Reset all color keys to the default theme
    */
   public resetColors = () => {
-    for (const key in DEFAULT_THEME) {
-      const value =  DEFAULT_THEME[key as keyof typeof DEFAULT_THEME];
+    for (const key in themes[0]) {
+      const value =  themes[0][key as keyof typeof themes[0]];
       rootElement.style.setProperty(`--color-${key}`, value);
     }
-    this.currentTheme = DEFAULT_THEME;
+    this.currentTheme = themes[0];
     this.saveTheme();
   }
   
@@ -222,75 +89,21 @@ class ColorUtil {
    */
    public changeTheme = (theme: string) => {   
      if(!this.isValidColorTheme(theme)) {
-       throw new Error(`Invalid theme or key "${theme}" - use one of: ${VALID_COLOR_KEYS.join(", ")}`);
+       throw new Error(`Invalid theme or key "${theme}" - use one of: ${themes.map(t => t.name + ", ")}`);
      }
-     //not ideal way of doing this optomise later
-     switch(theme){
-       case "amiga":
-         for (const key in amiga) {
-           const value = amiga[key as keyof typeof amiga];
-           rootElement.style.setProperty(`--color-${key}`, value);
-         }
-         this.currentTheme = amiga;
-         this.saveTheme();
-         break;
-       case "commodore":
-         for (const key in commodore) {
-           const value = commodore[key as keyof typeof commodore];
-           rootElement.style.setProperty(`--color-${key}`, value);
-         }
-         this.currentTheme = commodore;
-         this.saveTheme();
-         break;
-       case "green":
-         for (const key in green) {
-           const value = green[key as keyof typeof green];
-           rootElement.style.setProperty(`--color-${key}`, value);
-         }
-         this.currentTheme = green;
-         this.saveTheme();
-         break;
-       case "amber":
-         for (const key in amber) {
-           const value = amber[key as keyof typeof amber];
-           rootElement.style.setProperty(`--color-${key}`, value);
-         }
-         this.currentTheme = amber;
-         this.saveTheme();
-         break;
-       case "cga":
-         for (const key in cga) {
-           const value = cga[key as keyof typeof cga];
-           rootElement.style.setProperty(`--color-${key}`, value);
-         }
-         this.currentTheme = cga;
-         this.saveTheme();
-         break;
-       case "windows":
-         for (const key in windows) {
-           const value = windows[key as keyof typeof windows];
-           rootElement.style.setProperty(`--color-${key}`, value);
-         }
-         this.currentTheme = windows;
-         this.saveTheme();
-         break;      
-       case "gba":
-         for (const key in gba) {
-           const value = gba[key as keyof typeof gba];
-           rootElement.style.setProperty(`--color-${key}`, value);
-         }
-         this.currentTheme = gba;
-         this.saveTheme();
-         break;
-       case "light":
-         for (const key in light) {
-           const value = light[key as keyof typeof light];
-           rootElement.style.setProperty(`--color-${key}`, value);
-         }
-         this.currentTheme = light;
-         this.saveTheme();
-         break;
+     //optomise later by putting all themes in same array and finding by name
+     const tempThemeArray = themes
+     const foundTheme = tempThemeArray.find(element => element.name === theme)
+     if(!foundTheme){
+
+       return
      }
+     for (const key in foundTheme) {
+       const value = foundTheme[key as keyof typeof foundTheme];
+       rootElement.style.setProperty(`--color-${key}`, value);
+     }
+     this.currentTheme = foundTheme;
+     this.saveTheme();
    }
 
   /**

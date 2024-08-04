@@ -12,6 +12,11 @@ import {
   WHISPER_LOG_EVENT,
   COMMAND_LOG_EVENT,
   PING_EVENT,
+  MUSIC_EVENT,
+  TP_EVENT,
+  LOG_EVENT,
+  UFO_EVENT,
+  PONG_EVENT,
 } from "../../../events"
 import {
   store, 
@@ -31,14 +36,18 @@ import {
 } from "../utils/icon"
 
 export let client: WebSocket
+export let context = new AudioContext()
 
-// TSX doens't like generics
-export const sendEvent = async <TPayload,> (code: string, payload: TPayload) => {
-  client.send(JSON.stringify({
-    code,
-    payload,
-  }))
-}
+export const sendEvent = async <TPayload,>(code: string, payload: TPayload) => {
+  if (typeof client !== 'undefined') {
+    client.send(JSON.stringify({
+      code,
+      payload,
+    }));
+  } else {
+    console.error('Client is undefined');
+  }
+};
 
 // @ts-ignore
 const host = NODE_ENV === "development"
@@ -65,10 +74,10 @@ export const networkTask = () => new Promise<void>((resolve) => {
       code: string
       payload: unknown
     }
-
     console.log(`[${code}]`, payload)
 
-    if (code === PLAYER_EVENT) {
+    switch(code){
+    case PLAYER_EVENT:
       const player = payload as Player
 
       store.player = player
@@ -76,12 +85,18 @@ export const networkTask = () => new Promise<void>((resolve) => {
       if (requestedChat) {
         resolve()
       } else {
+        const urlParams = new URLSearchParams(window.location.search);
+        const myParam = urlParams.get('go');
+        if(myParam){
+          sendEvent(TP_EVENT, myParam)
+          //window.location.href = "http://mudgolt.com";
+        }        
         sendEvent<null>(CHAT_HISTORY_EVENT, null)
         requestedChat = true
       }
-    }
+    break;
 
-    if (code === CHAT_HISTORY_EVENT) {
+    case CHAT_HISTORY_EVENT:
       const chats = payload as Chat[]
       for (let i = 0; i < chats.length; i++){
         if(chats[i].type === "chat" || chats[i].type === null){
@@ -90,15 +105,14 @@ export const networkTask = () => new Promise<void>((resolve) => {
         networkEmitter.emit(COMMAND_LOG_EVENT, chats[i])
         }
       }
-      sendEvent(LOOK_EVENT, null)
-      resolve()
-    }
+      resolve()    
+    break;
     
-    if (code === INBOX_HISTORY_EVENT) {
+    case INBOX_HISTORY_EVENT:
       void (payload as Chat[]).forEach(chat => networkEmitter.emit(WHISPER_LOG_EVENT, chat))
-
       resolve()
-    }
+      break;
+  }
   
     networkEmitter.emit(code, payload)
   })
@@ -116,8 +130,41 @@ export const networkTask = () => new Promise<void>((resolve) => {
   })
 
 })
-
 setInterval(() => {
-  sendEvent(PING_EVENT, client)
+  if(!localStorage.getItem("muted")){
+  networkEmitter.emit(MUSIC_EVENT, context)
+  }
+}, 15 * 10)
+
+setTimeout(() => {
+  sendEvent(PING_EVENT, client)  
   sendEvent(PAY_EVENT, store.player?.id)
 }, 15 * 1000)
+
+//make settimeout then ping server, server return event to start a new timeout
+networkEmitter.on(PONG_EVENT, () => {
+  setTimeout(() => {
+    if(localStorage.getItem("focus") === "open"){
+      sendEvent(PING_EVENT, client)  
+    sendEvent(PAY_EVENT, store.player?.id)
+    }else{
+      if(Math.random()*10000 < 5){ 
+      sendEvent(UFO_EVENT, store.player?.id)
+      }
+    }
+  }, 15 * 1000)
+})
+
+window.addEventListener("focus", (event) => { 
+  localStorage.setItem("focus","open")
+})
+
+window.addEventListener("blur", (event) => {
+  localStorage.setItem("focus","close")
+  setTimeout(() => {
+    if(localStorage.getItem("focus") !="open")
+    window.addEventListener("focus", (event) => { 
+      window.location.reload()
+  })
+  }, 600 * 1000)
+})

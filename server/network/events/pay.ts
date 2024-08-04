@@ -17,6 +17,11 @@ import {
   getPlayerById, 
   payPlayer,
 } from "../../services/player"
+import {
+  getCurrentEvent,
+  clearOldEvents,
+  moveZombies,
+} from "../../services/event"
 import { GOLT } from "../../../constants"
 
 const handler: NetworkEventHandler = async (socket, playerID: number) => {
@@ -30,6 +35,10 @@ const handler: NetworkEventHandler = async (socket, playerID: number) => {
       sendEvent<string>(socket, ERROR_EVENT, "no player")
 
       return
+    }
+    const event = await getCurrentEvent(Date.now())
+    if(event?.type === "Zombie_Invasion"){
+      await moveZombies(event.id)
     }
     const list = online.map(o => o.player.username)
     if(list.includes(player.username)){
@@ -46,6 +55,7 @@ const handler: NetworkEventHandler = async (socket, playerID: number) => {
     }else{
       await payPlayer(player.id)
     }
+    await clearOldEvents(Date.now())
     const newplayer = await getPlayerById(playerID)
     const newgolts = newplayer?.golts
     if(!newgolts){

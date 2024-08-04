@@ -6,6 +6,7 @@ import {
   SEND_EVENT,
   SERVER_LOG_EVENT,
   NOTIFICATION_EVENT,
+  INVENTORY_UPDATE_EVENT,
 } from "../../../events"
 import {
   sendEvent,
@@ -20,7 +21,11 @@ import {
 } from "../../../constants"
 import {
   getPlayerByUsername,
+  getInvByPlayer,
 } from "../../services/player"
+import {
+  Item,
+} from "../../../@types"
 
 const handler: NetworkEventHandler = async (socket, args: string[], player) => {
   try {    
@@ -49,6 +54,8 @@ const handler: NetworkEventHandler = async (socket, args: string[], player) => {
     broadcastToUser<string>(SERVER_LOG_EVENT, player.username + " sent a " + args[0] + " to you", args[1]); 
     broadcastToUser<string>(NOTIFICATION_EVENT, "sentmail", player.username); 
     broadcastToUser<string>(NOTIFICATION_EVENT, "gotmail", args[1]); 
+    const inv = await getInvByPlayer(player.id)
+    sendEvent<Item[]>(socket, INVENTORY_UPDATE_EVENT, inv)
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)

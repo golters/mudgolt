@@ -59,7 +59,8 @@ class IconUtil {
 
     this.changeFavicon(`${canvas.toDataURL}`)
   
-    return canvas.toDataURL()
+    //return canvas.toDataURL()
+    return "../../favicon.icon"
   }
   
 }

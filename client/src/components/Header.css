@@ -1,29 +1,30 @@
-@font-face {
-  font-family: DOS16;
-  src: url(../assets/ModernDOS8x16.ttf);
-  font-size: 16px;
-}
-
-@font-face {
-  font-family: DOS14;
-  src: url(../assets/ModernDOS8x14.ttf);
-  font-size: 14px;
-}
 
 #header {
-  border-bottom: 1px solid rgb(35, 32, 35);
+  border-bottom: var(--color-banner-line);
   display: flex;
   justify-content: flex-start;
+  transition: 0.5s;
+  font-family: DOS14;
+  font-size: 16px;
 }
-
+@media only screen and (min-width: 1200px) {
+  #header {
+    margin-left:150px;
+    margin-right:200px;
+  }
+  #minibutton {
+    margin-right:200px;
+  }
+}
 #header-wrapper {
   display: grid;
   align-items: flex-start;
   justify-content: center;
   grid-template-rows: auto auto;
-  gap: 1em;
-  padding: 1em;
+  padding-top: 0.2em;
+  padding-left: 0.5em;
   width: auto;
+  transition: 0.5s;
 }
 
 #header-wrapper * {
@@ -33,113 +34,113 @@
 }
 
 #header-wrapper .controls {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0.5em;
-  font-size: 24px;
-  cursor: pointer;
-  opacity: 0.7;
-  user-select: none;
+  float: right;
 }
 
-#header-wrapper .controls:first-child {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0.5em; 
-  margin-right: 20px;
+#mini_button {
+  font-family: DOS14;
   font-size: 24px;
   cursor: pointer;
-  opacity: 0.7;
+  color: var(--color-banner-mini);
+  background-color: var(--color-banner-mini-back);
   user-select: none;
+  border: var(--color-banner-mini-edge);
 }
 
+#mini_button:hover {
+  color: var(--color-banner-mini-hover);
+  background-color: var(--color-banner-mini-back-hover);
+  border: var(--color-banner-mini-edge-hover);
+}
 
-#header-wrapper .controls:hover {
-  opacity: 1;
+#banner-type {
+  font-size: 16px;
+  font-family: DOS14;
+  letter-spacing: 0;
+  margin-right: 1em;
+  user-select: none;
+  cursor: pointer;
+  color: var(--color-banner-type);
+  background-color: var(--color-banner-type-back);
+  border: var(--color-banner-type-edge);
+}
+
+#banner-type:hover {
+  color: var(--color-banner-type-hover);
+  background-color: var(--color-banner-type-back-hover);
+  border: var(--color-banner-type-edge-hover);
 }
 
 #banner {
-  line-height: 1;
+  line-height: 0.5;
+  height:fit-content;
+  color: var(--color-banner-color);
+  background-color: var(--color-banner-back);
+  border: var(--color-banner-border);
+  transition: 0.5s;
+  width:100%;
+  --banner-span-size: calc(100vw / 100);
+}
+@media only screen and (min-width: 1200px) {
+  #banner {
+    width:100%;
+    --banner-span-size: calc(60vw / 96);
+  }
 }
 
 #banner, #banner * {
-  font-size: 16px;
-  font-family: DOS16;
+  font-size: calc(var(--banner-span-size)*2);
+  font-family: DOS8;
   letter-spacing: 0;
   user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
 }
 
 #banner > div {
-  display: flex;
+  float: left;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
   line-height: 16px;
 }
 
 /* Individual character */
 #banner span {
+  user-select: none;
+  float: right;
   display: inline-block;
-  width: 8px;
+  width: var(--banner-span-size);
   cursor: none;
+  transition: background-color 1s cubic-bezier(0.075, 0.9, 0.1, 0.075);
+}
+
+#banner span::before{
+  position:sticky;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-color: blue;
 }
 
 #banner span:hover {
-  color: var(--color-text-tertiary);
-  background-color: rgba(255, 255, 255, 0.3);
+  color: var(--color-banner-cursor);
+  background-color: var(--color-banner-cursor-back);
+  transition: background-color 0.25s;
 }
 
 #room-name {
   font-weight: 600;
+  margin-top: 0.2em;
+  margin-bottom: 0.3em;
+  color: var(--color-banner-room-name);
 }
 
-#room-description {
-  opacity: 0.7;
-}
-
-@media (max-width: 900px) {
-  #banner, #banner * {
-    font-size: 14px;
-    font-family: DOS14;
-    line-height: 12px;
-  }
-  
-  #banner span {
-    width: 7px;
-  }
-}
-
-@media (max-width: 800px) {
-  #banner, #banner * {
-    font-size: 12px;
-    font-family: DOS14;
-    line-height: 10px;
-  }
-  
-  #banner span {
-    width: 6px;
-  }
-}
-
-@media (max-width: 620px) {
-  #banner, #banner * {
-    font-size: 10px;
-    font-family: DOS14;
-    line-height: 9px;
-  }
-  
-  #banner span {
-    width: 5px;
-  }
-}
-
-@media (max-width: 550px) {
-  #banner, #banner * {
-    font-size: 8px;
-    font-family: DOS14;
-    line-height: 7px;
-  }
-  
-  #banner span {
-    width: 4px;
-  }
+mark { 
+  font-size: 16px;
+  font-family: DOS16;
+  color: var(--color-banner-type-select);
+  background-color: var(--color-banner-type-select-back);
+  outline-style: var(--color-banner-type-select-edge);
+  outline-color: var(--color-banner-type-select-back);
 }

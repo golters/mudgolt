@@ -7,16 +7,18 @@ import {
 } from "../"
 import {
   LOOK_EVENT,
-  LOG_EVENT,
   ERROR_EVENT,
+  LOOK_LOG_EVENT,
 } from "../../../events"
-import { lookByID } from "../../services/room"
+import { getLookByID } from "../../services/room"
+import { Look } from "@types"
 
 const handler: NetworkEventHandler = async (socket, roomID: number, player) => {
   try {
-    const message = await lookByID(player.roomId)
+    //const message = await lookByID(player.roomId)
+    const look = await getLookByID(player.roomId)
 
-    sendEvent<string>(socket, LOG_EVENT, message)
+    sendEvent<Look>(socket, LOOK_LOG_EVENT, look)
   } catch (error) {
     sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)

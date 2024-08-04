@@ -18,6 +18,10 @@ export const createDoor = async (roomID: number, targetID: number | undefined, n
     throw new Error("Door already exists")
   }
 
+  if(roomID === targetID){
+    throw new Error("The door collapses in on itself")
+  }
+
   await db.get(/*sql*/`
     INSERT INTO doors ("room_id", "target_room_id", "name")
       VALUES ($1, $2, $3);
@@ -55,6 +59,14 @@ export const getDoorByName = async (roomID: number, name: string): Promise<Door>
 export const getDoorByRoom = async (roomId: number): Promise<Door[]> => {
   const doors = await db.all<Door[]>(/*sql*/`
     SELECT * FROM doors WHERE room_id = $1;
+  `, [roomId])
+
+  return doors
+}
+
+export const getDoorsIntoRoom = async (roomId: number): Promise<Door[]> => {
+  const doors = await db.all<Door[]>(/*sql*/`
+    SELECT * FROM doors WHERE target_room_id = $1;
   `, [roomId])
 
   return doors

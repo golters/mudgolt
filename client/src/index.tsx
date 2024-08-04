@@ -1,5 +1,3 @@
-import "./index.css"
-
 import {
   cryptoTask, 
 } from "./crypto"
@@ -8,33 +6,60 @@ import {
   Terminal, 
 } from "./components/Terminal"
 import {
-  networkTask, 
+  networkTask, sendEvent, 
 } from "./network"
 import {
   Header, 
 } from "./components/Header"
+import {
+  Explore,
+} from "./components/explore"
+import {
+  Home,
+} from "./components/home"
 import "./commands"
+import { SoundProvider } from './components/SoundContext';
+
 
 import React from "react"
 import ReactDOM from "react-dom"
+import { EVENT_EVENT } from "../../events"
+navigator.storage.persist().catch(console.error)
 
-ReactDOM.render(
-  <>
-    <Header />
-    <Terminal />
-  </>, 
-  document.body
-)
 
 const init = async () => {
-  await cryptoTask()
-  await networkTask()
-  
-  console.log("Client started")
+  await cryptoTask();
+  await networkTask();
 
-  pushToLog(/* html */`Welcome to MUDGOLT! <small>Leave your shoes at the door.</small>`)
-  // pushToLog(/* html */`Want to contribute? https://github.com/golters/mudgolt`)
-  pushToLog(/* html */`Type <code>/help</code> for a list of commands.`)
+};
+
+const loadComponents = () => {
+  ReactDOM.render(
+    <>
+      <Explore />
+    </>, 
+    document.body
+  )
 }
 
-init().catch(console.error)
+const loadHome = () => {
+  ReactDOM.render(
+    <>
+      <SoundProvider>
+      <Home/>
+      </SoundProvider>
+    </>, 
+    document.body
+  )
+
+}
+
+const url = new URL(window.location.href)
+
+  init().catch(console.error);
+
+if (url.pathname.startsWith('/explore')) {
+  loadComponents()
+} else {
+  loadHome()
+}

@@ -91,6 +91,42 @@ import{
 import{
   Pay
 }from "./pay"
+import{
+  Banner
+}from "./banner"
+import{
+  Compose
+}from "./compose"
+import {
+  Volume
+}from "./volume"
+import {
+  Invite
+}from "./invite"
+import {
+  Game
+}from "./game"
+import {
+  Click
+}from "./click"
+import {
+  Link
+}from "./link"
+import {
+  Event
+}from "./event"
+import {
+  Smelt
+}from "./smelt"
+import {
+  Insight
+}from "./insight"
+import {
+  Make
+}from "./make"
+import {
+  Tag
+}from "./tag"
 
 
 export const commandModules = [
@@ -122,6 +158,18 @@ export const commandModules = [
   UseItem,
   EnchantItem,
   Pay,
+  Banner,
+  Compose,
+  Volume,
+  Invite,
+  Game,
+  Click,
+  Link,
+  Event,
+  Smelt,
+  Insight,
+  Make,
+  Tag,
 ]
 
 const findCommand = (nameOrAlias: string) => {

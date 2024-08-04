@@ -75,7 +75,7 @@ export const recentOnline: {
 
 
 server.on("connection", (socket, request) => {
-  console.log("Socket connected to server")
+  //console.log("Socket connected to server")
 
   const publicKey = decodeURIComponent(querystring.parse(request.url!)["/ws?public-key"] as string)
   let player: Player
@@ -160,7 +160,9 @@ server.on("connection", (socket, request) => {
 
   socket.on("close", () => {
     console.log("Socket disconnected from server")
-    broadcastToUser(SERVER_LOG_EVENT, "you went offline", player?.username)
+    socket.close()
+    //VVV this line crashes the server when refresh on firefox
+    //broadcastToUser(SERVER_LOG_EVENT, "you went offline", player.username)
     online.splice(online.findIndex(({ player }) => player.publicKey === publicKey), 1)
 
     socket.terminate()

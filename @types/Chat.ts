@@ -6,6 +6,8 @@ export interface Chat {
   date: number
   recipiant: Partial<Player> | null
   type: string
+  roomId: number | null
+  roomName: string | null
 }
 
 export interface ChatHistory {

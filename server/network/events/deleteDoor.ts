@@ -22,10 +22,26 @@ import {
   DELETE_DOOR_COST,
   GOLT,
 } from "../../../constants"
+import {
+  getBearName,
+  getCurrentEvent,
+} from "../../services/event"
 
 const handler: NetworkEventHandler = async (socket, args: string[], player) => {
   try {
-    const name = args[0].replace(/\s/g, "_")
+    let name = args[0].replace(/\s/g, "_")
+    const event = await getCurrentEvent(Date.now())
+    if(event){
+      switch (event.type){
+        case "Bear_Week":
+          const bearname = await getBearName(event.id, player.id)
+          if(bearname){
+            name = bearname
+          }
+
+          break;
+      }
+    }
 
     await getDoorByName(player.roomId, name)
 
