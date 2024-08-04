@@ -46,6 +46,7 @@ export const sendEvent = async <TPayload,>(code: string, payload: TPayload) => {
     }));
   } else {
     console.error('Client is undefined');
+    networkTask();
   }
 };
 
