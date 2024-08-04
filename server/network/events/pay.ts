@@ -66,7 +66,7 @@ const handler: NetworkEventHandler = async (socket, playerID: number) => {
       sendEvent<string>(socket, NOTIFICATION_EVENT, "pay")
     }
   } catch (error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }

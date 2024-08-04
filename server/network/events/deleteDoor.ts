@@ -59,7 +59,7 @@ const handler: NetworkEventHandler = async (socket, args: string[], player) => {
 
     sendEvent<string>(socket, SERVER_LOG_EVENT, `Deleted door ${name}`)
   } catch (error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }

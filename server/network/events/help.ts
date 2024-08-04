@@ -40,7 +40,7 @@ const handler: NetworkEventHandler = async (socket, commands: CommandModule[], p
     }
     sendEvent<string>(socket, LOG_EVENT, list)
   } catch (error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }

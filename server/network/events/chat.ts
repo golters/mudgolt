@@ -93,7 +93,7 @@ const handler: NetworkEventHandler = async (socket, message: string, player) => 
     await insertRoomChat(player.roomId, player.id, filteredMessage, chat.date)
     broadcastToRoom<string>(NOTIFICATION_EVENT, "chat", player.roomId);
   } catch (error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }

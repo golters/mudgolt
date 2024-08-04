@@ -13,7 +13,7 @@ import {
 import {
     Chat, Room,
 } from "../../../@types"
-import { networkTask, sendEvent } from "../network";
+import { client, networkTask, sendEvent } from "../network";
 import {
   store,
 } from "../store"
@@ -91,13 +91,20 @@ export function getClouds(): number {
     const roundedLikelihood = Math.round(likelihood);
     return Math.min(9, Math.max(0, roundedLikelihood));
 }
+
+localStorage.volume = localStorage.volume || "0.2"
+localStorage.muted = localStorage.muted || "true"
+
+if (isNaN(Number(localStorage.volume))) {
+    localStorage.volume = "0.2"
+}
   
 export const Home: React.FC = () => {
     const [asciiArt, setAsciiArt] = useState<JSX.Element[]>([]);
     const [notifications, setNotifications] = useState<JSX.Element[]>([]);
     const eventListenerRef = useRef<null | (() => void)>(null);
-    const [muted, setMuted] = useState(!!localStorage.getItem("muted") || false)
-    const [volume, setVolume] = useState(localStorage.volume*10)
+    const [muted, setMuted] = useState(localStorage.getItem("muted") === "true")
+    const [volume, setVolume] = useState(Number(localStorage.volume) * 10)
     const [randomEvent] = useState(Math.floor(Math.random() * 10)); // Consistent value across renders
     
 
@@ -145,7 +152,10 @@ export const Home: React.FC = () => {
         }
     }, [randomEvent, playGnome,playCrow,playOwl,playChest,frame]);
 
-    if(activeRooms.length === 0)sendEvent(HOME_UPDATE_EVENT, store.player?.roomId)
+    if (client && activeRooms.length === 0) {
+        sendEvent(HOME_UPDATE_EVENT, store.player?.roomId)
+    }
+        
     const eventHandler = (event: string, data: any) => {
         switch (event) {
             case CHAT_ALL_EVENT:

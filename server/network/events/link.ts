@@ -21,7 +21,7 @@ const handler: NetworkEventHandler = async (socket, commands: CommandModule[], p
     const room = await getRoomById(player.roomId)
     sendEvent<string>(socket, LOG_EVENT, "https://mudgolt.com/?go="+room.name)
   } catch (error) {
-    sendEvent<string>(socket, ERROR_EVENT, error.message)
+    sendEvent<string>(socket, ERROR_EVENT, (error as any).message)
     console.error(error)
   }
 }
