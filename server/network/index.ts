@@ -185,7 +185,7 @@ setInterval((publicKey) => {
       })
     }
   });
-}, 15 * 1000)
+}, 5 * 1000)
 
 
 console.log(`WebSocket server started on port ${PORT}`)
