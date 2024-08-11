@@ -726,27 +726,34 @@ export const createRandomEvent = async (time: number): Promise<void> => {
 }
 
 export const checkSeasonalEvents = async (): Promise<void> => {
-  if(Number(new Date().getMonth) < 7 || (Number(new Date().getMonth) === 7 && Number(new Date().getDate) < 11)){
-    const targetDate = new Date()
-    targetDate.setFullYear(new Date().getFullYear(),7,11)
-    targetDate.setHours(0)
-    targetDate.setMinutes(0)
-    targetDate.setSeconds(0)
-    const start = targetDate.getTime()
-    const end = start + 8.64e+7 * 7
+  const today = new Date();
+
+  // Define the start date (August 11th) and end date (August 18th)
+  const targetStartDate = new Date(today.getFullYear(), 7, 11); // August 11th, 00:00:00
+  targetStartDate.setHours(0, 0, 0, 0); // Clear time portion to ensure it's midnight
+
+  const targetEndDate = new Date(today.getFullYear(), 7, 18); // August 18th, 23:59:59
+  targetEndDate.setHours(23, 59, 59, 999); // Set to the end of the day on August 18th
+
+  // Check if today's date falls within the target range
+  if (today >= targetStartDate && today <= targetEndDate) {
+    const start = targetStartDate.getTime();
+    const end = targetStartDate.getTime() + 8.64e+7 * 7; // One week duration from start
+
+    // Check if the event already exists
     const bearWeek = await db.get<Event>(/*sql*/`
       SELECT * FROM events WHERE "start" = $1 AND "end" = $2 AND type = $3;
-    `, [start,end,"Bear_Week"])
-  
-    if(!bearWeek){
-      createEvent("Bear_Week",start,end)
+    `, [start, end, "Bear_Week"]);
+
+    // Create the event if it doesn't exist
+    if (!bearWeek) {
+      createEvent("Bear_Week", start, end);
     }
-  
   }
 
-
-  return
+  return;
 }
+
 
 export const getDateString = async (time: number): Promise<string> => {
   const formattedTimeParts = new Date(time)
