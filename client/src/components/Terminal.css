@@ -97,6 +97,7 @@ a {
   cursor: pointer;
   user-select: none;
   position: relative; /* Required for positioning the dropdown content */
+  max-width: 500%;
   width: max-content !important;
 }
 
