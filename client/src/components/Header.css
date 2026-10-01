@@ -72,7 +72,11 @@
 }
 
 #banner {
-  line-height: 0.5;
+  display: grid;
+  grid-template-columns: repeat(96, var(--banner-span-size));
+  grid-auto-rows: 16px;
+  direction: rtl;
+  line-height: 16px;
   height:fit-content;
   color: var(--color-banner-color);
   background-color: var(--color-banner-back);
@@ -80,6 +84,9 @@
   transition: 0.5s;
   width:100%;
   --banner-span-size: calc(100vw / 100);
+  contain: paint;
+  transform: translateZ(0);
+  will-change: transform;
 }
 @media only screen and (min-width: 1200px) {
   #banner {
@@ -104,14 +111,17 @@
   line-height: 16px;
 }
 
+#banner br {
+  display: none;
+}
+
 /* Individual character */
 #banner span {
   user-select: none;
-  float: right;
   display: inline-block;
   width: var(--banner-span-size);
   cursor: none;
-  transition: background-color 1s cubic-bezier(0.075, 0.9, 0.1, 0.075);
+  direction: ltr;
 }
 
 #banner span::before{
@@ -121,12 +131,6 @@
   width:100%;
   height:100%;
   background-color: blue;
-}
-
-#banner span:hover {
-  color: var(--color-banner-cursor);
-  background-color: var(--color-banner-cursor-back);
-  transition: background-color 0.25s;
 }
 
 #room-name {
