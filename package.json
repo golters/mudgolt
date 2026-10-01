@@ -54,5 +54,8 @@
     "sqlite3": "^5.0.2",
     "validate-color": "^2.1.1",
     "ws": "^7.4.4"
+  },
+  "allowScripts": {
+    "sqlite3@5.1.7": true
   }
 }
