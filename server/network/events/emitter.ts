@@ -1,8 +1,8 @@
 import Emitter from "events"
 import WebSocket from "ws"
-import {
+import type {
   Player, 
-} from "../../../@types"
+} from "../../../@types/index.ts"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type NetworkEventHandler = (socket: WebSocket, payload: any, player: Player) => void

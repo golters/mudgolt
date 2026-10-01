@@ -147,7 +147,7 @@ export const Terminal: React.FC = () => {
     >
       {logsState.map((log, key) => {
         if (typeof log === "string") {
-          return <Markdown key={key} string={log} options={{ sanitize: false }} />
+          return <Markdown key={key} string={log} allowHtml />
         } else {
           return <span key={key}>{log}</span>
         }

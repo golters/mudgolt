@@ -1,26 +1,26 @@
 import {
-  networkEmitter, NetworkEventHandler,
-} from "./emitter"
+  networkEmitter, type NetworkEventHandler,
+} from "./emitter.ts"
 import {
   ERROR_EVENT,
   SMELT_ITEM_EVENT,
   SERVER_LOG_EVENT,
   NOTIFICATION_EVENT,
   INVENTORY_UPDATE_EVENT,
-} from "../../../events"
+} from "../../../events.ts"
 import {
   sendEvent,
-} from "../../network"
+} from "../../network/index.ts"
 import {
   smeltItem, createItem,
-} from "../../services/item"
-import { SMELT_COST, GOLT } from "../../../constants"
+} from "../../services/item.ts"
+import { SMELT_COST, GOLT } from "../../../constants.ts"
 import {
   getInvByPlayer,
-} from "../../services/player"
-import {
+} from "../../services/player.ts"
+import type {
   Item,
-} from "../../../@types"
+} from "../../../@types/index.ts"
 
 const handler: NetworkEventHandler = async (socket, args: string, player) => {
   try {    

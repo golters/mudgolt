@@ -1,31 +1,31 @@
 import {
-  networkEmitter, NetworkEventHandler,
-} from "./emitter"
+  networkEmitter, type NetworkEventHandler,
+} from "./emitter.ts"
 import {
   ERROR_EVENT,
   SERVER_LOG_EVENT,
   DELETE_DOOR_EVENT,
-} from "../../../events"
+} from "../../../events.ts"
 import {
   sendEvent,
   broadcastToRoom,
-} from "../../network"
+} from "../../network/index.ts"
 import {
   getDoorByName,
   deleteDoor,
   getDoorByRoom,
-} from "../../services/door"
+} from "../../services/door.ts"
 import {
   takePlayerGolts,
-} from "../../services/player"
+} from "../../services/player.ts"
 import {
   DELETE_DOOR_COST,
   GOLT,
-} from "../../../constants"
+} from "../../../constants.ts"
 import {
   getBearName,
   getCurrentEvent,
-} from "../../services/event"
+} from "../../services/event.ts"
 
 const handler: NetworkEventHandler = async (socket, args: string[], player) => {
   try {

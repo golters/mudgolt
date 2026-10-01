@@ -1,4 +1,4 @@
-import { Player } from "./Player"
+import type { Player } from "./Player.ts"
 
 export interface Chat {
   player: Partial<Player>

@@ -1,11 +1,11 @@
 import {
-  networkEmitter, NetworkEventHandler,
-} from "./emitter"
+  networkEmitter, type NetworkEventHandler,
+} from "./emitter.ts"
 import {
   broadcastToUser,
   sendEvent,
   online,
-} from ".."
+} from "../index.ts"
 import {
   INVITE_EVENT,
   SERVER_LOG_EVENT,
@@ -15,32 +15,32 @@ import {
   GAME_UPDATE_EVENT,
   BANNER_UPDATE_EVENT,
   ROOM_UPDATE_EVENT,
-} from "../../../events"
-import {
+} from "../../../events.ts"
+import type {
   Player,
   Room,
-} from "../../../@types"
+} from "../../../@types/index.ts"
 import {
   getInvByPlayer,
   getPlayerById,
   getPlayerByUsername,
-} from "../../services/player"
+} from "../../services/player.ts"
 import {
   insertWhisper,
-} from "../../services/chat"
+} from "../../services/chat.ts"
 import {
   sendInvite,
   acceptInvite,
   closeInvite,
   findInviteByPlayer,
   findOpenInvites,
-} from "../../services/invite"
+} from "../../services/invite.ts"
 import {
   getGameByInvite,
-} from "../../services/game"
+} from "../../services/game.ts"
 import {
   getRoomById,
-} from "../../services/room"
+} from "../../services/room.ts"
 
 const handler: NetworkEventHandler = async (
   socket,

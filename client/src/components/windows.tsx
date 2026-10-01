@@ -15,7 +15,7 @@ import {
 import { MESSAGE_MAX_LENGTH, AVATAR_HEIGHT, AVATAR_WIDTH } from '../../../constants'
 import{
   setBrush,
-}from "./Header"
+}from "../store/banner"
 
 
 export function newMesageWindow(Message: string, user:string, npcs: Npc[] | null){

@@ -48,19 +48,15 @@ import{
   setBrushType,
   setBrushBackCol,
   setBrushPrimeCol,
-}from "./Header"
+}from "../store/banner"
 import { commandModules } from "../../src/commands"
 import { colorUtil } from "../../src/utils"
-import { Volume } from "src/commands/volume"
 import {
   commandEmitter, 
 } from "../commands/emitter"
 import { pushToLog } from "./Terminal"
-import { type } from "os"
-import { Make } from "src/commands/make"
 import { newCraftWindow, newMesageWindow, newReplyWindow, redrawAvatars } from "./windows"
 import { news } from "./news"
-import { Color } from "src/commands/color"
 import { themes } from "../../src/utils/themes"
 
 const rooms: (string)[] = []
@@ -1003,14 +999,16 @@ function drawInbox(){
 
 }
 
-sendEvent(EVENT_EVENT,"/event check")
-getCount()
-setInterval(getCount, 1000);
+useEffect(() => {
+  getCount()
+  const timer = setInterval(getCount, 1000)
+  return () => clearInterval(timer)
+}, []);
 
 function getCount(){
-  let eventName = localStorage.event.split(",")[0]
-  let eventStart = localStorage.event.split(",")[1]
-  let eventEnd = localStorage.event.split(",")[2]
+  let eventName = (localStorage.event || "").split(",")[0]
+  let eventStart = (localStorage.event || "").split(",")[1]
+  let eventEnd = (localStorage.event || "").split(",")[2]
 
   var now = Date.now();
   var countdown = eventStart - now;

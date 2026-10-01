@@ -1,13 +1,13 @@
 import {
-  NetworkEventHandler,
+  type NetworkEventHandler,
   networkEmitter,
-} from "./emitter"
+} from "./emitter.ts"
 import {
   sendEvent,
   broadcastToRoom,
   broadcastToUser,
   broadcast,
-} from "../"
+} from "../index.ts"
 import {
   DRAW_AVATAR_EVENT,
   ERROR_EVENT,
@@ -15,19 +15,19 @@ import {
   NOTIFICATION_EVENT,
   TOOLBAR_UPDATE_EVENT,
   NPC_UPDATE_EVENT,
-} from "../../../events"
+} from "../../../events.ts"
 import {
   getRoomById,
   editBaner,
-} from "../../services/room"
+} from "../../services/room.ts"
 import {
   takePlayerGolts,
-} from "../../services/player"
+} from "../../services/player.ts"
 import {
   GOLT,
-} from "../../../constants"
-import { Npc } from "../../../@types"
-import { editAvatar, getLivingNpcs } from "../../services/npc"
+} from "../../../constants.ts"
+import type { Npc } from "../../../@types/index.ts"
+import { editAvatar, getLivingNpcs } from "../../services/npc.ts"
 
 const handler: NetworkEventHandler = async (socket, payload: [number, number, string, Npc], player) => {
   try {

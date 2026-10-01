@@ -1,24 +1,24 @@
 import {
-  NetworkEventHandler,
+  type NetworkEventHandler,
   networkEmitter,
-} from "./emitter"
+} from "./emitter.ts"
 import {
   sendEvent,
   broadcastToUser,
-} from "../"
+} from "../index.ts"
 import {
   CLICK_EVENT,
   ERROR_EVENT,
   SERVER_LOG_EVENT,
   NOTIFICATION_EVENT,
-} from "../../../events"
+} from "../../../events.ts"
 import {
   findGameByPlayer,
   chessClick,
-} from "../../services/game"
+} from "../../services/game.ts"
 import {
   BANNER_WIDTH, 
-} from "../../../constants"
+} from "../../../constants.ts"
 
 const handler: NetworkEventHandler = async (socket, point: [number, number], player) => {
   try {

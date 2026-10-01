@@ -1,34 +1,34 @@
 /* eslint-disable camelcase */
 import { error } from "console"
-import {
+import type {
   Door,
   Event, EventTag, Room, Player, Chat, ChatHistory,
-} from "../../@types"
+} from "../../@types/index.ts"
 import {
   db,
-} from "../store"
+} from "../store/index.ts"
 import {
   broadcast,
   broadcastToUser,
   broadcastToRoom,
   online,
-} from "../network"
+} from "../network/index.ts"
 import {
   CAMPAIGN_LOG_EVENT,
   ERROR_EVENT,
   LOG_EVENT,
   NOTIFICATION_EVENT,
   SERVER_LOG_EVENT,
-} from "../../events"
-import { getPlayerById, getPlayerByRoom, getPlayerByUsername, getRecentlyOnline, takePlayerGolts } from "./player"
-import { createItem,setItemBio,createFloorItem, createPocketItem } from "./item"
-import { getDoorsIntoRoom } from "./door"
+} from "../../events.ts"
+import { getPlayerById, getPlayerByRoom, getPlayerByUsername, getRecentlyOnline, takePlayerGolts } from "./player.ts"
+import { createItem,setItemBio,createFloorItem, createPocketItem } from "./item.ts"
+import { getDoorsIntoRoom } from "./door.ts"
 import { start } from "repl"
-import { insertCampaign, insertRoomCommand } from "./chat"
-import { getAllRooms } from "./room"
+import { insertCampaign, insertRoomCommand } from "./chat.ts"
+import { getAllRooms } from "./room.ts"
 import {
   GOLT,
-} from "../../constants"
+} from "../../constants.ts"
 
 export const events = [
   "Zombie_Invasion",

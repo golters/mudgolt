@@ -1,8 +1,8 @@
-import { storeTask } from "./store"
+import { storeTask } from "./store/index.ts"
 
 const init = async () => {
   await storeTask()
-  await import("./network")
+  await import("./network/index.ts")
   console.log("Server ready")
 }
 

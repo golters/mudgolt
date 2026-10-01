@@ -1,20 +1,20 @@
 import {
-  NetworkEventHandler,
+  type NetworkEventHandler,
   networkEmitter,
-} from "./emitter"
+} from "./emitter.ts"
 import {
   sendEvent,
-} from "../"
+} from "../index.ts"
 import {
   CHANGE_MUSIC_EVENT,
   MUSIC_UPDATE_EVENT,
   ERROR_EVENT,
-} from "../../../events"
+} from "../../../events.ts"
 import {
   updateRoomMusic,
   getMusicByRoom,
-} from "../../services/music"
-import { Music } from "../../../@types"
+} from "../../services/music.ts"
+import type { Music } from "../../../@types/index.ts"
 
 const handler: NetworkEventHandler = async (socket, roomID: number) => {
   try {

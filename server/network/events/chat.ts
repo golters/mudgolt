@@ -1,31 +1,31 @@
 import {
-  networkEmitter, NetworkEventHandler, 
-} from "./emitter"
+  networkEmitter, type NetworkEventHandler,
+} from "./emitter.ts"
 import {
   broadcast,
   broadcastToRoom,
   sendEvent,
-} from "../"
+} from "../index.ts"
 import {
   CHAT_ALL_EVENT,
   CHAT_EVENT, 
   ERROR_EVENT,
   NOTIFICATION_EVENT,
-} from "../../../events"
+} from "../../../events.ts"
 import {
   MESSAGE_MAX_LENGTH, 
-} from "../../../constants"
-import { Chat } from "@types"
+} from "../../../constants.ts"
+import type { Chat } from "../../../@types/index.ts"
 import {
   insertRoomChat,
-} from "../../services/chat"
+} from "../../services/chat.ts"
 import {
   getRoomById,
-} from "../../services/room"
+} from "../../services/room.ts"
 import {
   getBearName,
   getCurrentEvent, getEventTag,
-} from "../../services/event"
+} from "../../services/event.ts"
 
 export const zombieSlurs = [
   "... ",

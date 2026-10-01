@@ -1,23 +1,23 @@
 import {
-  networkEmitter, NetworkEventHandler,
-} from "./emitter"
+  networkEmitter, type NetworkEventHandler,
+} from "./emitter.ts"
 import {
   sendEvent,
   broadcastToRoom,
-} from ".."
+} from "../index.ts"
 import {
   ERROR_EVENT, INVENTORY_UPDATE_EVENT, SERVER_LOG_EVENT, TAG_ITEM_EVENT,
-} from "../../../events"
-import {
+} from "../../../events.ts"
+import type {
   Player,
   Item,
-} from "../../../@types"
+} from "../../../@types/index.ts"
 import {
   ITEM_MAX_TAGS,
-} from "../../../constants"
+} from "../../../constants.ts"
 import {
   getItemByPlayer, setItemBio, setItemTags,
-} from "../../services/item"
+} from "../../services/item.ts"
 
 const handler: NetworkEventHandler = async (
   socket,

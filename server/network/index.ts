@@ -1,23 +1,23 @@
 import WebSocket from "ws"
 import {
   networkEmitter, 
-} from "./events"
+} from "./events/index.ts"
 import querystring from "querystring"
 import {
   getRoomById,
-} from "../services/room"
+} from "../services/room.ts"
 import {
   findOrCreatePlayer,
-} from "../services/player"
+} from "../services/player.ts"
 import {
   insertRoomCommand,
-} from "../services/chat"
-import {
+} from "../services/chat.ts"
+import type {
   Player, Room, 
-} from "../../@types"
+} from "../../@types/index.ts"
 import {
   AUTH_EVENT, ERROR_EVENT, PLAYER_EVENT, ROOM_UPDATE_EVENT, SERVER_LOG_EVENT, NOTIFICATION_EVENT,
-} from "../../events"
+} from "../../events.ts"
 import {
   createVerify, createPublicKey, 
 } from "crypto"
@@ -169,7 +169,7 @@ server.on("connection", (socket, request) => {
   })
 })
 
-setInterval((publicKey) => {
+setInterval((publicKey?: string) => {
   recentOnline.forEach(p => {
     if(p.player.publicKey === publicKey){
       online.forEach(c => {

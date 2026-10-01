@@ -1,17 +1,17 @@
 import {
-  NetworkEventHandler,
+  type NetworkEventHandler,
   networkEmitter,
-} from "./emitter"
+} from "./emitter.ts"
 import {
   sendEvent,
-} from "../"
+} from "../index.ts"
 import {
   INV_EVENT,
   LOG_EVENT,
   ERROR_EVENT,
-} from "../../../events"
-import { getInvByPlayer } from "../../../server/services/player"
-import { GOLT } from "../../../constants"
+} from "../../../events.ts"
+import { getInvByPlayer } from "../../../server/services/player.ts"
+import { GOLT } from "../../../constants.ts"
 
 const handler: NetworkEventHandler = async (socket, roomID: number, player) => {
   try {

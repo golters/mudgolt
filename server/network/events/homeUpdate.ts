@@ -1,10 +1,10 @@
 import {
-  NetworkEventHandler,
+  type NetworkEventHandler,
   networkEmitter,
-} from "./emitter"
+} from "./emitter.ts"
 import {
   sendEvent,
-} from ".."
+} from "../index.ts"
 import {
   ERROR_EVENT,
   DOOR_UPDATE_EVENT,
@@ -15,28 +15,28 @@ import {
   ACTIVE_UPDATE_EVENT,
   HOME_UPDATE_EVENT,
   RANDOM_ROOM_EVENT,
-} from "../../../events"
+} from "../../../events.ts"
 import {
   activeRooms,
   getRoomById,
   randomRooms,
-} from "../../services/room"
+} from "../../services/room.ts"
 import {
   getDoorByRoom,
-} from "../../services/door"
+} from "../../services/door.ts"
 import {
   getLivingNpcs,
-} from "../../services/npc"
-import {
+} from "../../services/npc.ts"
+import type {
   Room,
   Door,
   Item,
   Npc,
   Chat,
-} from "../../../@types"
+} from "../../../@types/index.ts"
 import {
   broadcastToUser,
-} from ".."
+} from "../index.ts"
 
 const handler: NetworkEventHandler = async (socket, nothing: string, player) => {
   try {

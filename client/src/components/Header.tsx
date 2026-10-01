@@ -1,11 +1,11 @@
 import {
-  Room, 
+  Room,
   Music,
   Game,
 } from "../../../@types"
 import {
   DRAW_EVENT,
-  ROOM_UPDATE_EVENT, 
+  ROOM_UPDATE_EVENT,
   ERROR_EVENT,
   CHANGE_MUSIC_EVENT,
   COMPOSE_EVENT,
@@ -18,12 +18,12 @@ import {
   LOG_EVENT,
 } from "../../../events"
 import {
-  networkEmitter, 
+  networkEmitter,
 } from "../network/events"
 import {
   BANNER_FILL,
   BANNER_HEIGHT,
-  BANNER_WIDTH, 
+  BANNER_WIDTH,
   GOLT,
 } from "../../../constants"
 import "./Header.css"
@@ -35,52 +35,28 @@ import {
 
 const BANNER_MINIMIZE_STORAGE_KEY = 'headerBannerMinimized'
 
-export let brush = localStorage.brush || "+"
-export let brushType = localStorage.brushType || "draw"
-export let brushPrimeCol = localStorage.brushPrimeCol || ""
-export let brushBackCol = localStorage.brushBackCol || ""
-export let bannerT = localStorage.bannerT || "art"
-let R = store.player?.roomId
+import {
+  brush, brushType, brushPrimeCol, brushBackCol, bannerT,
+  setBrush, setBrushPrimeCol, setBrushBackCol, changeBanner,
+} from "../store/banner"
 
-export const setBrushType = (newBrushType: string) => {
-  localStorage.brushType = newBrushType
-  brushType = newBrushType
-  sendEvent(TOOLBAR_UPDATE_EVENT, store.player?.roomId)
-}
-
-export const setBrush = (newBrush: string) => {
-  localStorage.brush = newBrush
-  brush = newBrush
-}
-
-export const setBrushPrimeCol = (newCol: string) => {
-  localStorage.brushPrimeCol = newCol
-  brushPrimeCol = newCol
-}
-
-export const setBrushBackCol = (newCol: string) => {
-  localStorage.brushBackCol = newCol
-  brushBackCol = newCol 
-}
-
-export const changeBanner = (newBanner: string) => {
-  switch(newBanner){
-    case "art":
-      bannerT = "art"
-      localStorage.bannerT = "art"
-      break;
-    case "music":
-      bannerT = "music"
-      localStorage.bannerT = "music"
-      break;
-    case "game":
-      bannerT = "game"
-      localStorage.bannerT = "game"
-      break;
-    default:
-      sendEvent(ERROR_EVENT, "invalid banner type")
-      break;
-  }
+const BannerCell: React.FC<{
+  character: string,
+  color: string,
+  backColor: string,
+  onMouseDown: React.MouseEventHandler<HTMLSpanElement>,
+}> = ({ character, color, backColor, onMouseDown }) => {
+  const [hovered, setHovered] = useState(false)
+  return <span
+    onMouseOver={() => setHovered(true)}
+    onMouseLeave={() => setHovered(false)}
+    onContextMenu={event => event.preventDefault()}
+    onMouseDown={onMouseDown}
+    style={{
+      color: hovered ? (brushType === "color" ? brushPrimeCol : "") : color,
+      backgroundColor: hovered ? (brushType === "color" ? brushBackCol : "") : backColor,
+    }}
+  >{hovered ? (brushType === "draw" ? brush : "+") : character}</span>
 }
 
 
@@ -94,19 +70,17 @@ export const Header: React.FC = () => {
   const [gametab, setgametab] = useState(false)
   const [minimized, setMinimized] = useState(!!localStorage.getItem(BANNER_MINIMIZE_STORAGE_KEY) || false)
   const [inGame, setInGame] = useState(!!localStorage.getItem("inGame") || false)
-  R = room?.id
+  const R = room?.id
 
   function bannerArt() {
-    bannerT = "art"
-    localStorage.bannerT = "art"  
+    changeBanner("art")
     sendEvent(CHANGE_BANNER_EVENT, R)
     setarttab(true)
     setmusictab(false)
     setgametab(false)
   }
   function bannerMusic() {
-    bannerT = "music"
-    localStorage.bannerT = "music"  
+    changeBanner("music")
     sendEvent(CHANGE_BANNER_EVENT, R)
     setarttab(false)
     setmusictab(true)
@@ -116,23 +90,24 @@ export const Header: React.FC = () => {
     const args = []
     args.push("game")
     sendEvent(GAME_EVENT,args)
-    bannerT = "game"
-    localStorage.bannerT = "game" 
-    sendEvent(CHANGE_BANNER_EVENT, R) 
+    changeBanner("game")
+    sendEvent(CHANGE_BANNER_EVENT, R)
     setarttab(false)
     setmusictab(false)
     setgametab(true)
   }
 
   useEffect(() => {
-    networkEmitter.on(ROOM_UPDATE_EVENT, (room: Room) => {
-      sendEvent(CHANGE_MUSIC_EVENT, room.id) 
-      sendEvent(ERROR_EVENT, "room update")
+    const updateRoom = (room: Room) => {
+      sendEvent(CHANGE_MUSIC_EVENT, room.id)
       setRoom(room)
       setMusic(music)
       setGame(game)
+      setInGame(Boolean(store.game))
       sendEvent(TOOLBAR_UPDATE_EVENT, room.id)
-    })
+    }
+    networkEmitter.on(ROOM_UPDATE_EVENT, updateRoom)
+    return () => { networkEmitter.off(ROOM_UPDATE_EVENT, updateRoom) }
   }, [])
 
   const toggleBanner = useCallback(() => {
@@ -144,35 +119,31 @@ export const Header: React.FC = () => {
       localStorage.setItem(BANNER_MINIMIZE_STORAGE_KEY, '1')
     }
   }, [minimized])
-  
+
   const Banner: React.FC<{ room: Room }> = ({ room }) => {
-    const bannerParts: string[] = [] 
-    let colorParts: string[] = [] 
-    let backColorParts: string[] = [] 
+    const bannerParts: string[] = []
+    let colorParts: string[] = []
+    let backColorParts: string[] = []
 
     const music = store.music
     const game = store.game
     let Mbanner = ""
     if(music === undefined){
       Mbanner = room.banner
-      bannerT = "art"
-      localStorage.bannerT = "art"
+      changeBanner("art")
     }else{
       Mbanner = music.banner
-    } 
+    }
     let Gbanner = ""
     if(bannerT === "game"){
     if(!game){
-      bannerT = "art"
-      localStorage.bannerT = "art"
-      setInGame(false)
+      changeBanner("art")
     }else{
       Gbanner = game?.banner
-      setInGame(true)
     }
   }
-  
-    for (let i = 0; i < room.banner.length / BANNER_WIDTH && i < BANNER_HEIGHT; i++) {    
+
+    for (let i = 0; i < room.banner.length / BANNER_WIDTH && i < BANNER_HEIGHT; i++) {
       switch(bannerT){
         case "art":
           const artFrom = Array.from(room.banner);
@@ -181,14 +152,14 @@ export const Header: React.FC = () => {
           colorParts.push(room.primeColor.split(",").slice(i * BANNER_WIDTH, (i * BANNER_WIDTH) + BANNER_WIDTH).reverse().join(","))
           if(room.backColor)
           backColorParts.push(room.backColor.split(",").slice(i * BANNER_WIDTH, (i * BANNER_WIDTH) + BANNER_WIDTH).reverse().join(","))
-          
+
           break;
-        case "music":   
+        case "music":
         const musicFrom = Array.from(Mbanner);
           bannerParts.push(musicFrom.slice(i * BANNER_WIDTH, (i * BANNER_WIDTH) + BANNER_WIDTH).join(""))
 
           break;
-        case "game":   
+        case "game":
         const gameFrom = Array.from(Gbanner);
           bannerParts.push(gameFrom.slice(i * BANNER_WIDTH, (i * BANNER_WIDTH) + BANNER_WIDTH).join(""))
 
@@ -204,36 +175,23 @@ export const Header: React.FC = () => {
 
     const parts = bannerParts.map((part, y) => {
       const usingArrayFrom = Array.from(part);
-      
-      return <>{
+
+      return <React.Fragment key={y}>{
         usingArrayFrom.reverse()
           .map((character, x) => {
-            const [currentCharacter, setCurrentCharacter] = useState(character)
             let currentColor = ""
             let currentBackColor = ""
-            let brushColor = ""
-            let brushBackColor = ""
-            let brushCharacter = "+"
-            if(brushType === "color"){
-              brushColor = brushPrimeCol
-              brushBackColor = brushBackCol
-            }
-            if(brushType === "draw"){
-              brushCharacter = brush
-            }
             if(bannerT === "art"){
             if(colorParts.length > 0 && colorParts[x + (y * BANNER_WIDTH)] != BANNER_FILL)
             currentColor = colorParts[x + (y * BANNER_WIDTH)]
             if(backColorParts.length > 0 && backColorParts[x + (y * BANNER_WIDTH)] != BANNER_FILL)
             currentBackColor = backColorParts[x + (y * BANNER_WIDTH)]
             }
-            const [col, setCol] = useState(currentColor)
-            const [backCol, setBackCol] = useState(currentBackColor)
-            return <span
-              onMouseOver={() => {setCurrentCharacter(brushCharacter),setCol(brushColor),setBackCol(brushBackColor)}}
-              onMouseLeave={() => {setCurrentCharacter(character),setCol(currentColor),setBackCol(currentBackColor)}}
-              onContextMenu={(event) => event.preventDefault()}
-              
+            return <BannerCell
+              key={x}
+              character={character}
+              color={currentColor}
+              backColor={currentBackColor}
               onMouseDown={(event) => {
                 if (event.buttons === 1) {
                   switch(bannerT){
@@ -244,10 +202,10 @@ export const Header: React.FC = () => {
                       sendEvent(DRAW_COLOR_EVENT, [(usingArrayFrom.length - x - 1),y,brushPrimeCol,brushBackCol])
                       }
                       break;
-                    case "music":   
+                    case "music":
                       sendEvent(COMPOSE_EVENT, [(usingArrayFrom.length - x - 1), y, brush])
                       break;
-                    case "game":   
+                    case "game":
                       sendEvent(CLICK_EVENT, [(usingArrayFrom.length - x - 1), y])
                       break;
                   }
@@ -260,12 +218,11 @@ export const Header: React.FC = () => {
                   }
                 }
               }}
-              style={{color:col, backgroundColor:backCol}}
-            >{minimized? null : currentCharacter}</span>
+            />
           })
-      }<br /></> 
+      }<br /></React.Fragment>
     })
-  
+
     return <div id="banner">{parts}</div>
   }
 
@@ -276,8 +233,8 @@ export const Header: React.FC = () => {
     <h3 id="room-name">{room?.name}
         <div className="controls">
           <span id="mini_button"
-            title={`${minimized ? 'Expand' : 'Minimize'} banner`} 
-            className="minimize" 
+            title={`${minimized ? 'Expand' : 'Minimize'} banner`}
+            className="minimize"
             onClick={toggleBanner}
           >{minimized ? "+" : "-"}</span>
         </div>  </h3>
@@ -287,7 +244,7 @@ export const Header: React.FC = () => {
         <span id="banner-type" onClick={bannerGame}>{inGame ? gametab ? <mark>Game</mark> : "Game" : "..."}</span>
         </span> }
         </span>
-        </div>      
+        </div>
         {(!minimized && room) && <Banner room={room} />}
       </div>
     </header>

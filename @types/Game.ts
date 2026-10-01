@@ -1,4 +1,4 @@
-import { Player } from "./Player"
+import type { Player } from "./Player.ts"
 /* eslint-disable camelcase */
 export interface Game {
   id: number

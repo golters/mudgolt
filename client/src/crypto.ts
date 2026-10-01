@@ -83,6 +83,6 @@ export const cryptoTask = async () => {
       publicKey: await importRSAKey(localStorage.publicKey, "spki", ["verify"]),
     }
   } catch (error) {
-    console.error(error)
+    throw error
   }
 }

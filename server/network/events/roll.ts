@@ -1,22 +1,22 @@
 import {
-  networkEmitter, NetworkEventHandler, 
-} from "./emitter"
+  networkEmitter, type NetworkEventHandler,
+} from "./emitter.ts"
 import {
   broadcastToRoom, 
-} from ".."
+} from "../index.ts"
 import {
   ROLL_EVENT, SERVER_LOG_EVENT, 
-} from "../../../events"
-import {
+} from "../../../events.ts"
+import type {
   Player, 
-} from "../../../@types";
+} from "../../../@types/index.ts";
 import {
   insertRoomCommand,
-} from "../../services/chat"
+} from "../../services/chat.ts"
 import {
   getCurrentEvent,
   getBearName,
-} from "../../services/event"
+} from "../../services/event.ts"
 
 export interface DiceProps{
   count: number

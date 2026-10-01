@@ -1,20 +1,20 @@
 import {
-  NetworkEventHandler,
+  type NetworkEventHandler,
   networkEmitter,
-} from "./emitter"
+} from "./emitter.ts"
 import {
   online,
   sendEvent,
-} from "../"
+} from "../index.ts"
 import {
   ONLINE_EVENT,
   LOG_EVENT,
   ERROR_EVENT,
-} from "../../../events"
+} from "../../../events.ts"
 import {
   getRecentlyOnline,
-} from "../../services/player"
-import { getBearName, getCurrentEvent } from "../../services/event"
+} from "../../services/player.ts"
+import { getBearName, getCurrentEvent } from "../../services/event.ts"
 
 const handler: NetworkEventHandler = async (socket, roomID: string, player) => {
   try {

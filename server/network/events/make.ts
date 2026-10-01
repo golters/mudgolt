@@ -1,27 +1,27 @@
 import {
-  networkEmitter, NetworkEventHandler,
-} from "./emitter"
+  networkEmitter, type NetworkEventHandler,
+} from "./emitter.ts"
 import {
   ERROR_EVENT,
   MAKE_EVENT,
   SERVER_LOG_EVENT,
   INVENTORY_UPDATE_EVENT,
-} from "../../../events"
+} from "../../../events.ts"
 import {
   broadcastToRoom,
   sendEvent,
-} from "../../network"
+} from "../../network/index.ts"
 import {
   createDoor,
   getDoorByRoom,
-} from "../../services/door"
+} from "../../services/door.ts"
 import {
   getRoomByName, makeFullRoom,
-} from "../../services/room"
+} from "../../services/room.ts"
 import {
   takePlayerGolts,
   getInvByPlayer,
-} from "../../services/player"
+} from "../../services/player.ts"
 import {
   DOOR_COST,
   DOOR_MULTIPLIER,
@@ -31,15 +31,15 @@ import {
   ROOM_COST,
   ITEM_MAX_NAME,
   ROOM_MAX_NAME,
-} from "../../../constants"
+} from "../../../constants.ts"
 import {
   getCurrentEvent,
   getBearName,
-} from "../../services/event"
-import {
+} from "../../services/event.ts"
+import type {
   Item,
-} from "../../../@types"
-import { makeFullItem } from "../../services/item"
+} from "../../../@types/index.ts"
+import { makeFullItem } from "../../services/item.ts"
 
 const handler: NetworkEventHandler = async (socket, args: string[], player) => {
   try { 

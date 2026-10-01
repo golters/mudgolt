@@ -1,5 +1,5 @@
 import { CommandModule } from "./emitter"
-import { setBrush } from "../components/Header"
+import { setBrush } from "../store/banner"
 import { pushErrorToLog } from "../components/Terminal"
 
 export const Brush: CommandModule = {

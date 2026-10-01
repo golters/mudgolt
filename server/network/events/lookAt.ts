@@ -1,27 +1,27 @@
 import {
-  NetworkEventHandler,
+  type NetworkEventHandler,
   networkEmitter,
-} from "./emitter"
+} from "./emitter.ts"
 import {
   sendEvent,
-} from "../"
+} from "../index.ts"
 import {
   LOOK_AT_EVENT,
   LOG_EVENT,
   ERROR_EVENT,
-} from "../../../events"
+} from "../../../events.ts"
 import {
   getPlayerByRoom,
-} from "../../services/player"
+} from "../../services/player.ts"
 import {
   getItemByPlayer,
   getItemByRoom,
-} from "../../services/item"
+} from "../../services/item.ts"
 import {
   getAllBearNames,
   getCurrentEvent,
   getEventTag,
-} from "../../services/event"
+} from "../../services/event.ts"
 
 const handler: NetworkEventHandler = async (socket, args: string[], player) => {
   try {

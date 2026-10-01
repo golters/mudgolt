@@ -1,4 +1,4 @@
-import {
+import type {
   Room, 
   Event,
   EventTag,
@@ -8,34 +8,34 @@ import {
   Player,
   Item,
   Door,
-} from "../../@types"
+} from "../../@types/index.ts"
 import {
   db,
-} from "../store"
+} from "../store/index.ts"
 import {
   BANNER_WIDTH, BANNER_HEIGHT, BANNER_FILL, 
-} from "../../constants"
+} from "../../constants.ts"
 import {
   ROOM_UPDATE_EVENT,
-} from "../../events"
+} from "../../events.ts"
 import {
   broadcastToRoom,
-} from "../network"
+} from "../network/index.ts"
 import {
   online,
-} from "../network"
+} from "../network/index.ts"
 import {
   getDoorByRoom,
-} from "./door"
+} from "./door.ts"
 import {
   createFloorItem,
   createItem,
   getItemByRoom,
   setItemBio,
-} from "./item"
-import { getAllBearNames, getBearName, getCurrentEvent, getZombieDoors, getZombieRooms } from "./event"
-import { fetchRoomChats } from "./chat"
-import { bugs, weeds } from "./specialItems"
+} from "./item.ts"
+import { getAllBearNames, getBearName, getCurrentEvent, getZombieDoors, getZombieRooms } from "./event.ts"
+import { fetchRoomChats } from "./chat.ts"
+import { bugs, weeds } from "./specialItems.ts"
 
 export const generateBanner = () => {
   return new Array(BANNER_WIDTH * BANNER_HEIGHT)

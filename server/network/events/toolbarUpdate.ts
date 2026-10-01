@@ -1,10 +1,10 @@
 import {
-  NetworkEventHandler,
+  type NetworkEventHandler,
   networkEmitter,
-} from "./emitter"
+} from "./emitter.ts"
 import {
   sendEvent,
-} from "../"
+} from "../index.ts"
 import {
   TOOLBAR_UPDATE_EVENT,
   ERROR_EVENT,
@@ -13,28 +13,28 @@ import {
   NPC_UPDATE_EVENT,
   INBOX_UPDATE_EVENT,
   CORRESPONDENTS_UPDATE_EVENT,
-} from "../../../events"
+} from "../../../events.ts"
 import {
   getRoomById,
-} from "../../services/room"
+} from "../../services/room.ts"
 import {
   getDoorByRoom,
-} from "../../services/door"
+} from "../../services/door.ts"
 import {
   getLivingNpcs,
-} from "../../services/npc"
-import {
+} from "../../services/npc.ts"
+import type {
   Room,
   Door,
   Item,
   Npc,
   Chat,
-} from "../../../@types"
+} from "../../../@types/index.ts"
 import {
   broadcastToUser,
-} from "../../network"
-import { getInvByPlayer } from "../../services/player"
-import { fetchCorrespondent, fetchInbox } from "../../services/chat"
+} from "../../network/index.ts"
+import { getInvByPlayer } from "../../services/player.ts"
+import { fetchCorrespondent, fetchInbox } from "../../services/chat.ts"
 
 const handler: NetworkEventHandler = async (socket, nothing: string, player) => {
   try {

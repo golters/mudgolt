@@ -1,19 +1,19 @@
-import {
+import type {
   Item,
   Player, 
   Room, 
   ChatHistory,
-} from "../../@types"
+} from "../../@types/index.ts"
 import {
   db, 
-} from "../store"
+} from "../store/index.ts"
 import crypto from "crypto"
-import { getAllRooms, getRoomByName, weedCheck } from "./room"
-import { broadcastToUser, online } from "../network"
-import { DAILY_PAY, PAY_RATE, PAY_TIME } from "../../constants"
-import { SERVER_LOG_EVENT } from "../../events"
-import { insertWhisper } from "./chat"
-import { getCurrentEvent,getZombieDoors } from "./event"
+import { getAllRooms, getRoomByName, weedCheck } from "./room.ts"
+import { broadcastToUser, online } from "../network/index.ts"
+import { DAILY_PAY, PAY_RATE, PAY_TIME } from "../../constants.ts"
+import { SERVER_LOG_EVENT } from "../../events.ts"
+import { insertWhisper } from "./chat.ts"
+import { getCurrentEvent,getZombieDoors } from "./event.ts"
 
 export const updateOnlinePlayerById = (playerId: number, newPlayer: Partial<Player>) => {
   online.find(({ player }) => {

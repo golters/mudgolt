@@ -1,34 +1,34 @@
 import {
-  networkEmitter, NetworkEventHandler,
-} from "./emitter"
+  networkEmitter, type NetworkEventHandler,
+} from "./emitter.ts"
 import {
   sendEvent,
-} from ".."
+} from "../index.ts"
 import {
   USE_ITEM_EVENT,
   SERVER_LOG_EVENT,
   ERROR_EVENT,
   NOTIFICATION_EVENT,
-} from "../../../events"
-import {
+} from "../../../events.ts"
+import type {
   Player,
-} from "../../../@types"
+} from "../../../@types/index.ts"
 import {
   broadcastToRoom,
-} from "../../network"
+} from "../../network/index.ts"
 import {
   getRoomById,
-} from "../../services/room"
+} from "../../services/room.ts"
 import {
   insertRoomCommand,
-} from "../../services/chat"
+} from "../../services/chat.ts"
 import{
   getItemByPlayer,
-}from "../../services/item"
+}from "../../services/item.ts"
 import {
   getCurrentEvent,
   getBearName,
-} from "../../services/event"
+} from "../../services/event.ts"
 
 const handler: NetworkEventHandler = async (
   socket,

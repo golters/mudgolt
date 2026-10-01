@@ -1,11 +1,11 @@
 import {
   Chat,
-  Player, 
+  Player,
 } from "../../../@types"
 import {
   CHAT_EVENT,
   CHAT_HISTORY_EVENT,
-  PLAYER_EVENT, 
+  PLAYER_EVENT,
   LOOK_EVENT,
   PAY_EVENT,
   INBOX_HISTORY_EVENT,
@@ -19,118 +19,129 @@ import {
   PONG_EVENT,
 } from "../../../events"
 import {
-  store, 
+  store,
 } from "../store"
 import {
-  networkEmitter, 
+  networkEmitter,
 } from "./events"
 import {
   RECONNECT_DELAY,
 } from "../../../constants"
 import {
-  pushErrorToLog, 
+  pushErrorToLog,
   pushToLog,
 } from "../components/Terminal"
 import {
   iconUtil,
 } from "../utils/icon"
 
+import { cryptoTask } from "../crypto"
+import { signChallenge } from "./events/auth"
+import { AUTH_EVENT, ERROR_EVENT } from "../../../events"
+
 export let client: WebSocket
-export let context = new AudioContext()
+export const context = new AudioContext()
 
-export const sendEvent = async <TPayload,>(code: string, payload: TPayload) => {
-  if (typeof client !== 'undefined') {
-    client.send(JSON.stringify({
-      code,
-      payload,
-    }));
-  } else {
-    console.error('Client is undefined');
-    networkTask();
-  }
-};
-
-// @ts-ignore
+// @ts-ignore -- supplied by Vite
 const host = NODE_ENV === "development"
-  // @ts-ignore
+  // @ts-ignore -- supplied by Vite
   ? `${location.hostname}:${PORT || 1234}`
   : location.host
 
-let reconnectAttempts = 0
+let connectionTask: Promise<void> | undefined
+let initializeKeys: Promise<void> | undefined
+let reconnectTimer: ReturnType<typeof setTimeout> | undefined
+let authenticated = false
 let requestedChat = false
 
-export const networkTask = () => new Promise<void>((resolve) => {
-  client = new WebSocket(`${location.protocol === "https:" ? "wss:" : "ws:"}//${host}/ws?public-key=${encodeURIComponent(localStorage.publicKey)}`)
-
-  reconnectAttempts++
-
-  client.addEventListener("open", () => {
-    //pushToLog("Connected to server")
-
-    reconnectAttempts = 0
-  })
-  
-  client.addEventListener("message", (event) => {
-    const { code, payload } = JSON.parse(event.data) as {
-      code: string
-      payload: unknown
-    }
-    console.log(`[${code}]`, payload)
-
-    switch(code){
-    case PLAYER_EVENT:
-      const player = payload as Player
-
-      store.player = player
-
-      if (requestedChat) {
-        resolve()
-      } else {
-        const urlParams = new URLSearchParams(window.location.search);
-        const myParam = urlParams.get('go');
-        if(myParam){
-          sendEvent(TP_EVENT, myParam)
-          //window.location.href = "http://mudgolt.com";
-        }        
-        sendEvent<null>(CHAT_HISTORY_EVENT, null)
-        requestedChat = true
-      }
-    break;
-
-    case CHAT_HISTORY_EVENT:
-      const chats = payload as Chat[]
-      for (let i = 0; i < chats.length; i++){
-        if(chats[i].type === "chat" || chats[i].type === null){
-        networkEmitter.emit(CHAT_EVENT, chats[i])
-        }else{          
-        networkEmitter.emit(COMMAND_LOG_EVENT, chats[i])
-        }
-      }
-      resolve()    
-    break;
-    
-    case INBOX_HISTORY_EVENT:
-      void (payload as Chat[]).forEach(chat => networkEmitter.emit(WHISPER_LOG_EVENT, chat))
-      resolve()
-      break;
+export const sendEvent = async <TPayload,>(code: string, payload: TPayload) => {
+  await networkTask()
+  // A disconnect can occur between awaiting readiness and sending.
+  if (!authenticated || client.readyState !== WebSocket.OPEN) {
+    connectionTask = undefined
+    return sendEvent(code, payload)
   }
-  
-    networkEmitter.emit(code, payload)
-  })
+  client.send(JSON.stringify({ code, payload }))
+}
 
-  client.addEventListener("close", () => {
-    //pushErrorToLog(`Disconnected from server. Reconnecting...`)
-
-    if (reconnectAttempts === 0) {
-      networkTask().catch(console.error)
-    } else {
-      setTimeout(() => {
-        networkTask().catch(console.error)
-      }, RECONNECT_DELAY)
+export const networkTask = (): Promise<void> => {
+  if (connectionTask) return connectionTask
+  if (reconnectTimer) clearTimeout(reconnectTimer)
+  connectionTask = new Promise<void>((resolve, reject) => {
+    let ready = false
+    const connect = async () => {
+      try {
+        await (initializeKeys ??= cryptoTask())
+        const socket = new WebSocket(`${location.protocol === "https:" ? "wss:" : "ws:"}//${host}/ws?public-key=${encodeURIComponent(localStorage.publicKey)}`)
+        client = socket
+        authenticated = false
+        const send = (code: string, payload: unknown) => {
+          if (client === socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({ code, payload }))
+          }
+        }
+        socket.addEventListener("message", async (event) => {
+          if (client !== socket) return
+          try {
+            const { code, payload } = JSON.parse(event.data)
+            console.log(`[${code}]`, payload)
+            if (code === AUTH_EVENT) {
+              // Signing is asynchronous: never send an old challenge on a new socket.
+              send(AUTH_EVENT, await signChallenge(payload))
+              return
+            }
+            if (code === ERROR_EVENT && !authenticated) {
+              pushErrorToLog(String(payload))
+              return
+            }
+            if (code === PLAYER_EVENT) {
+              authenticated = true
+              store.player = payload as Player
+              if (!requestedChat) {
+                const destination = new URLSearchParams(location.search).get("go")
+                if (destination) send(TP_EVENT, destination)
+                send(CHAT_HISTORY_EVENT, null)
+                requestedChat = true
+              } else {
+                ready = true
+                resolve()
+              }
+            }
+            if (code === CHAT_HISTORY_EVENT) {
+              for (const chat of payload as Chat[]) {
+                networkEmitter.emit(chat.type === "chat" || chat.type === null ? CHAT_EVENT : COMMAND_LOG_EVENT, chat)
+              }
+              ready = true
+              resolve()
+            }
+            if (code === INBOX_HISTORY_EVENT) {
+              for (const chat of payload as Chat[]) networkEmitter.emit(WHISPER_LOG_EVENT, chat)
+            }
+            networkEmitter.emit(code, payload)
+          } catch (error) {
+            console.error(error)
+          }
+        })
+        socket.addEventListener("close", () => {
+          if (client !== socket) return
+          authenticated = false
+          requestedChat = false
+          if (ready) connectionTask = undefined
+          reconnectTimer = setTimeout(() => {
+            if (ready) networkTask().catch(console.error)
+            else void connect()
+          }, RECONNECT_DELAY)
+        })
+      } catch (error) {
+        initializeKeys = undefined
+        connectionTask = undefined
+        reject(error)
+      }
     }
+    void connect()
   })
-
-})
+  return connectionTask
+}
 setInterval(() => {
   if(!localStorage.getItem("muted")){
   networkEmitter.emit(MUSIC_EVENT, context)
@@ -138,7 +149,7 @@ setInterval(() => {
 }, 15 * 10)
 
 setTimeout(() => {
-  sendEvent(PING_EVENT, client)  
+  sendEvent(PING_EVENT, null)
   sendEvent(PAY_EVENT, store.player?.id)
 }, 15 * 1000)
 
@@ -146,17 +157,17 @@ setTimeout(() => {
 networkEmitter.on(PONG_EVENT, () => {
   setTimeout(() => {
     if(localStorage.getItem("focus") === "open"){
-      sendEvent(PING_EVENT, client)  
+      sendEvent(PING_EVENT, null)
     sendEvent(PAY_EVENT, store.player?.id)
     }else{
-      if(Math.random()*10000 < 5){ 
+      if(Math.random()*10000 < 5){
       sendEvent(UFO_EVENT, store.player?.id)
       }
     }
   }, 15 * 1000)
 })
 
-window.addEventListener("focus", (event) => { 
+window.addEventListener("focus", (event) => {
   localStorage.setItem("focus","open")
 })
 
@@ -164,7 +175,7 @@ window.addEventListener("blur", (event) => {
   localStorage.setItem("focus","close")
   setTimeout(() => {
     if(localStorage.getItem("focus") !="open")
-    window.addEventListener("focus", (event) => { 
+    window.addEventListener("focus", (event) => {
       window.location.reload()
   })
   }, 600 * 1000)

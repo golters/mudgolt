@@ -1,31 +1,17 @@
-import marked from "marked"
 import React from "react"
+import { renderMarkdown } from "../utils/markdown"
 import "./Markdown.css"
 
-marked.setOptions({
-  gfm: true,
-  sanitize: true,
-})
-
-const renderer = new marked.Renderer()
-
-renderer.link = (href, title, text) => {
-  return `<a target="_blank" href="${href}">${text}</a>`
-}
-
 export const Markdown: React.FC<{
-  string: string, 
-  options?: marked.MarkedOptions,
+  string: string,
+  allowHtml?: boolean,
 }> = (props) => {
-  const __html = marked(props.string, {
-    renderer, 
-    ...(props.options || {}),
-  })
+  const __html = renderMarkdown(props.string, props.allowHtml)
 
   return (
     <span
-      className="markdown" 
-      dangerouslySetInnerHTML={{ __html }} 
+      className="markdown"
+      dangerouslySetInnerHTML={{ __html }}
     />
   )
 }

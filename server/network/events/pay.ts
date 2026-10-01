@@ -1,28 +1,28 @@
 import {
-  networkEmitter, NetworkEventHandler, 
-} from "./emitter"
+  networkEmitter, type NetworkEventHandler,
+} from "./emitter.ts"
 import {
   PAY_EVENT,
   SERVER_LOG_EVENT,
   ERROR_EVENT,
   NOTIFICATION_EVENT,
   REFRESH_EVENT,
-} from "../../../events"
+} from "../../../events.ts"
 import {
   online,
   sendEvent, 
-} from "../"
+} from "../index.ts"
 import { 
   addPlayerGolts, 
   getPlayerById, 
   payPlayer,
-} from "../../services/player"
+} from "../../services/player.ts"
 import {
   getCurrentEvent,
   clearOldEvents,
   moveZombies,
-} from "../../services/event"
-import { GOLT } from "../../../constants"
+} from "../../services/event.ts"
+import { GOLT } from "../../../constants.ts"
 
 const handler: NetworkEventHandler = async (socket, playerID: number) => {
   try {    

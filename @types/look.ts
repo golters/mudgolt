@@ -1,6 +1,6 @@
-import { Player } from "./Player"
-import { Item } from "./Item"
-import { Door } from "./Door"
+import type { Player } from "./Player.ts"
+import type { Item } from "./Item.ts"
+import type { Door } from "./Door.ts"
 
 export interface Look {
   bio: string

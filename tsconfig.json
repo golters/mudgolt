@@ -1,16 +1,15 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",
-    "moduleResolution": "node",
+    "noEmit": true,
+    "target": "esnext",
+    "lib": ["esnext"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "esModuleInterop": true,
-    "lib": ["es2020"],
-    "target": "es2020",
     "strict": true,
-    "noImplicitAny": true,
-    "baseUrl": "./",
-    "declaration": true,
+    "rewriteRelativeImportExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true
   },
-  "include": [
-    "server/index.ts",
-  ],
+  "include": ["server/**/*.ts", "constants.ts", "events.ts", "@types/**/*.ts"]
 }

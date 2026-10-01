@@ -1,36 +1,36 @@
 import {
-  networkEmitter, NetworkEventHandler,
-} from "./emitter"
+  networkEmitter, type NetworkEventHandler,
+} from "./emitter.ts"
 import {
   sendEvent,
   broadcastToRoom,
-} from ".."
+} from "../index.ts"
 import {
   ROOM_DESCRIBE_EVENT, ERROR_EVENT, SERVER_LOG_EVENT, INVENTORY_UPDATE_EVENT,
-} from "../../../events"
-import {
+} from "../../../events.ts"
+import type {
   Player,
   Item,
-} from "../../../@types"
+} from "../../../@types/index.ts"
 import {
   GOLT,
   ROOM_MAX_BIO,
   PLAYER_MAX_BIO,
   ITEM_MAX_BIO,
-} from "../../../constants"
+} from "../../../constants.ts"
 import {
   getRoomById,
   editBio,
-} from "../../services/room"
+} from "../../services/room.ts"
 import {
   getItemByPlayer, setItemBio,
-} from "../../services/item"
-import { setPlayerBio,takePlayerGolts } from "../../services/player"
-import { countCharacters } from "../../services/chat"
+} from "../../services/item.ts"
+import { setPlayerBio,takePlayerGolts } from "../../services/player.ts"
+import { countCharacters } from "../../services/chat.ts"
 import {
   getBearName,
   getCurrentEvent,
-} from "../../services/event"
+} from "../../services/event.ts"
 
 const handler: NetworkEventHandler = async (
   socket,

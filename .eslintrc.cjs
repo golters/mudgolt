@@ -7,7 +7,6 @@ module.exports = {
 
   parserOptions: {
     sourceType: "module",
-    parser: "babel-eslint",
     allowImportExportEverywhere: false,
     ecmaVersion: 2020,
   },
@@ -78,9 +77,7 @@ module.exports = {
     {
       files: ["**.ts"],
 
-      parserOptions: {
-        parser: "@typescript-eslint/parser",
-      },
+      parser: "@typescript-eslint/parser",
 
       extends: [
         "plugin:@typescript-eslint/eslint-recommended",
@@ -88,21 +85,21 @@ module.exports = {
       ],
 
       rules: {
-        "@typescript-eslint/member-delimiter-style": [
-          "error",
-          {
-            multiline: {
-              delimiter: "none",
-              requireLast: true,
-            },
-            singleline: {
-              delimiter: "comma",
-              requireLast: false,
-            },
-          },
-        ],
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
+      },
+    },
+    {
+      files: ["server/**/*.ts", "@types/**/*.ts", "constants.ts", "events.ts"],
+      rules: {
+        // Native Node ESM requires filenames, including directory index.ts files.
+        "no-restricted-syntax": [
+          "error",
+          {
+            selector: ':matches(ImportDeclaration, ExportNamedDeclaration, ExportAllDeclaration, ImportExpression)[source.value=/^\\./]:not([source.value=/\\.ts$/])',
+            message: "Relative TypeScript imports must end in .ts; use /index.ts for directory imports.",
+          },
+        ],
       },
     },
   ],

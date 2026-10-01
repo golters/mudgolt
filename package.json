@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "description": "",
   "scripts": {
-    "start:server": "cross-env NODE_ENV=production ts-node server",
-    "dev:server": "cross-env NODE_ENV=development ts-node-dev server --rs",
+    "start:server": "cross-env NODE_ENV=production node server/index.ts",
+    "dev:server": "cross-env NODE_ENV=development node --watch server/index.ts",
     "build:client": "cd client && vite build",
     "dev:client": "cd client && cross-env NODE_ENV=development vite",
-    "lint": "eslint --fix --ext .js,.ts ."
+    "lint": "eslint --fix --ext .js,.ts .",
+    "check": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
@@ -20,42 +21,29 @@
   },
   "homepage": "https://github.com/golters/mudgolt#readme",
   "devDependencies": {
-    "@types/jwk-to-pem": "^2.0.0",
-    "@types/marked": "^2.0.2",
+    "@types/node": "^26.0.0",
     "@types/react": "^17.0.80",
     "@types/react-dom": "^17.0.25",
-    "@types/sqlite3": "^3.1.7",
     "@types/ws": "^7.4.1",
-    "@typescript-eslint/eslint-plugin": "^4.33.0",
-    "@typescript-eslint/parser": "^4.33.0",
-    "@vitejs/plugin-react-swc": "^3.7.0",
-    "babel-eslint": "^10.1.0",
+    "@typescript-eslint/eslint-plugin": "^8.71.0",
+    "@typescript-eslint/parser": "^8.71.0",
     "cross-env": "^7.0.3",
-    "dotenv": "^16.4.5",
-    "eslint": "^7.32.0",
-    "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-react-refresh": "^0.4.9",
-    "html-webpack-plugin": "^5.3.1",
-    "ts-node": "^10.9.2",
-    "ts-node-dev": "^1.1.6",
-    "typescript": "^5.5.4",
-    "vite": "^5.3.5"
+    "eslint": "^8.57.1",
+    "typescript": "~5.9.3",
+    "vite": "^8.3.2",
+    "@vitejs/plugin-react": "^6.1.1"
   },
   "dependencies": {
-    "fast-diff": "^1.2.0",
-    "fs": "^0.0.1-security",
-    "howler": "^2.2.4",
-    "marked": "^2.0.3",
+    "marked": "^18.0.14",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "sharp": "^0.33.4",
-    "simplex-noise": "^4.0.3",
-    "sqlite": "^4.0.23",
-    "sqlite3": "^5.0.2",
     "validate-color": "^2.1.1",
-    "ws": "^7.4.4"
+    "ws": "^7.4.4",
+    "dompurify": "^3.0.0",
+    "events": "^3.3.0"
   },
-  "allowScripts": {
-    "sqlite3@5.1.7": true
+  "type": "module",
+  "engines": {
+    "node": ">=26.9.0"
   }
 }

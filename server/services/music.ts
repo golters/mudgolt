@@ -1,23 +1,23 @@
-import {
+import type {
   Room, 
   Music,
-} from "../../@types"
+} from "../../@types/index.ts"
 import {
   db,
-} from "../store"
+} from "../store/index.ts"
 import {
   BANNER_WIDTH, BANNER_HEIGHT, BANNER_FILL, 
-} from "../../constants"
+} from "../../constants.ts"
 import {
   CHANGE_MUSIC_EVENT,
   ROOM_UPDATE_EVENT,
-} from "../../events"
+} from "../../events.ts"
 import {
   broadcastToRoom,
-} from "../network"
+} from "../network/index.ts"
 import {
   getRoomById,
-} from "./room"
+} from "./room.ts"
 
 export const generateMusic = () => {
   return new Array(BANNER_WIDTH * BANNER_HEIGHT)

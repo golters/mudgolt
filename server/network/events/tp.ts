@@ -1,6 +1,6 @@
 import {
-  networkEmitter, NetworkEventHandler,
-} from "./emitter"
+  networkEmitter, type NetworkEventHandler,
+} from "./emitter.ts"
 import {
   ERROR_EVENT,
   TP_EVENT,
@@ -9,36 +9,36 @@ import {
   LOOK_LOG_EVENT,
   NOTIFICATION_EVENT,
   MUSIC_UPDATE_EVENT,
-} from "../../../events"
+} from "../../../events.ts"
 import {
   broadcastToRoom,
   sendEvent,
-} from "../../network"
+} from "../../network/index.ts"
 import {
   setPlayerRoomByName,
-} from "../../services/player"
+} from "../../services/player.ts"
 import {
   getRoomById,
   getRoomByName,
   getLookByID,
-} from "../../services/room"
-import { Room,Music, Look } from "@types"
+} from "../../services/room.ts"
+import type { Room,Music, Look } from "../../../@types/index.ts"
 import {
   TELEPORT_COST,
   GOLT,
-} from "../../../constants"
+} from "../../../constants.ts"
 import {
   insertRoomCommand,
-} from "../../services/chat"
+} from "../../services/chat.ts"
 import {
   getMusicByRoom,
   updateRoomMusic,
-} from "../../services/music"
+} from "../../services/music.ts"
 import {
   getCurrentEvent,
   getEventTag,
   getBearName,
-} from "../../services/event"
+} from "../../services/event.ts"
 
 const handler: NetworkEventHandler = async (socket, roomNameInput: string, player) => {
   try {

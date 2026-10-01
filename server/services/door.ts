@@ -1,10 +1,10 @@
 /* eslint-disable camelcase */
-import {
+import type {
   Door,
-} from "../../@types"
+} from "../../@types/index.ts"
 import {
   db,
-} from "../store"
+} from "../store/index.ts"
 
 export const createDoor = async (roomID: number, targetID: number | undefined, name: string): Promise<Door> => {
   const existingDoor = await db.get<Door>(/*sql*/`

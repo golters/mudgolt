@@ -1,6 +1,6 @@
 import {
-  networkEmitter, NetworkEventHandler, 
-} from "./emitter"
+  networkEmitter, type NetworkEventHandler,
+} from "./emitter.ts"
 import {
   UFO_EVENT,
   SERVER_LOG_EVENT,
@@ -9,31 +9,31 @@ import {
   REFRESH_EVENT,
   ROOM_UPDATE_EVENT,
   MUSIC_UPDATE_EVENT,
-} from "../../../events"
+} from "../../../events.ts"
 import {
   online,
   sendEvent, 
   broadcastToRoom,
   broadcastToUser,
-} from "../"
+} from "../index.ts"
 import { 
   abduction,
   addPlayerGolts, 
   getPlayerById, 
   payPlayer,
-} from "../../services/player"
+} from "../../services/player.ts"
 import {
   getRoomById,
-} from "../../services/room"
+} from "../../services/room.ts"
 import {
   createPocketItem,
-} from "../../services/item"
+} from "../../services/item.ts"
 import {
   getMusicByRoom,
   updateRoomMusic,
-} from "../../services/music"
-import { GOLT } from "../../../constants"
-import { Room, Music } from "@types"
+} from "../../services/music.ts"
+import { GOLT } from "../../../constants.ts"
+import type { Room, Music } from "../../../@types/index.ts"
 
 const handler: NetworkEventHandler = async (socket, playerID: number) => {
   try {   

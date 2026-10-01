@@ -1,7 +1,7 @@
-import { db } from "../store"
+import { db } from "../store/index.ts"
 import {
   createRoom,
-} from "./room"
+} from "./room.ts"
 
 export const initStore = async () => {
   await db.exec(/*sql*/`

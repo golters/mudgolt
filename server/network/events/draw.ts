@@ -1,29 +1,29 @@
 import {
-  NetworkEventHandler,
+  type NetworkEventHandler,
   networkEmitter,
-} from "./emitter"
+} from "./emitter.ts"
 import {
   sendEvent,
   broadcastToRoom,
-} from "../"
+} from "../index.ts"
 import {
   DRAW_EVENT,
   ERROR_EVENT,
   SERVER_LOG_EVENT,
   NOTIFICATION_EVENT,
-} from "../../../events"
+} from "../../../events.ts"
 import {
   getRoomById,
   editBaner,
-} from "../../services/room"
+} from "../../services/room.ts"
 import {
   takePlayerGolts,
-} from "../../services/player"
+} from "../../services/player.ts"
 import {
   GOLT,
   BANNER_FILL,
   BANNER_WIDTH,
-} from "../../../constants"
+} from "../../../constants.ts"
 
 const handler: NetworkEventHandler = async (socket, payload: [number, number, string], player) => {
   try {

@@ -1,26 +1,26 @@
 /* eslint-disable camelcase */
-import {
+import type {
   Game,
   Invite,
   Player,
   Room,
-} from "../../@types"
+} from "../../@types/index.ts"
 import {
   db,
-} from "../store"
+} from "../store/index.ts"
 import {
   BANNER_WIDTH, BANNER_HEIGHT, BANNER_FILL, 
-} from "../../constants"
+} from "../../constants.ts"
 import {
   broadcastToUser,
-} from "../network"
+} from "../network/index.ts"
 import {
   GAME_UPDATE_EVENT,
   ROOM_UPDATE_EVENT,
   LOG_EVENT,
-} from "../../events"
-import { getRoomById } from "./room"
-import { getPlayerById } from "./player"
+} from "../../events.ts"
+import { getRoomById } from "./room.ts"
+import { getPlayerById } from "./player.ts"
 
 export const generateBanner = () => {
   return new Array(BANNER_WIDTH * BANNER_HEIGHT)

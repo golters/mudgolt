@@ -31,6 +31,8 @@ import {
 } from "../../components/Terminal"
 
 const sfx = {
+  chat: new Audio(pop),
+  me: new Audio(pop),
   whisper: new Audio(whisper),
   shout: new Audio(shout),
   doorEnter: new Audio(doorEnter),
@@ -66,7 +68,9 @@ const handler: NetworkEventHandler = (sound: keyof typeof sfx) => {
   }
   if(!localStorage.getItem("muted")){
     sfx[sound].currentTime = 0
-    sfx[sound].play()
+    sfx[sound].play().catch(error => {
+      console.warn("Could not play sfx", sound, error)
+    })
   }
 }
 

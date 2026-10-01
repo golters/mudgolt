@@ -1,24 +1,15 @@
-import path from "path"
-import { initStore } from "../services/init"
-import sqlite3 from "sqlite3"
-import { open, Database } from "sqlite"
-import fs from "fs"
+import path from "node:path"
+import fs from "node:fs"
+import { initStore } from "../services/init.ts"
+import { Database } from "./database.ts"
 
 const dbDirectory = path.join("./db")
+const storeFile = path.join(dbDirectory, "store.db")
 
-if (!fs.existsSync(dbDirectory)) {
-  fs.mkdirSync(dbDirectory)
-}
-
-const storeFile = path.join(dbDirectory, "store.db") 
-
-export let db: Database<sqlite3.Database, sqlite3.Statement>
+export let db: Database
 
 export const storeTask = async () => {
-  db = await open({
-    filename: storeFile,
-    driver: sqlite3.verbose().cached.Database,
-  })
-  
+  fs.mkdirSync(dbDirectory, { recursive: true })
+  db = new Database(storeFile)
   await initStore()
 }

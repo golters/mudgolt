@@ -1,23 +1,23 @@
 import {
-  NetworkEventHandler,
+  type NetworkEventHandler,
   networkEmitter,
-} from "./emitter"
+} from "./emitter.ts"
 import {
   sendEvent,
-} from "../"
+} from "../index.ts"
 import {
   ERROR_EVENT,
   INBOX_UPDATE_EVENT,
   CORRESPONDENTS_UPDATE_EVENT,
   MORE_INBOX_EVENT,
-} from "../../../events"
-import {
+} from "../../../events.ts"
+import type {
   Chat,
-} from "../../../@types"
+} from "../../../@types/index.ts"
 import {
   broadcastToUser,
-} from "../../network"
-import { fetchCorrespondent, fetchInbox } from "../../services/chat"
+} from "../../network/index.ts"
+import { fetchCorrespondent, fetchInbox } from "../../services/chat.ts"
 
 const handler: NetworkEventHandler = async (socket, args: string, player) => {
   try {

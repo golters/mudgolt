@@ -1,30 +1,30 @@
 import {
-  networkEmitter, NetworkEventHandler, 
-} from "./emitter"
+  networkEmitter, type NetworkEventHandler,
+} from "./emitter.ts"
 import {
   broadcastToRoom, sendEvent, 
-} from ".."
+} from "../index.ts"
 import {
   USERNAME_CHANGE_EVENT, SERVER_LOG_EVENT, ERROR_EVENT, 
-} from "../../../events"
-import {
+} from "../../../events.ts"
+import type {
   Player, 
-} from "../../../@types"
+} from "../../../@types/index.ts"
 import {
   USERNAME_MAX_LENGTH, 
   GOLT,
-} from "../../../constants"
+} from "../../../constants.ts"
 import {
   setPlayerUsername, 
   takePlayerGolts,
-} from "../../services/player"
+} from "../../services/player.ts"
 import {
   countCharacters, 
-} from "../../services/chat"
+} from "../../services/chat.ts"
 import {
   getBearName,
   getCurrentEvent,
-} from "../../services/event"
+} from "../../services/event.ts"
 
 const handler: NetworkEventHandler = async (
   socket,

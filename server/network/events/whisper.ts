@@ -1,11 +1,11 @@
 import {
-  networkEmitter, NetworkEventHandler,
-} from "./emitter"
+  networkEmitter, type NetworkEventHandler,
+} from "./emitter.ts"
 import {
   broadcastToUser,
   sendEvent,
   online,
-} from ".."
+} from "../index.ts"
 import {
   WHISPER_EVENT,
   SERVER_LOG_EVENT,
@@ -16,19 +16,19 @@ import {
   CORRESPONDENTS_UPDATE_EVENT,
   TOOLBAR_UPDATE_EVENT,
   WHISPER_POPUP_EVENT,
-} from "../../../events"
-import {
+} from "../../../events.ts"
+import type {
   Player,
   Chat,
-} from "../../../@types"
+} from "../../../@types/index.ts"
 import {
   getPlayerByUsername,
-} from "../../services/player"
+} from "../../services/player.ts"
 import {
   insertWhisper,
   fetchCorrespondent,
   fetchInbox,
-} from "../../services/chat"
+} from "../../services/chat.ts"
 
 const handler: NetworkEventHandler = async (
   socket,

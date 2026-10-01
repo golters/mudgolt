@@ -1,17 +1,17 @@
-import{
+import type {
   Npc,  
-} from "../../@types"
+} from "../../@types/index.ts"
 import{
   AVATAR_WIDTH,
   AVATAR_HEIGHT,
   NPC_HEALTH,
-} from "../../constants"
+} from "../../constants.ts"
 import {
   db,
-} from "../store"
-import { createFloorItem, getAllItems, setItemBio } from "./item"
-import { getRecentlyOnline } from "./player"
-import { getAllRooms } from "./room"
+} from "../store/index.ts"
+import { createFloorItem, getAllItems, setItemBio } from "./item.ts"
+import { getRecentlyOnline } from "./player.ts"
+import { getAllRooms } from "./room.ts"
 
 const nameBits = [
   "bug",
@@ -288,17 +288,17 @@ export const generatePhrases = async(job: string, personality: string):Promise<s
         }
         switch(regex[r].toString()){
           case "[item]":
-            if(items){
+            if(items.length > 0){
               lines[l] = lines[l].replace(regex[r], items[Math.floor(Math.random()*items.length)].name)
             }else{ lines[l] = "Hello" }
             break;
           case "[room]":
-            if(rooms){
+            if(rooms.length > 0){
               lines[l] = lines[l].replace(regex[r], rooms[Math.floor(Math.random()*rooms.length)].name)
             }else{ lines[l] = "Hello" }
             break;
           case "[user]":
-            if(users){
+            if(users.length > 0){
               lines[l] = lines[l].replace(regex[r], users[Math.floor(Math.random()*users.length)].username)
             }else{ lines[l] = "Hello" }
             break;
@@ -326,6 +326,7 @@ export const getLivingNpcs = async():Promise<Npc[]> => {
     //if none creatnpc
     if(!npc[0] || npc[0] === undefined){
       const newnpc = await createNpc(jobs[j])
+      newnpc.phrases = String(newnpc.phrases).split("&")
       npcs.push(newnpc)
     }else{
       //fix phrases array
@@ -336,7 +337,7 @@ export const getLivingNpcs = async():Promise<Npc[]> => {
 
   }
 
-  return allNpcs
+  return npcs
 }
 
 export const createNpc = async(job: string): Promise<Npc> => {

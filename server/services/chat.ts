@@ -1,10 +1,10 @@
-import { broadcast } from "server/network"
-import { Chat, ChatHistory, Player, Event } from "../../@types"
+import { broadcast } from "../network/index.ts"
+import type { Chat, ChatHistory, Player, Event } from "../../@types/index.ts"
 import {
   db, 
-} from "../store"
-import { getBearName, getCurrentEvent } from "./event"
-import { getPlayerById, getPlayerByUsername } from "./player"
+} from "../store/index.ts"
+import { getBearName, getCurrentEvent } from "./event.ts"
+import { getPlayerById, getPlayerByUsername } from "./player.ts"
 
 export const insertRoomChat = async (roomId: number, fromPlayerId: number, message: string, date: number) => {
   await db.run(/*sql*/`

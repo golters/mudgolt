@@ -1,18 +1,18 @@
 import {
-  NetworkEventHandler,
+  type NetworkEventHandler,
   networkEmitter,
-} from "./emitter"
+} from "./emitter.ts"
 import {
   sendEvent,
-} from "../"
+} from "../index.ts"
 import {
   INBOX_EVENT,
   ERROR_EVENT,
   INBOX_HISTORY_EVENT,
-} from "../../../events"
-import { fetchInbox } from "../../services/chat"
-import { getPlayerByUsername } from "../../services/player"
-import { Chat } from "../../../@types"
+} from "../../../events.ts"
+import { fetchInbox } from "../../services/chat.ts"
+import { getPlayerByUsername } from "../../services/player.ts"
+import type { Chat } from "../../../@types/index.ts"
 
 const handler: NetworkEventHandler = async (socket, args: string[], player) => {
   try {

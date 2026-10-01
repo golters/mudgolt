@@ -1,26 +1,26 @@
 import {
-  NetworkEventHandler,
+  type NetworkEventHandler,
   networkEmitter,
-} from "./emitter"
+} from "./emitter.ts"
 import {
   sendEvent,
-} from "../"
+} from "../index.ts"
 import {
   HELP_AT_EVENT,
   LOG_EVENT,
   ERROR_EVENT,
-} from "../../../events"
-import {
+} from "../../../events.ts"
+import type {
   CommandModule, 
-} from "../../../client/src/commands/emitter"
+} from "../../../client/src/commands/emitter.ts"
 import{
   GOLT,
   DOOR_COST,
   DOOR_MULTIPLIER,
-}from "../../../constants"
+}from "../../../constants.ts"
 import{
   getDoorByRoom,
-} from "../../services/door"
+} from "../../services/door.ts"
 
 
 const handler: NetworkEventHandler = async (socket, command: CommandModule) => {

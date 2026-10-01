@@ -1,8 +1,8 @@
-import { Game,Chat, Invite } from "../../@types"
+import type { Game,Chat, Invite } from "../../@types/index.ts"
 import {
   db, 
-} from "../store"
-import { createGame, findGameByPlayer } from "./game"
+} from "../store/index.ts"
+import { createGame, findGameByPlayer } from "./game.ts"
 
 export const sendInvite = async (player1: number, player2: number, type: string) => {
   const existinginvite = await findInviteByPlayer(player1, player2)

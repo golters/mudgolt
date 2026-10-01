@@ -1,13 +1,13 @@
 import {
-  networkEmitter, NetworkEventHandler,
-} from "./emitter"
+  networkEmitter, type NetworkEventHandler,
+} from "./emitter.ts"
 import {
   broadcastToUser,
   broadcastToRoom,
   broadcast,
   sendEvent,
   online,
-} from ".."
+} from "../index.ts"
 import {
   EVENT_EVENT,
   SERVER_LOG_EVENT,
@@ -19,12 +19,12 @@ import {
   ROOM_UPDATE_EVENT,
   CHAT_EVENT,
   EVENT_UPDATE_EVENT,
-} from "../../../events"
-import {
+} from "../../../events.ts"
+import type {
   Player,
   Room,
   Chat,
-} from "../../../@types"
+} from "../../../@types/index.ts"
 import {
   clearOldEvents,
   createEvent, createEventTag, createRandomEvent, fishWinner, getCurrentEvent, getUpcomingEvents, givePoints, moveZombies,
@@ -35,17 +35,17 @@ import {
   campaign,
   pollResults,
   clearAllEvents,
-} from "../../services/event"
+} from "../../services/event.ts"
 import {
   insertRoomChat,
-} from "../../services/chat"
-import { getRoomById } from "../../services/room"
-import { createItem, createPocketItem, setItemBio } from "../../services/item"
-import { cheat, takePlayerGolts } from "../../services/player"
+} from "../../services/chat.ts"
+import { getRoomById } from "../../services/room.ts"
+import { createItem, createPocketItem, setItemBio } from "../../services/item.ts"
+import { cheat, takePlayerGolts } from "../../services/player.ts"
 import {
   GOLT,
-} from "../../../constants"
-import { fish } from "../../services/specialItems"
+} from "../../../constants.ts"
+import { fish } from "../../services/specialItems.ts"
 
 const waterRooms: string[] = [
   "water",

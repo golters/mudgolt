@@ -1,4 +1,3 @@
-import { getConstantValue } from "typescript";
 import validateColor from "validate-color";
 
 import { ColorTheme, VALID_COLOR_KEYS } from "../types/ColorTheme";

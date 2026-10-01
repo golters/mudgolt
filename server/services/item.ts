@@ -1,17 +1,17 @@
 /* eslint-disable camelcase */
-import { SMELT_COST, ICON_WIDTH, ICON_HEIGHT, BANNER_FILL } from "../../constants"
-import {
+import { SMELT_COST, ICON_WIDTH, ICON_HEIGHT, BANNER_FILL } from "../../constants.ts"
+import type {
   Item, Player,
-} from "../../@types"
+} from "../../@types/index.ts"
 import {
   db,
-} from "../store"
+} from "../store/index.ts"
 import {
   insertWhisper,
-} from "./chat"
-import { addPlayerGolts, getInvByPlayer, getPlayerById } from "./player"
-import { broadcastToUser } from "../../server/network"
-import { INVENTORY_UPDATE_EVENT } from "../../events"
+} from "./chat.ts"
+import { addPlayerGolts, getInvByPlayer, getPlayerById } from "./player.ts"
+import { broadcastToUser } from "../../server/network/index.ts"
+import { INVENTORY_UPDATE_EVENT } from "../../events.ts"
 
 export const createItem = async (playerID: number, name: string): Promise<Item> => {
   const icon = await generateIcon()

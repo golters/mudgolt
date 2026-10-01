@@ -1,19 +1,19 @@
 import {
-  NetworkEventHandler,
+  type NetworkEventHandler,
   networkEmitter,
-} from "./emitter"
+} from "./emitter.ts"
 import {
   sendEvent,
-} from "../"
+} from "../index.ts"
 import {
   LINK_EVENT,
   LOG_EVENT,
   ERROR_EVENT,
-} from "../../../events"
-import {
+} from "../../../events.ts"
+import type {
   CommandModule, 
-} from "../../../client/src/commands/emitter"
-import { getRoomById } from "../../services/room"
+} from "../../../client/src/commands/emitter.ts"
+import { getRoomById } from "../../services/room.ts"
 
 
 const handler: NetworkEventHandler = async (socket, commands: CommandModule[], player) => {
