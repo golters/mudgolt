@@ -3,6 +3,11 @@
   --vh: 1vh;
 }
 
+@font-face {
+  font-family: DOS8;
+  src: url(../assets/ModernDOS8x8.ttf);
+}
+
 .ascii-background {
   position: fixed;
   top: 0;
@@ -19,13 +24,14 @@
 }
 
 .ascii-content {
-  display: inline-block;
-  font-size: var(--vw);
-  font-family: DOS8;
+  position: absolute;
+  inset: 0;
 }
-.ascii-content >div{
-  height: var(--vh) !important;
 
+.ascii-pixi-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .door {

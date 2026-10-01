@@ -15,14 +15,46 @@ import {
 
 interface AsciiTile {
   character: string
-  avgColor: string
-  backColor: string
+  avgColor: number
+  backColor: number
 }
 
 interface ColorCombination {
-  colors: [string, string]
+  colors: [number, number]
   avgColor: { r: number, g: number, b: number }
 }
+
+const packRgb = (r: number, g: number, b: number) =>
+  (r << 16) | (g << 8) | b;
+const colorRed = (color: number) => color >>> 16;
+const colorGreen = (color: number) => color >>> 8 & 0xff;
+const colorBlue = (color: number) => color & 0xff;
+
+export const GRAYSCALE_GLYPHS = ' .`:,\'_-;=+*><!?)(v}{IcJr][VTLFwo mie7Czsnj&1YXWxtl%3SPMufa#42ZOGEyKA@965UQNDBkhb8Rp0qg$H';
+export const EDGE_GLYPHS = ['|', '/', '-', '\\'] as const;
+export const CLOUD_GLYPHS = ['.', ',', 'o', 'O', 'Q', '@'] as const;
+export const GRASS_GLYPHS = ['♠', '¥', '♣', '♀', '☼'] as const;
+export const GRASS_BLADE_GLYPHS = ['\\', '|', '/'] as const;
+export const WATER_GLYPHS = ['~', '^'] as const;
+export const MUSIC_GLYPHS = ['♪', '♫'] as const;
+export const RAIN_GLYPHS = ['*', '/'] as const;
+export const FRAME_GLYPH = '▓';
+export const HOME_GLYPHS = [...new Set([
+  ...GRAYSCALE_GLYPHS,
+  ...EDGE_GLYPHS,
+  ...CLOUD_GLYPHS,
+  ...GRASS_GLYPHS,
+  ...GRASS_BLADE_GLYPHS,
+  ...WATER_GLYPHS,
+  ...MUSIC_GLYPHS,
+  ...RAIN_GLYPHS,
+  FRAME_GLYPH,
+])].join('');
+
+const asciiImageCache = new Map<string, Promise<AsciiTile[][]>>();
+let backdropBuffer: AsciiTile[][] = [];
+let backdropWidth = 0;
+let backdropHeight = 0;
 
 // Function to get the value of a CSS variable from the <html> style attribute
 export const getCSS = (variableName: string): string | null => {
@@ -37,7 +69,13 @@ export const getCSS = (variableName: string): string | null => {
 };
 
 export function imageToAsciiArray(imageSrc: string, width: number, height: number): Promise<AsciiTile[][]> {
-  return new Promise((resolve, reject) => {
+  const cacheKey = `${imageSrc}|${width}|${height}`;
+  const cachedImage = asciiImageCache.get(cacheKey);
+  if (cachedImage) {
+    return cachedImage;
+  }
+
+  const imagePromise = new Promise<AsciiTile[][]>((resolve, reject) => {
     const canvas: HTMLCanvasElement = document.createElement("canvas");
     const context = canvas.getContext("2d");
     if (!context) {
@@ -72,10 +110,8 @@ export function imageToAsciiArray(imageSrc: string, width: number, height: numbe
       // Convert image to grayscale and get average color
       const grayData: number[][] = new Array(scaledHeight).fill(0)
         .map(() => new Array(scaledWidth).fill(0));
-      const colorData: string[][] = new Array(scaledHeight).fill(0)
-        .map(() => new Array(scaledWidth).fill(""));
-      const colorBackData: string[][] = new Array(scaledHeight).fill(0)
-        .map(() => new Array(scaledWidth).fill(""));
+      const colorData: number[][] = new Array(scaledHeight).fill(0)
+        .map(() => new Array(scaledWidth).fill(0));
 
       for (let y = 0; y < scaledHeight; y++) {
         for (let x = 0; x < scaledWidth; x++) {
@@ -88,13 +124,11 @@ export function imageToAsciiArray(imageSrc: string, width: number, height: numbe
           // Check if the pixel is transparent
           if (a === 0) {
             grayData[y][x] = -1; // Use -1 to indicate transparency
-            colorData[y][x] = "rgba(0, 0, 0, 0)"; // Transparent color
-            colorBackData[y][x] = "rgba(0, 0, 0, 0)"; // Transparent color
+            colorData[y][x] = 0;
           } else {
             const avg = (r + g + b) / 3;
             grayData[y][x] = avg;
-            colorData[y][x] = `rgba(${r},${g},${b},${a / 255})`;
-            colorBackData[y][x] = `rgba(${r},${g},${b},${a / 255})`;
+            colorData[y][x] = packRgb(r, g, b);
           }
         }
       }
@@ -104,8 +138,8 @@ export function imageToAsciiArray(imageSrc: string, width: number, height: numbe
 
       const asciiArray: AsciiTile[][] = new Array(scaledHeight).fill(0)
         .map(() => new Array(scaledWidth).fill({ character: "",
-          avgColor: "",
-          backColor: "" }));
+          avgColor: 0,
+          backColor: 0 }));
 
       for (let y = 0; y < scaledHeight; y++) {
         for (let x = 0; x < scaledWidth; x++) {
@@ -123,7 +157,7 @@ export function imageToAsciiArray(imageSrc: string, width: number, height: numbe
           }
           asciiArray[y][x] = { character,
             avgColor: colorData[y][x],
-            backColor: colorBackData[y][x] };
+            backColor: colorData[y][x] };
         }
       }
       resolve(asciiArray);
@@ -137,26 +171,28 @@ export function imageToAsciiArray(imageSrc: string, width: number, height: numbe
     // Set image source
     image.src = imageSrc;
   });
+
+  asciiImageCache.set(cacheKey, imagePromise);
+  imagePromise.catch(() => asciiImageCache.delete(cacheKey));
+  return imagePromise;
 }
 
 
 function grayscaleToAscii(value: number): string {
-  const chars: string[] = [" ", ".", "`", ":", ",", "'", "-", "_", ";", "=", "+", "*", ">", "<", "!", "?", ")", "(", "v", "}", "{", "I", "c", "J", "r", "]", "[", "V", "T", "L", "F", "w", "o", "m", "i", "e", "7", "C", "z", "s", "n", "j", "&", "1", "Y", "X", "W", "x", "t", "l", "%", "3", "S", "P", "M", "u", "f", "a", "#", "4", "2", "Z", "O", "G", "E", "y", "K", "A", "@", "9", "6", "5", "U", "Q", "N", "D", "B", "k", "h", "b", "8", "R", "p", "0", "q", "g", "d", "$", "H"];
-  //const chars: string[] = ["░", "▒", "▓"]
-  const index: number = Math.max(0, Math.min(chars.length - 1, Math.floor((value / 255) * (chars.length - 1))));
+  const index: number = Math.max(0, Math.min(GRAYSCALE_GLYPHS.length - 1, Math.floor((value / 255) * (GRAYSCALE_GLYPHS.length - 1))));
   
-  return chars[index];
+  return GRAYSCALE_GLYPHS[index];
 }
 
 function angleToAscii(angle: number): string {
   if ((angle >= -22.5 && angle < 22.5) || (angle >= 157.5 && angle <= 180) || (angle >= -180 && angle < -157.5)) {
-    return "|";
+    return EDGE_GLYPHS[0];
   } else if ((angle >= 22.5 && angle < 67.5) || (angle >= -157.5 && angle < -112.5)) {
-    return "/";
+    return EDGE_GLYPHS[1];
   } else if ((angle >= 67.5 && angle < 112.5) || (angle >= -112.5 && angle < -67.5)) {
-    return "-";
+    return EDGE_GLYPHS[2];
   } else {
-    return "\\";
+    return EDGE_GLYPHS[3];
   }
 }
 
@@ -255,7 +291,10 @@ export function createColorCombinations(): ColorCombination[] {
       };
 
       combinations.push({
-        colors: [colorArray[i].color, colorArray[j].color],
+        colors: [
+          packRgb(color1.r, color1.g, color1.b),
+          packRgb(color2.r, color2.g, color2.b),
+        ],
         avgColor: avgColor,
       });
     }
@@ -264,18 +303,12 @@ export function createColorCombinations(): ColorCombination[] {
   return combinations;
 }
 
-export function adjustColorByTime(colorString: string, colorCombinations: ColorCombination[]): string {
-  // Extract the RGB values from the color string
-  const match = colorString.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*[\d.]*\)?/);
-  if (!match) {
-    return colorString; // Return the original string if parsing fails
-  }
+export function adjustColorByTime(color: number, now = new Date()): number {
+  let r = colorRed(color);
+  let g = colorGreen(color);
+  let b = colorBlue(color);
 
-  let r = parseInt(match[1], 10);
-  let g = parseInt(match[2], 10);
-  let b = parseInt(match[3], 10);
-
-  const hour = (new Date().getHours()) + ((new Date().getMinutes() * 1.66)/100)
+  const hour = now.getHours() + ((now.getMinutes() * 1.66) / 100)
 
   // Initialize color adjustment and brightness adjustment
   const colorAdjustment: { r: number, g: number, b: number } = { r: 0,
@@ -327,50 +360,53 @@ export function adjustColorByTime(colorString: string, colorCombinations: ColorC
   g = Math.min(255, Math.max(0, Math.floor(g * brightnessAdjustment)));
   b = Math.min(255, Math.max(0, Math.floor(b * brightnessAdjustment)));
 
-  // Return the adjusted color as an RGB string
-  
-  return `rgb(${r}, ${g}, ${b})`;
+  return packRgb(r, g, b);
 }
 
 
-// Function to find the closest color combination to the target color
-export function findClosestColorCombination(targetColor: string, combinations: ColorCombination[]): [string, string] {
-  //const timeColor = adjustColorByTime(targetColor);
-  const match = targetColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*[\d.]*\)?/);
-  if (!match) {
-    return combinations[0].colors; // Return the first combination if parsing fails
+const INV_3 = 1 / 3;
+
+export function findClosestColorCombination(
+  targetColor: number,
+  combinations: ColorCombination[],
+  cache?: Map<number, [number, number]>
+): [number, number] {
+  const cached = cache?.get(targetColor);
+  if (cached) {
+    return cached;
   }
 
-  const tr = parseInt(match[1], 10);
-  const tg = parseInt(match[2], 10);
-  const tb = parseInt(match[3], 10);
-  
+  const r = colorRed(targetColor);
+  const g = colorGreen(targetColor);
+  const b = colorBlue(targetColor);
 
-  const targetBrightness = (tr + tg + tb) / 3;
+  const targetBrightness = (r + g + b) * INV_3;
 
-  let closestPair: [string, string] = combinations[0].colors;
-  let minDistance = Number.MAX_VALUE;
+  let best = 0;
+  let minDistance = Infinity;
 
-  for (const combination of combinations) {
-    const avgColor = combination.avgColor;
-    const avgBrightness = (avgColor.r + avgColor.g + avgColor.b) / 3;
+  for (let j = 0, n = combinations.length; j < n; ++j) {
+    const avg = combinations[j].avgColor;
 
-    // Calculate the color distance
-    const distance = colorDistance({ r: tr,
-      g: tg,
-      b: tb }, avgColor);
+    const dr = r - avg.r;
+    const dg = g - avg.g;
+    const db = b - avg.b;
 
-    // Adjust distance by the brightness difference
-    const brightnessDifference = Math.abs(targetBrightness - avgBrightness);
-    const adjustedDistance = distance + brightnessDifference * 0.01; // Adjust the multiplier as needed
+    const avgBrightness = (avg.r + avg.g + avg.b) * INV_3;
 
-    if (adjustedDistance < minDistance) {
-      minDistance = adjustedDistance;
-      closestPair = combination.colors;
+    const distance =
+      Math.sqrt(dr * dr + dg * dg + db * db) +
+      Math.abs(targetBrightness - avgBrightness) * 0.01;
+
+    if (distance < minDistance) {
+      minDistance = distance;
+      best = j;
     }
   }
 
-  return closestPair;
+  const closestColors = combinations[best].colors;
+  cache?.set(targetColor, closestColors);
+  return closestColors;
 }
 
 // Function to calculate the distance between two RGB colors
@@ -378,8 +414,7 @@ function colorDistance(color1: { r: number, g: number, b: number }, color2: { r:
   return Math.sqrt(Math.pow(color1.r - color2.r, 2) + Math.pow(color1.g - color2.g, 2) + Math.pow(color1.b - color2.b, 2));
 }
 
-function adjustSkyColorByTime(): { r: number, g: number, b: number } {
-  const hour = new Date().getHours();
+function adjustSkyColorByTime(hour: number): { r: number, g: number, b: number } {
   const sunriseColor = { r: 255,
     g: 165,
     b: 0 }; // Warm orange for sunrise
@@ -438,51 +473,36 @@ function smoothNoise(x: number, y: number): number {
   return corners + sides + center;
 }
 
-function perlinNoise(x: number, y: number, scale: number): number {
+function perlinNoise(x: number, y: number): number {
   let total = 0;
-  const persistence = 0.5;
   const octaves = 3; // Number of octaves for noise
+  let frequency = 1;
+  let amplitude = 1;
 
   for (let i = 0; i < octaves; i++) {
-    const frequency = Math.pow(2, i) / scale;
-    const amplitude = Math.pow(persistence, i);
     total += smoothNoise(x * frequency, y * frequency) * amplitude;
+    frequency *= 2;
+    amplitude *= 0.5;
   }
 
   return total;
 }
 
-function interpolateColor(color1: string, color2: string, fraction: number): string {
-  //const timeColor = adjustColorByTime(targetColor);
-  const match = color1.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*[\d.]*\)?/);
-  if (!match) {
-    return color2
-  }
-  const match2 = color2.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*[\d.]*\)?/);
-  if (!match2) {
-    return color1
-  }
- 
-  const tr = parseInt(match[1], 10);
-  const tg = parseInt(match[2], 10);
-  const tb = parseInt(match[3], 10);
-  const tr2 = parseInt(match2[1], 10);
-  const tg2 = parseInt(match2[2], 10);
-  const tb2 = parseInt(match2[3], 10);
-  
-  
-  return `rgb(${Math.round(tr + (tr2 - tr) * fraction)}, 
-    ${Math.round(tg + (tg2 - tg) * fraction)}, 
-    ${Math.round(tb + (tb2 - tb) * fraction)})`;
+function interpolateColor(color1: number, color2: number, fraction: number): number {
+  return packRgb(
+    Math.round(colorRed(color1) + (colorRed(color2) - colorRed(color1)) * fraction),
+    Math.round(colorGreen(color1) + (colorGreen(color2) - colorGreen(color1)) * fraction),
+    Math.round(colorBlue(color1) + (colorBlue(color2) - colorBlue(color1)) * fraction)
+  );
 }
 
-function getGrassColor(month: number, day: number): string {
-  const spring = "rgb(144,238,144)";
-  const summer = "rgb(0,255,0)";
-  const autumn = "rgb(212,91,18)";
-  const winter = "rgb(255,255,255)";
+function getGrassColor(month: number, day: number): number {
+  const spring = packRgb(144, 238, 144);
+  const summer = packRgb(0, 255, 0);
+  const autumn = packRgb(212, 91, 18);
+  const winter = packRgb(255, 255, 255);
 
-  const colors: string[] = [winter, spring, summer, autumn, winter];
+  const colors: number[] = [winter, spring, summer, autumn, winter];
   const startColor = colors[Math.floor(month / 3)];
   const endColor = colors[Math.floor(month / 3) + 1];
 
@@ -494,13 +514,30 @@ function getGrassColor(month: number, day: number): string {
   return color;
 }
 
-export async function generateBackdrop(width: number, height: number, clouds: number): Promise<AsciiTile[][]> {
-  const backdrop: AsciiTile[][] = [];
+export async function generateBackdrop(
+  width: number,
+  height: number,
+  clouds: number,
+  now = new Date()
+): Promise<AsciiTile[][]> {
+  if (backdropWidth !== width || backdropHeight !== height) {
+    backdropBuffer = Array.from(
+      { length: height },
+      () => Array.from(
+        { length: width },
+        () => ({ character: '', avgColor: 0, backColor: 0 })
+      )
+    );
+    backdropWidth = width;
+    backdropHeight = height;
+  }
 
   // Sky color settings
-  const skyColor = adjustSkyColorByTime();
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes() * 10 + now.getSeconds();
+  const skyColor = adjustSkyColorByTime(currentHour);
   const clamp = (value: number) => Math.min(255, Math.max(0, Math.round(value)));
-  const skyColorString = `rgba(${clamp(skyColor.r)}, ${clamp(skyColor.g)}, ${clamp(skyColor.b)}, 1)`;
+  const skyColorPacked = packRgb(clamp(skyColor.r), clamp(skyColor.g), clamp(skyColor.b));
 
   // Sea color settings
   const seaColor = {
@@ -508,7 +545,7 @@ export async function generateBackdrop(width: number, height: number, clouds: nu
     g: clamp(skyColor.g),
     b: clamp(skyColor.b * 0.6 + 255 * 0.5),
   };
-  const seaColorString = `rgba(${seaColor.r}, ${seaColor.g}, ${seaColor.b}, 1)`;
+  const seaColorPacked = packRgb(seaColor.r, seaColor.g, seaColor.b);
 
   // Water level settings
   const getWaterLevelOffset = () => Math.floor(Math.random() * 2) - 1;
@@ -517,122 +554,110 @@ export async function generateBackdrop(width: number, height: number, clouds: nu
   const waterLevel = baseWaterLevel + waterLevelOffset;
 
   // Character arrays
-  const cloudCharacters = [".", ",", "o", "O", "Q", "@"];
-  const grassCharacters = ["♠", "¥", "♣", "♀", "☼"];
-  const waterCharacters = ["~", "^"];
-  const grassBlades = ["\\", "|", "/"];
 
   // Time and noise settings
-  const currentMinute = (new Date().getMinutes() * 10) + (new Date().getSeconds());
   const horizontalOffset = currentMinute * 0.1; // Adjust multiplier to control movement speed
   const cloudDensity = clouds / 10; // Lower value means more clouds
   const cloudChunkiness = 10 - clouds; // Scale of noise
+  const noiseScale = 1 / (cloudChunkiness * cloudChunkiness);
 
   // Cliff settings
   const cliffRadius = (Math.min(width, height) / 4);
+  const cliffRadiusSquared = cliffRadius * cliffRadius;
   const cliffX = ((width / 2) - (cliffRadius * 2));
 
   // Grass settings
   const grassDirection = Math.floor(Math.random() * 3);
-  const month = new Date().getMonth();
-  const day = new Date().getDay();
+  const month = now.getMonth();
+  const day = now.getDay();
   const grassColor = getGrassColor(month, day);
 
   // Sun settings
-  const sunRadius = (Math.min(width, height) / 6);
-  const currentHour = new Date().getHours();
+  const sunRadius = Math.min(width, height) / 6;
+  const sunRadiusSquared = sunRadius * sunRadius;
   const sunPositionX = ((width / 24) * ((currentHour + 12) % 24)); // Moon opposite the sun
   const sunPositionY = (height / 3) + Math.sin(((currentHour + 12) % 24) / 24 * Math.PI) * (height / 6);
   
   let sunColor;
   if (currentHour < 6 || currentHour > 18) {
-    sunColor = "rgba(255, 69, 0, 1)"; // Reddish color for sunrise/sunset
+    sunColor = packRgb(255, 69, 0); // Reddish color for sunrise/sunset
   } else if (currentHour < 9 || currentHour > 15) {
-    sunColor = "rgba(255, 165, 0, 1)"; // Orange color for morning/evening
+    sunColor = packRgb(255, 165, 0); // Orange color for morning/evening
   } else {
-    sunColor = "rgba(255, 255, 0, 1)"; // Bright yellow for midday
+    sunColor = packRgb(255, 255, 0); // Bright yellow for midday
   }
 
   // Moon settings
   const moonRadius = sunRadius / 1.2;
+  const moonRadiusSquared = moonRadius * moonRadius;
   const moonPositionX = ((width / 24) * currentHour); // Sun moves from left to right across the sky
   const moonPositionY = (height / 3) + Math.sin((currentHour / 24) * Math.PI) * (height / 6); // Sun height based on sine wave
-  const moonColor = "rgba(210, 210, 200, 1)"; // White color for the moon
+  const moonColor = packRgb(210, 210, 200); // White color for the moon
 
   // Main generation loop
   for (let y = 0; y < height; y++) {
-    const row: AsciiTile[] = [];
+    const row = backdropBuffer[y];
+    const cliffY = y - height / 2 - cliffRadius / 1.2;
+    const cliffYSquared = cliffY * cliffY;
     for (let x = 0; x < width; x++) {
-      const cliffDistance = Math.sqrt(Math.pow(x - cliffX, 2) + Math.pow(y - (height / 2) - (cliffRadius / 1.2), 2));
-      if (y > height / 2 && (x >= cliffX || cliffRadius > cliffDistance)) {
+      const cliffXOffset = x - cliffX;
+      const tile = row[x];
+      if (y > height / 2 && (x >= cliffX || cliffRadiusSquared > cliffXOffset * cliffXOffset + cliffYSquared)) {
         // Grass area
-        row.push({
-          character: (Math.abs((x * 73856093 ^ y * 19349663) % 10) > 5) ? grassCharacters[Math.abs((x * 73856093 ^ y * 19349663) % grassCharacters.length)] : grassBlades[grassDirection],
-          avgColor: grassColor,
-          backColor: grassColor,
-        });
+        tile.character = (Math.abs((x * 73856093 ^ y * 19349663) % 10) > 5) ? GRASS_GLYPHS[Math.abs((x * 73856093 ^ y * 19349663) % GRASS_GLYPHS.length)] : GRASS_BLADE_GLYPHS[grassDirection];
+        tile.avgColor = grassColor;
+        tile.backColor = grassColor;
       } else if (y > (height / 2) + (cliffRadius / 2) && x >= cliffX - cliffRadius + ((y - height / 2) / 8)) {
         // Cliff area
-        row.push({
-          character: "%",
-          avgColor: "rgb(139,69,19)",
-          backColor: "rgb(139,69,19)",
-        });
+        tile.character = "%";
+        tile.avgColor = packRgb(139, 69, 19);
+        tile.backColor = tile.avgColor;
       } else if (y > waterLevel || (y == waterLevel && Math.random() > 0.7)) {
         // Sea area
-        row.push({
-          character: waterCharacters[Math.floor(Math.random() * waterCharacters.length)],
-          avgColor: seaColorString,
-          backColor: seaColorString,
-        });
+        tile.character = WATER_GLYPHS[Math.floor(Math.random() * WATER_GLYPHS.length)];
+        tile.avgColor = seaColorPacked;
+        tile.backColor = seaColorPacked;
       } else {
-        const tempChar = {} as AsciiTile;
-        const sunDistance = Math.sqrt(Math.pow(x - sunPositionX, 2) + Math.pow(y - sunPositionY, 2));
-        const moonDistance = Math.sqrt(Math.pow(x - moonPositionX, 2) + Math.pow(y - moonPositionY, 2));
+        const sunX = x - sunPositionX;
+        const sunY = y - sunPositionY;
+        const moonX = x - moonPositionX;
+        const moonY = y - moonPositionY;
+        const insideSun = sunX * sunX + sunY * sunY < sunRadiusSquared;
+        const insideMoon = moonX * moonX + moonY * moonY < moonRadiusSquared;
         // Sky area with clouds
-        const noiseValue = (perlinNoise((x + horizontalOffset) / cloudChunkiness, y / cloudChunkiness, cloudChunkiness) + 1) / 2; // Normalize to 0-1
+        const noiseValue = (perlinNoise(
+          (x + horizontalOffset) * noiseScale,
+          y * noiseScale
+        ) + 1) / 2; // Normalize to 0-1
+        let character: string;
+        let color: number;
         if (noiseValue < cloudDensity) { // Threshold to decide cloud placement
-          const cloudIndex = Math.floor(noiseValue * cloudCharacters.length);
-          const cloudCharacter = cloudCharacters[cloudIndex] || " ";
+          const cloudIndex = Math.floor(noiseValue * CLOUD_GLYPHS.length);
           const cloudShade = clamp(255 - (noiseValue * 255));
-          const cloudColorString = `rgba(${clamp(skyColor.r + (cloudShade) * (noiseValue / 1.5))}, ${clamp(skyColor.g + (cloudShade) * (noiseValue / 1.5))}, ${clamp(skyColor.b + (cloudShade) * (noiseValue / 1.5))})`;
-          tempChar.character = cloudCharacter;
-          tempChar.avgColor = cloudColorString;
-          tempChar.backColor = cloudColorString;
+          character = CLOUD_GLYPHS[cloudIndex] || " ";
+          color = packRgb(
+            clamp(skyColor.r + cloudShade * (noiseValue / 1.5)),
+            clamp(skyColor.g + cloudShade * (noiseValue / 1.5)),
+            clamp(skyColor.b + cloudShade * (noiseValue / 1.5))
+          );
         }else {
-          tempChar.character = " "
-          tempChar.avgColor = skyColorString;
-          tempChar.backColor = skyColorString;
-        }if (moonDistance < moonRadius) {
-          if(tempChar.character == " "){
-            tempChar.character = "@";
-          }
-          row.push({
-            character: tempChar.character,
-            avgColor: interpolateColor(moonColor,tempChar.avgColor,0.5),
-            backColor: interpolateColor(moonColor,tempChar.avgColor,0.5),
-          });
-        }else
-        if (sunDistance < sunRadius) {
-          if(tempChar.character == " "){
-            tempChar.character = "*";
-          }
-          row.push({
-            character: tempChar.character,
-            avgColor: interpolateColor(sunColor,tempChar.avgColor,0.5),
-            backColor: interpolateColor(sunColor,tempChar.avgColor,0.5),
-          });
-        } else{
-          row.push({
-            character: tempChar.character,
-            avgColor: tempChar.avgColor,
-            backColor: tempChar.backColor,
-          })
+          character = " ";
+          color = skyColorPacked;
         }
+        if (insideMoon) {
+          tile.character = character === " " ? "@" : character;
+          tile.avgColor = interpolateColor(moonColor, color, 0.5);
+        } else if (insideSun) {
+          tile.character = character === " " ? "*" : character;
+          tile.avgColor = interpolateColor(sunColor, color, 0.5);
+        } else {
+          tile.character = character;
+          tile.avgColor = color;
+        }
+        tile.backColor = tile.avgColor;
       }
     }
-    backdrop.push(row);
   }
 
-  return Promise.resolve(backdrop);
+  return backdropBuffer;
 }

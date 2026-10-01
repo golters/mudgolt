@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from "react-dom"
 import './home.css'; // Import CSS for styling
-import { imageToAsciiArray, generateBackdrop, createColorCombinations, adjustColorByTime, findClosestColorCombination} from './home_art';
+import { imageToAsciiArray, generateBackdrop, createColorCombinations, adjustColorByTime, findClosestColorCombination, FRAME_GLYPH, MUSIC_GLYPHS, RAIN_GLYPHS} from './home_art';
+import { PixiAsciiRenderer } from './PixiAsciiRenderer';
 import {
     networkEmitter, NetworkEventHandler
 } from "../network/events"
@@ -20,7 +21,6 @@ import {
 import { colorUtil } from "../../src/utils"
 import { themes } from "../../src/utils/themes"
 import { useSoundContext,SoundProvider } from './SoundContext';
-import { Volume } from "src/commands/volume"
 
 export interface imageData {
     image: AsciiTile[][]; // Update to use AsciiTile
@@ -32,9 +32,12 @@ export interface imageData {
 
 interface AsciiTile {
     character: string;
-    avgColor: string;
-    backColor: string;
+    avgColor: number;
+    backColor: number;
 }
+
+const WHITE = 0xffffff;
+const BLACK = 0;
 
 //font size offset
 const offsetY = 1;
@@ -100,9 +103,21 @@ if (isNaN(Number(localStorage.volume))) {
 }
   
 export const Home: React.FC = () => {
-    const [asciiArt, setAsciiArt] = useState<JSX.Element[]>([]);
     const [notifications, setNotifications] = useState<JSX.Element[]>([]);
     const eventListenerRef = useRef<null | (() => void)>(null);
+    const asciiRootRef = useRef<HTMLDivElement>(null);
+    const pixiRendererRef = useRef<PixiAsciiRenderer | null>(null);
+    const tileBuffersRef = useRef({
+        tiles: [] as AsciiTile[][],
+        doorTiles: [] as boolean[][],
+        width: 0,
+        height: 0,
+    });
+    const colorCachesRef = useRef({
+        normal: new Map<number, [number, number]>(),
+        time: new Map<number, [number, number]>(),
+        timeKey: '',
+    });
     const [muted, setMuted] = useState(localStorage.getItem("muted") === "true")
     const [volume, setVolume] = useState(Number(localStorage.volume) * 10)
     const [randomEvent] = useState(Math.floor(Math.random() * 10)); // Consistent value across renders
@@ -207,7 +222,44 @@ export const Home: React.FC = () => {
             }
         };
     }, []);
-      
+
+    useEffect(() => {
+        const root = asciiRootRef.current;
+        if (!root) {
+            return;
+        }
+
+        let disposed = false;
+        let renderer: PixiAsciiRenderer | null = null;
+        const initializeRenderer = async () => {
+            renderer = await PixiAsciiRenderer.create(root);
+            if (disposed) {
+                renderer.destroy();
+                return;
+            }
+            pixiRendererRef.current = renderer;
+        };
+        initializeRenderer();
+
+        const handleDoorClick = (event: MouseEvent) => {
+            if (pixiRendererRef.current?.isDoorAt(event.clientX, event.clientY)) {
+                window.location.href = `${window.location.origin}/explore`;
+            }
+        };
+
+        root.addEventListener('click', handleDoorClick);
+        return () => {
+            disposed = true;
+            root.removeEventListener('click', handleDoorClick);
+            pixiRendererRef.current?.destroy();
+            pixiRendererRef.current = null;
+        };
+    }, []);
+
+    const renderAsciiDom = (tiles: AsciiTile[][], doorTiles: boolean[][]) => {
+        pixiRendererRef.current?.render(tiles, doorTiles);
+    };
+
     // Async function to generate ASCII art
     const generateAsciiArt = async () => {
         // Initial calculation for width and height / characters
@@ -227,6 +279,15 @@ export const Home: React.FC = () => {
 
 
         try {
+            const now = new Date();
+            const hour = now.getHours();
+            const month = now.getMonth();
+            const isDay = hour > 5 && hour < 22;
+            const timeKey = `${hour}:${now.getMinutes()}`;
+            if (colorCachesRef.current.timeKey !== timeKey) {
+                colorCachesRef.current.time.clear();
+                colorCachesRef.current.timeKey = timeKey;
+            }
             const centerY = Math.floor(height / 2);
             const centerX = Math.floor(width / 2);
             let DoorNum = 0;
@@ -258,12 +319,12 @@ export const Home: React.FC = () => {
             const Door = await imageToAsciiArray("/door.svg", width / 2, height / 2);
             const Tree = await imageToAsciiArray("/tree"+Math.abs(frame-3)+".svg", width, height);
             let Torch = await imageToAsciiArray("/torchOff.svg", width/6, height/6);
-            if(!(new Date().getHours() < 22 && new Date().getHours() > 5)){
+            if(!isDay){
                 Torch = await imageToAsciiArray("/torch"+(Math.floor(Math.random()*3)+1)+".svg", width/6, height/6);
             }
             let i = 0;
             images[i] = {} as imageData;
-            const backDrop = await generateBackdrop(width,height,cloudStrength);
+            const backDrop = await generateBackdrop(width, height, cloudStrength, now);
             images[i].image = backDrop;
             images[i].width = backDrop[0].length;
             images[i].height = backDrop.length;
@@ -387,7 +448,7 @@ export const Home: React.FC = () => {
                     images[i].startY = centerY - Math.floor(images[i].height / 2) + Math.floor(height/5);
                 break;
             }
-            if(new Date().getHours() > 23 || new Date().getHours() < 1){
+            if(hour > 23 || hour < 1){
             const creepyMan = await imageToAsciiArray("/creepyMan.svg", width, height);
             i++;
             images[i] = {} as imageData;
@@ -402,83 +463,130 @@ export const Home: React.FC = () => {
 
 
 
-            const colorCombos = createColorCombinations()
-
-            let art: JSX.Element[] = [];
-            for (let y = 0; y < height; y++) {
-                let row: JSX.Element[] = [];
-                for (let x = 0; x < width; x++) {
-                    let tile: AsciiTile = { character: " ", avgColor: "white", backColor: "black" }; // Default tile
-                    // Add className for door elements and onClick handler
-                    let isDoor = images[DoorNum].startY <= y && y < images[DoorNum].startY + images[DoorNum].height &&
-                                    images[DoorNum].startX <= x && x < images[DoorNum].startX + images[DoorNum].width && 
-                                    images[DoorNum];
-                    for (let i = 0; i < images.length; i++) {
-                        if (y === 0 || x === 0 || y === height - 1 || x === width - 1) {
-                            tile = { character: "▓", avgColor: "", backColor: "" };
-                        } else {
-                            if (y >= images[i].startY && y < images[i].startY + images[i].height && x >= images[i].startX && x < images[i].startX + images[i].width) {
-                                const asciiTile = images[i].image[y - images[i].startY][x - images[i].startX];
-                                let closerColor = findClosestColorCombination(asciiTile.avgColor,colorCombos);
-                                // Calculate the distance from the torch
-                                let rainColor = findClosestColorCombination("rgb(255,255,255)",colorCombos)[0];
-                                const torchDistance = Math.sqrt(Math.pow(x - torchX, 2) + Math.pow(y - torchY, 2));
-                                if((torchDistance > torchRadius || (i < torchNum - 2 || i > torchNum)) || (new Date().getHours() < 22 && new Date().getHours() > 5)){
-                                    const timeColor = adjustColorByTime(asciiTile.avgColor,colorCombos);
-                                    closerColor = findClosestColorCombination(timeColor,colorCombos);
-                                    const darkRainColor = adjustColorByTime("rgb(255,255,255)",colorCombos);
-                                    rainColor = findClosestColorCombination(darkRainColor,colorCombos)[0];
-                                }
-                                if (asciiTile.character !== "") {
-                                    // Place the premade art character
-                                    tile = asciiTile;
-                                    tile.avgColor = closerColor[0];
-                                    tile.backColor = closerColor[1];
-                                }else if(i == DoorNum){
-                                    isDoor = false;
-                                }
-                                if(randomEvent === 0){
-                                    const gnomeDistance = Math.sqrt(Math.pow(x - images[gnomeNum].startX - (images[gnomeNum].width/2), 2) + Math.pow(y - images[gnomeNum].startY, 2));
-                                    if((Math.random() * 10) > 9 && gnomeDistance < (Math.min(width, height)/8) && i != gnomeNum){
-                                        const musicNotes = ["♪","♫"];
-                                        tile.character = (musicNotes[Math.floor(Math.random()*musicNotes.length)])
-                                        tile.avgColor =  findClosestColorCombination("rgb(0,0,0)",colorCombos)[0];
-    
-                                    }
-                                }
-                                if((Math.random() * 10) + 6 < cloudStrength){
-                                    // rain effect
-                                    const month = new Date().getMonth();
-                                    tile.character = (month >= 12 || month <= 2) ? '*' : '/';
-                                    tile.avgColor = rainColor;
-                                }
-                            }
-                        }
+            const colorCombos = createColorCombinations();
+            const { normal: normalColorCache, time: timeColorCache } = colorCachesRef.current;
+            const getClosestColor = (color: number, useTimeColor: boolean) => {
+                if (useTimeColor) {
+                    const cached = timeColorCache.get(color);
+                    if (cached) {
+                        return cached;
                     }
-                    const className = isDoor ? 'door' : '';
-                    row.push(
-                        <p 
-                            key={`${x}-${y}`} 
-                            style={{ 
-                                display: 'inline', 
-                                margin: 0, 
-                                color: tile.avgColor, 
-                                background: tile.backColor 
-                            }}
-                            className={className}
-                            onClick={isDoor ? handleButtonClick : undefined}
-                        >
-                            {tile.character}
-                        </p>
+
+                    const closest = findClosestColorCombination(
+                        adjustColorByTime(color, now),
+                        colorCombos
                     );
+                    timeColorCache.set(color, closest);
+                    return closest;
                 }
-                art.push(<div key={y} style={{ height: '1em' }}>{row}</div>);
+
+                return findClosestColorCombination(color, colorCombos, normalColorCache);
+            };
+            const whiteColor = getClosestColor(WHITE, false)[0];
+            const darkWhiteColor = getClosestColor(WHITE, true)[0];
+            const blackColor = getClosestColor(BLACK, false)[0];
+            const torchRadiusSquared = torchRadius * torchRadius;
+            const gnomeRadius = Math.min(width, height) / 8;
+            const gnomeRadiusSquared = gnomeRadius * gnomeRadius;
+            const gnomeX = gnomeNum >= 0
+                ? images[gnomeNum].startX + images[gnomeNum].width / 2
+                : 0;
+            const gnomeY = gnomeNum >= 0 ? images[gnomeNum].startY : 0;
+            const buffers = tileBuffersRef.current;
+            if (buffers.width !== width || buffers.height !== height) {
+                buffers.tiles = Array.from(
+                    { length: height },
+                    () => Array.from(
+                        { length: width },
+                        () => ({ character: " ", avgColor: WHITE, backColor: BLACK })
+                    )
+                );
+                buffers.doorTiles = Array.from(
+                    { length: height },
+                    () => Array(width).fill(false)
+                );
+                buffers.width = width;
+                buffers.height = height;
             }
 
-            setAsciiArt(art);
+            const { tiles, doorTiles } = buffers;
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    const tile = tiles[y][x];
+                    tile.character = " ";
+                    tile.avgColor = WHITE;
+                    tile.backColor = BLACK;
+                    doorTiles[y][x] = false;
+                }
+            }
+
+            for (let imageIndex = 0; imageIndex < images.length; imageIndex++) {
+                const image = images[imageIndex];
+                const startY = Math.max(1, image.startY);
+                const endY = Math.min(height - 1, image.startY + image.height);
+                const startX = Math.max(1, image.startX);
+                const endX = Math.min(width - 1, image.startX + image.width);
+
+                for (let y = startY; y < endY; y++) {
+                    const imageRow = image.image[y - image.startY];
+                    for (let x = startX; x < endX; x++) {
+                        const asciiTile = imageRow[x - image.startX];
+                        const torchDx = x - torchX;
+                        const torchDy = y - torchY;
+                        const useTimeColor = isDay ||
+                            torchDx * torchDx + torchDy * torchDy > torchRadiusSquared ||
+                            imageIndex < torchNum - 2 || imageIndex > torchNum;
+
+                        if (asciiTile.character !== "") {
+                            const closerColor = getClosestColor(asciiTile.avgColor, useTimeColor);
+                            const tile = tiles[y][x];
+                            tile.character = asciiTile.character;
+                            tile.avgColor = closerColor[0];
+                            tile.backColor = closerColor[1];
+                            if (imageIndex === DoorNum) {
+                                doorTiles[y][x] = true;
+                            }
+                        } else if (imageIndex === DoorNum) {
+                            doorTiles[y][x] = false;
+                        }
+
+                        const tile = tiles[y][x];
+                        if (randomEvent === 0 && imageIndex !== gnomeNum) {
+                            const gnomeDx = x - gnomeX;
+                            const gnomeDy = y - gnomeY;
+                            if ((Math.random() * 10) > 9 &&
+                                gnomeDx * gnomeDx + gnomeDy * gnomeDy < gnomeRadiusSquared) {
+                                tile.character = MUSIC_GLYPHS[Math.floor(Math.random() * MUSIC_GLYPHS.length)];
+                                tile.avgColor = blackColor;
+                            }
+                        }
+                        if ((Math.random() * 10) + 6 < cloudStrength) {
+                            tile.character = (month >= 12 || month <= 2) ? RAIN_GLYPHS[0] : RAIN_GLYPHS[1];
+                            tile.avgColor = useTimeColor ? darkWhiteColor : whiteColor;
+                        }
+                    }
+                }
+            }
+
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    if (y === 0 || x === 0 || y === height - 1 || x === width - 1) {
+                        const tile = tiles[y][x];
+                        tile.character = FRAME_GLYPH;
+                        tile.avgColor = WHITE;
+                        tile.backColor = BLACK;
+                        doorTiles[y][x] = false;
+                    }
+                }
+            }
+
+            renderAsciiDom(tiles, doorTiles);
         } catch (error) {
             console.error('Error generating ASCII art:', error);
-            setAsciiArt([<p key="error">Error generating ASCII art.</p>]);
+            const root = asciiRootRef.current;
+            if (root) {
+                root.textContent = 'Error generating ASCII art.';
+            }
         }
     };
 
@@ -505,9 +613,7 @@ export const Home: React.FC = () => {
 
     return (
         <div className="ascii-background">
-            <div className="ascii-content">
-                {asciiArt}
-            </div>
+            <div ref={asciiRootRef} className="ascii-content" />
             <div className='explore-button' onClick={handleButtonClick}>Enter</div>
             <div className='notification'>
                 {notifications.map(notification => (
