@@ -2,9 +2,6 @@ import {
   EVENT_EVENT,
 } from "../../../events"
 import {
-  pushErrorToLog,
-} from "../components/Terminal"
-import {
   sendEvent, 
 } from "../network"
 import {

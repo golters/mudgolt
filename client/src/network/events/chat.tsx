@@ -18,6 +18,8 @@ import { sendEvent } from "../../network"
 import {
   newWhisperWindow
 } from "../../components/windows"
+import { Glyph } from "../../../../@types"
+import { stringToGlyphs } from "../../components/Header"
 
 
 function lookUser(player: string |undefined){
@@ -25,36 +27,64 @@ function lookUser(player: string |undefined){
 }
 
 const handler: NetworkEventHandler = ({ player, message, date }: Chat) => {
-  const matches = message.matchAll(/\b(https?:\/\/\S*?\.(?:png|jpe?g|gif)(?:\?(?:(?:(?:[\w_-]+=[\w_-]+)(?:&[\w_-]+=[\w_-]+)*)|(?:[\w_-]+)))?)\b/g)
+  const matches = message.matchAll(
+    /\b(https?:\/\/\S*?\.(?:png|jpe?g|gif)(?:\?(?:(?:(?:[\w_-]+=[\w_-]+)(?:&[\w_-]+=[\w_-]+)*)|(?:[\w_-]+)))?)\b/g
+  );
 
-  const embeds: JSX.Element[] = [...matches].map(match => {
-    return <img src={match[1]} />
-  })
+  // Extract embed URLs
+  const embedUrls = [...matches].map(match => match[1]);
 
+  // Format timestamp
   const formattedTimeParts = new Date(date)
     .toLocaleString()
-    .split(' ')
-    .slice(1, 3)
+    .split(" ")
+    .slice(1, 3);
 
   const [formattedDate] = new Date(date)
     .toLocaleString()
-    .split(',')
-    .slice(0, 1)
+    .split(",")
+    .slice(0, 1);
 
-    formattedTimeParts[0] = formattedTimeParts[0].split(':').slice(0, 2).join(":")
-    
-  const timestamp = Date.now() - date < 86400000
-    ? formattedTimeParts.join(" ")
-    : `${formattedDate} ${formattedTimeParts.join(" ")}`
+  formattedTimeParts[0] = formattedTimeParts[0]
+    .split(":")
+    .slice(0, 2)
+    .join(":");
 
-  pushToLog(
-    <span className="chat-message">
-      <span className="date" title={new Date(date).toLocaleString()}>[{timestamp}] </span>
-      <span className="username"><div className = "chatdropdown">[{player.username}] <div className="chatdropdown-content">{<div onClick={() => lookUser(player.username)}>Look</div>} {<div onClick={() => newWhisperWindow(player.username,null)}>Whisper</div>}</div></div></span>
-      <Markdown string={message} />
-      {embeds}
-    </span>
-  )
-}
+  const timestamp =
+    Date.now() - date < 86400000
+      ? formattedTimeParts.join(" ")
+      : `${formattedDate} ${formattedTimeParts.join(" ")}`;
+
+  // Build glyph arrays
+  const dateGlyphs: Glyph[] = stringToGlyphs(`[${timestamp}] `).map(g => ({
+    ...g,
+    effect: "date",
+  }));
+
+  const usernameGlyphs: Glyph[] = [
+    { char: "[" },
+    ...stringToGlyphs(player.username).map(g => ({
+      ...g,
+      effect: "username",
+    })),
+    { char: "]" },
+    { char: " " },
+  ];
+
+  const messageGlyphs: Glyph[] = stringToGlyphs(message);
+
+  const embedGlyphs: Glyph[] = embedUrls.map(url => ({
+    char: "🖼",
+    effect: `image:${url}`, // renderer can interpret this
+  }));
+
+  // Push all glyphs together
+  pushToLog([
+    ...dateGlyphs,
+    ...usernameGlyphs,
+    ...messageGlyphs,
+    ...embedGlyphs,
+  ]);
+};
 
 networkEmitter.on(CHAT_EVENT, handler)

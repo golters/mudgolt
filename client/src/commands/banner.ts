@@ -1,5 +1,5 @@
 import { CommandModule } from "./emitter"
-import { changeBanner } from "../store/banner"
+import { changeBanner } from "../components/Headerold"
 import { pushErrorToLog } from "../components/Terminal"
 import { UPDATE_BANNER_EVENT, GAME_EVENT } from "../../../events"
 import {

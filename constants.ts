@@ -1,5 +1,7 @@
-export const BANNER_WIDTH = 96
-export const BANNER_HEIGHT = 22
+export const BANNER_WIDTH = 64
+//96
+export const BANNER_HEIGHT = 18
+//22
 export const BANNER_FILL = "∙"
 
 export const ICON_WIDTH = 6

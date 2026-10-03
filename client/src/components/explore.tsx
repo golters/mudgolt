@@ -1,13 +1,15 @@
 import React, { useEffect } from "react";
 import "./explore.css";
 
-import { pushToLog, Terminal } from "./Terminal";
+import { cryptoTask } from "../crypto";
+import { pushToLog } from "./Terminal";
 import { networkTask, sendEvent } from "../network";
 import { Header } from "./Header";
 import { Toolbar } from "./Toolbar";
 import "../commands";
 import { EVENT_EVENT } from "../../../events";
 
+navigator.storage.persist().catch(console.error);
 
 const startMessages: string[] = [
   "Leave your shoes at the door.",
@@ -19,6 +21,7 @@ const startMessages: string[] = [
 ];
 
 const init = async () => {
+  await cryptoTask();
   await networkTask();
 
   console.log("Client started");
@@ -36,9 +39,7 @@ export const Explore: React.FC = () => {
 
   return (
     <>
-      <Toolbar />
       <Header />
-      <Terminal />
     </>
   );
 };

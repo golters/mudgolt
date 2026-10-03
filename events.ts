@@ -80,6 +80,7 @@ export const DRAW_BACK_COLOR_EVENT = "DRAW_BACK_COLOR_EVENT"
 export const ACTIVE_UPDATE_EVENT = "ACTIVE_UPDATE"
 export const RANDOM_ROOM_EVENT = "RANDOM_ROOM"
 export const HOME_UPDATE_EVENT = "HOME_UPDATE"
+export const WINDOW_EVENT = "WINDOW"
 
 // command events
 export const LOG_EVENT = "LOG"

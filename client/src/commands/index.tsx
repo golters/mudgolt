@@ -208,7 +208,7 @@ commandEmitter.on(INPUT_EVENT, (input: string) => {
   const args = parseArgs(commandName, input)
 
   if (command) {
-    pushToLog(<span>&gt; {input}</span>)
+    pushToLog(input)
 
     command.callback({
       args,

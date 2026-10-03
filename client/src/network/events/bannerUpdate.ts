@@ -13,7 +13,7 @@ import {
 import {
   Game,
 } from "../../../../@types"
-import { changeBanner } from "../../store/banner"
+import { changeBanner } from "../../components/Headerold"
 
 const handler: NetworkEventHandler = (banner: string) => {
   changeBanner(banner)    

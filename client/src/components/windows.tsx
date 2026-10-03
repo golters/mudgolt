@@ -8,6 +8,7 @@ import {
   SEND_EVENT,
   TAG_ITEM_EVENT,
   WHISPER_EVENT,
+  WINDOW_EVENT
 } from "../../../events"
 import {
   Door, Item, Npc, Chat,
@@ -15,7 +16,7 @@ import {
 import { MESSAGE_MAX_LENGTH, AVATAR_HEIGHT, AVATAR_WIDTH } from '../../../constants'
 import{
   setBrush,
-}from "../store/banner"
+}from "./Headerold"
 
 
 export function newMesageWindow(Message: string, user:string, npcs: Npc[] | null){

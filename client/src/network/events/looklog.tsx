@@ -24,10 +24,9 @@ import { sendEvent } from "../../network"
 import {
   newWhisperWindow
 } from "../../components/windows"
-import Username from "src/commands/username"
-import { Color } from "src/commands/color"
-import { colorUtil } from "src/utils"
 import { itemRarity } from "../../../../constants"
+import { Glyph } from "../../../../@types"
+import { stringToGlyphs } from "../../components/Header"
 
 //make new function to lookat item.id in future
 function lookAt(player: string |undefined){
@@ -44,45 +43,78 @@ function goDoor(door: Door){
 
 const handler: NetworkEventHandler = ({ bio, users, items, doors, event}: Look) => {
 
-  pushToLog(
-    <span className="look-message">
-      {bio}
-      <br></br>
-      You see:
-      <br></br>
-      {users.map((username, i, list )=> 
-      <span className="username"><div className = "chatdropdown">[{username}]{i+1 != list.length? "," : null} <div className="chatdropdown-content">
-      {<div onClick={() => lookAt(username)}>Look </div>} 
-      {<div onClick={() => newWhisperWindow(username,null)}>Whisper</div>}</div></div></span>)}
-      <br></br>
-      {items.length > 0? 
-      <span>on the floor is:
-      <br></br>
-      {items.map((item, i, list) => 
-      <span className="itemlook"><div className = "chatdropdown" id="test" 
-      style={{color:itemRarity.find(R => R.num.toString() === item.rarity)?.col,
-      backgroundColor:itemRarity.find(R => R.num.toString() === item.rarity)?.back,
-      textShadow:itemRarity.find(R => R.num.toString() === item.rarity)?.shadow}}
-      >{item.name}{i+1 != list.length? "," : null} <div className="chatdropdown-content">
-      {<div onClick={() => lookAt(item.name)}>Look</div>}
-      {<div onClick={() => takeItem(item)}>Take</div>} 
-      </div></div></span>)}
-      <br></br>
-      </span>: <span>the floor is bare<br></br></span>
-      }
-      {doors.length > 0?
-      <span>
-      the exits are:
-      <br></br>
-      {doors.map((door, i, list) => 
-      <span className="doorlook"><div className = "chatdropdown" onClick={() => goDoor(door)}>{door.name}{i+1 != list.length? "," : null} <div className="chatdropdown-content">
-      {<div onClick={() => goDoor(door)}>Go</div>} 
-      </div></div></span>)}
-      </span>:<span>there are no exits</span>}
-      <br></br>
-      {event}
-    </span>
-  )
+pushToLog(
+  stringToGlyphs(bio),
+  stringToGlyphs("\nYou see:\n"),
+
+  // Users
+  users.flatMap((username, i, list) => {
+    const glyphs: Glyph[] = [];
+
+    // open bracket
+    glyphs.push({ char: "[" });
+
+    // username glyphs
+    glyphs.push(...stringToGlyphs(username));
+
+    // close bracket
+    glyphs.push({ char: "]" });
+
+    // comma if not last
+    if (i + 1 !== list.length) {
+      glyphs.push({ char: "," });
+    }
+
+    return glyphs;
+  }),
+
+  stringToGlyphs("\n"),
+
+  // Items
+  items.length > 0
+    ? [
+        ...stringToGlyphs("on the floor is:\n"),
+        ...items.flatMap((item, i, list) => {
+          const color = itemRarity.find(
+            R => R.num.toString() === item.rarity
+          );
+
+          const glyphs: Glyph[] = stringToGlyphs(item.name).map(g => ({
+            ...g,
+            color: color?.col,
+            backColor: color?.back,
+            effect: color?.shadow, // if you mapped shadow to effect
+          }));
+
+          if (i + 1 !== list.length) {
+            glyphs.push({ char: "," });
+          }
+
+          return glyphs;
+        }),
+        { char: "\n" },
+      ]
+    : stringToGlyphs("the floor is bare\n"),
+
+  // Doors
+  doors.length > 0
+    ? [
+        ...stringToGlyphs("the exits are:\n"),
+        ...doors.flatMap((door, i, list) => {
+          const glyphs: Glyph[] = stringToGlyphs(door.name);
+          if (i + 1 !== list.length) {
+            glyphs.push({ char: "," });
+          }
+          return glyphs;
+        }),
+        { char: "\n" },
+      ]
+    : stringToGlyphs("there are no exits\n"),
+
+  // Event
+  stringToGlyphs(event)
+);
+
 }
 
 networkEmitter.on(LOOK_LOG_EVENT, handler)

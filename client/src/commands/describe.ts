@@ -1,7 +1,6 @@
 import {
   ROOM_DESCRIBE_EVENT,
 } from "../../../events"
-import { pushErrorToLog } from "../components/Terminal"
 import {
   sendEvent,
 } from "../network"

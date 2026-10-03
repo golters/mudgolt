@@ -1,6 +1,6 @@
 import { ITEM_COST, GOLT } from "../../../constants"
 import {
-  MAKE_ITEM_EVENT,
+  MAKE_ITEM_EVENT, WINDOW_EVENT,
 } from "../../../events"
 import {
   pushErrorToLog,
@@ -11,6 +11,7 @@ import {
 import {
   CommandModule,
 } from "./emitter"
+import { buildWindow } from "../components/windowManager"
 
 export const MakeItem: CommandModule = {
   command: "makeitem",
@@ -22,6 +23,8 @@ export const MakeItem: CommandModule = {
     const [name] = args
 
     if (!name) {
+      //make window
+      buildWindow(10,10)
       pushErrorToLog(`Syntax: ${MakeItem.syntax}`)
 
       return

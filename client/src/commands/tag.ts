@@ -1,7 +1,6 @@
 import {
   TAG_ITEM_EVENT,
 } from "../../../events"
-import { pushErrorToLog } from "../components/Terminal"
 import {
   sendEvent,
 } from "../network"
